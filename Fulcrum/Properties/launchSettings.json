@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Fulcrum (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Fulcrum (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
