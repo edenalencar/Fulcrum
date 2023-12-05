@@ -17,10 +17,5 @@ namespace Fulcrum.Bu
                 waveOut.Play(); // Comece a tocar novamente
             };
         }
-        public override void AlterarVolume(double volume) => reader.Volume = (float)volume;
-        public override void Parar()
-        {
-            waveOut.Stop();
-        }
     }
 }

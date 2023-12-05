@@ -11,9 +11,16 @@ namespace Fulcrum.Bu
         public string audioFile = String.Empty;
 
         // Crie um novo AudioFileReader
-        public AudioFileReader reader;        
-        public abstract void Parar();
-        public abstract void AlterarVolume(double volume);
+        public AudioFileReader reader;
+        public void Play()
+        {
+            waveOut.Play();
+        }
+        public void Pause()
+        {
+            waveOut.Pause();
+        }
+        public void AlterarVolume(double volume) => reader.Volume = (float)volume;
 
     }
 
