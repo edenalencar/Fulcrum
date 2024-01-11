@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Fulcrum.View.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
+
+        <!--  Spacing between cards  -->
+        <x:Double x:Key="SettingsCardSpacing">3</x:Double>
+
+        <!--  Style (inc. the correct spacing) of a section header  -->
+        <Style
+        x:Key="SettingsSectionHeaderTextBlockStyle"
+        BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+        TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,29,0,5" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+    <Grid x:Name="RootGrid" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource Breakpoint640Plus}" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="contentSV.Padding" Value="16,0" />
+                        <Setter Target="PageHeader.Margin" Value="16,48,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <ScrollViewer x:Name="contentSV" Grid.Row="1" Padding="0,0,0,0" IsTabStop="False" UseSystemFocusVisuals="False" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Background="Transparent">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Transparent">
+                    <SymbolIcon Symbol="Pause" x:Name="playpause" Tapped="PlayOrPause"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" x:Name="ImgVento" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/vento.png" Height="100" Width="100" x:Name="imgVento" />
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="ventosstatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Vento" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="ventos" x:Name="ventos"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/chuva.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="chuvastatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Chuva" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="chuva" x:Name="chuva"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/trem.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="tremstatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Trem" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="trem" x:Name="trem"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/fogueira.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="fogueirastatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Fogueira" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="fogueira" x:Name="fogueira"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/cafeteria.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="cafeteriastatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Cafeteria" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="cafeteria" x:Name="cafeteria"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/ondas.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="ondasstatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Ondas" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="ondas" x:Name="ondas"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/passaros.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="passarosstatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Passáros" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="passaros" x:Name="passaros"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/praia.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="praiastatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Praia" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="praia" x:Name="praia"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
+                    <StackPanel Orientation="Vertical">
+                        <Image Source="/Assets/Images/lancha.png" Height="100" Width="100"/>
+                        <FontIcon Glyph="&#xEC11;" Foreground="Red" x:Name="lanchastatus"/>
+                    </StackPanel>
+                    <Slider AutomationProperties.Name="simple slider" Width="200" Header="Lancha" HorizontalAlignment="Center" VerticalAlignment="Center" ValueChanged="AlterarVolume" Tag="lancha" x:Name="lancha"/>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

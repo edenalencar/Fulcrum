@@ -5,7 +5,7 @@ namespace Fulcrum.Bu
 {
     public abstract class Reprodutor
     {
-        public WaveOutEvent waveOut = new WaveOutEvent();
+        public WaveOutEvent waveOut;
 
         // Defina o local do arquivo de som
         public string audioFile = String.Empty;

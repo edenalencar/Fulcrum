@@ -2,14 +2,116 @@
 <Page
     x:Class="Fulcrum.View.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Fulcrum.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
 
-    <Grid>
+        <!--  Spacing between cards  -->
+        <x:Double x:Key="SettingsCardSpacing">3</x:Double>
 
+        <!--  Style (inc. the correct spacing) of a section header  -->
+        <Style
+            x:Key="SettingsSectionHeaderTextBlockStyle"
+            BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+            TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,29,0,5" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+    <Grid x:Name="RootGrid">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="WideLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource Breakpoint640Plus}" />
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="NarrowLayout">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="contentSV.Padding" Value="16,0" />
+                        <Setter Target="PageHeader.Margin" Value="16,48,0,0" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <TextBlock
+            x:Name="PageHeader"
+            Margin="20,0,20,0"
+            Style="{StaticResource TitleTextBlockStyle}"
+            Text="{x:Bind configuracoes}" />
+        <ScrollViewer
+            x:Name="contentSV"
+            Grid.Row="1"            
+            Padding="0,0,0,0"
+            IsTabStop="False"
+            UseSystemFocusVisuals="False"
+            VerticalScrollBarVisibility="Auto"
+            VerticalScrollMode="Auto">
+            <StackPanel Spacing="{StaticResource SettingsCardSpacing}">
+                <StackPanel.ChildrenTransitions>
+                    <EntranceThemeTransition FromVerticalOffset="50" />
+                    <RepositionThemeTransition IsStaggeringEnabled="False" />
+                </StackPanel.ChildrenTransitions>
+                <TextBlock Margin="0,60,0,0" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Aparência"/>
+                <labs:SettingsCard Description="Selecione o tema do aplicativo a ser exibido" Header="Tema do aplicativo">
+                    <labs:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE790;" />
+                    </labs:SettingsCard.HeaderIcon>
+                    <ComboBox x:Name="Tema" AutomationProperties.AutomationId="themeModeComboBox" SelectionChanged="themeMode_SelectionChanged">
+                        <ComboBoxItem x:Name="Claro" Content="{x:Bind claro}" Tag="{x:Bind light}"/>
+                        <ComboBoxItem x:Name="Escuro" Content="{x:Bind escuro}" Tag="{x:Bind dark}" />
+                        <ComboBoxItem x:Name="Padrao" Content="{x:Bind usarTemaPadrao}" Tag="{x:Bind padrao}"/>
+                    </ComboBox>
+                </labs:SettingsCard>
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind sobre}" />
+                <labs:SettingsExpander Description="{x:Bind direitos}" Header="Fulcrum">
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="True"
+                        Text="0.1.0" />
+                    <labs:SettingsExpander.Items>
+                        <labs:SettingsCard Header="Para clonar esse repositório">
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                IsTextSelectionEnabled="True"
+                                Text="git clone https://github.com/edenalencar/Fulcrum" />
+                        </labs:SettingsCard>
+                        <labs:SettingsCard
+                            x:Name="issues"
+                            Click="requistarNovoRecurso_click"
+                            Header="Registrar um bug ou solicitar novo recurso"
+                            IsClickEnabled="True">
+                            <labs:SettingsCard.ActionIcon>
+                                <FontIcon Glyph="&#xE8A7;" />
+                            </labs:SettingsCard.ActionIcon>
+                        </labs:SettingsCard>
+                        <labs:SettingsCard
+                            HorizontalContentAlignment="Left"
+                            ContentAlignment="Vertical"
+                            Header="Dependências e referências">
+                            <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
+                                <HyperlinkButton Content="Windows UI Library" NavigateUri="https://aka.ms/winui" />
+                                <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
+                            </StackPanel>
+                        </labs:SettingsCard>
+                        <labs:SettingsCard
+                            HorizontalContentAlignment="Left"
+                            ContentAlignment="Vertical"
+                            Header="ESTE CÓDIGO E INFORMAÇÕES SÃO FORNECIDOS 'NO ESTADO EM QUE SE ENCONTRAM', SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO A, GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E/OU ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.">
+                        </labs:SettingsCard>
+                    </labs:SettingsExpander.Items>
+                </labs:SettingsExpander>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>
+

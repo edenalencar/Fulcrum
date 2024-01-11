@@ -9,6 +9,7 @@ namespace Fulcrum.Bu
             audioFile = @"C:\Users\edena\Projetos\Fulcrum\Fulcrum\Assets\Sounds\fogueira.wav";
             reader = new AudioFileReader(audioFile);
             reader.Volume = 0.0f;
+            waveOut = new WaveOutEvent();
             waveOut.Init(reader);
             waveOut.Play();
             waveOut.PlaybackStopped += (s, e) =>

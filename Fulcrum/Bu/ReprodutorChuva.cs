@@ -1,5 +1,4 @@
 ﻿using NAudio.Wave;
-using System.Threading;
 
 namespace Fulcrum.Bu
 {
@@ -9,7 +8,8 @@ namespace Fulcrum.Bu
         {
             audioFile = @"C:\Users\edena\Projetos\Fulcrum\Fulcrum\Assets\Sounds\chuva forte.wav";
             reader = new AudioFileReader(audioFile);
-            reader.Volume = 0.0f;            
+            reader.Volume = 0.0f;
+            waveOut = new WaveOutEvent();
             waveOut.Init(reader);
             waveOut.Play();
             waveOut.PlaybackStopped += (s, e) =>
@@ -17,6 +17,7 @@ namespace Fulcrum.Bu
                 reader.Position = 0; // Reinicie o áudio do início
                 waveOut.Play(); // Comece a tocar novamente
             };
-        }     
+        }
+        
     }
 }
