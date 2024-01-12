@@ -21,7 +21,6 @@
     <Content Remove="Assets\Sounds\cafeteria.wav" />
     <Content Remove="Assets\Sounds\chuva forte.wav" />
     <Content Remove="Assets\Sounds\fogueira.wav" />
-    <Content Remove="Assets\Sounds\lancha.mp3" />
     <Content Remove="Assets\Sounds\manhã-praia.wav" />
     <Content Remove="Assets\Sounds\ondas.wav" />
     <Content Remove="Assets\Sounds\passaros.wav" />
