@@ -18,6 +18,6 @@ namespace Fulcrum.Bu
                 waveOut.Play(); // Comece a tocar novamente
             };
         }
-        
+
     }
 }

@@ -5,8 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     mc:Ignorable="d"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
@@ -73,7 +73,7 @@
                     </ComboBox>
                 </labs:SettingsCard>
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind sobre}" />
-                <labs:SettingsExpander Description="{x:Bind direitos}" Header="Fulcrum">
+                <labs:SettingsExpander Description="{x:Bind direitos}" Header="Fulcrum" IsExpanded="True">
                     <TextBlock
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
