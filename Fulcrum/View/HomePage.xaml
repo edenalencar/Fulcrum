@@ -48,7 +48,7 @@
         </VisualStateManager.VisualStateGroups>
         <ScrollViewer x:Name="contentSV" Grid.Row="1" Padding="0,0,0,0" IsTabStop="False" UseSystemFocusVisuals="False" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" Background="Transparent">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Transparent">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Transparent"  Padding="10">
                     <SymbolIcon Symbol="Pause" x:Name="playpause" Tapped="PlayOrPause"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10" Spacing="20" Background="Transparent">
