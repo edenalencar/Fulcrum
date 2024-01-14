@@ -47,7 +47,7 @@
             x:Name="PageHeader"
             Margin="20,0,20,0"
             Style="{StaticResource TitleTextBlockStyle}"
-            Text="{x:Bind configuracoes}" />
+            x:Uid="Settings" />
         <ScrollViewer
             x:Name="contentSV"
             Grid.Row="1"            
@@ -61,53 +61,36 @@
                     <EntranceThemeTransition FromVerticalOffset="50" />
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
-                <TextBlock Margin="0,60,0,0" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Aparência"/>
-                <labs:SettingsCard Description="Selecione o tema do aplicativo a ser exibido" Header="Tema do aplicativo">
+                <TextBlock Margin="0,60,0,0" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance"/>
+                <labs:SettingsCard x:Uid="AppTheme">
                     <labs:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE790;" />
                     </labs:SettingsCard.HeaderIcon>
                     <ComboBox x:Name="Tema" AutomationProperties.AutomationId="themeModeComboBox" SelectionChanged="themeMode_SelectionChanged">
-                        <ComboBoxItem x:Name="Claro" Content="{x:Bind claro}" Tag="{x:Bind light}"/>
-                        <ComboBoxItem x:Name="Escuro" Content="{x:Bind escuro}" Tag="{x:Bind dark}" />
-                        <ComboBoxItem x:Name="Padrao" Content="{x:Bind usarTemaPadrao}" Tag="{x:Bind padrao}"/>
+                        <ComboBoxItem x:Name="Claro" x:Uid="light" />
+                        <ComboBoxItem x:Name="Escuro" x:Uid="Dark" />
+                        <ComboBoxItem x:Name="Padrao" x:Uid="Default" />
                     </ComboBox>
                 </labs:SettingsCard>
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="{x:Bind sobre}" />
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="About" />
                 <labs:SettingsExpander Description="{x:Bind direitos}" Header="Fulcrum" IsExpanded="True">
                     <TextBlock
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
                         Text="0.1.0" />
-                    <labs:SettingsExpander.Items>
-                        <labs:SettingsCard Header="Para clonar esse repositório">
-                            <TextBlock
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="True"
-                                Text="git clone https://github.com/edenalencar/Fulcrum" />
-                        </labs:SettingsCard>
-                        <labs:SettingsCard
-                            x:Name="issues"
-                            Click="requistarNovoRecurso_click"
-                            Header="Registrar um bug ou solicitar novo recurso"
-                            IsClickEnabled="True">
-                            <labs:SettingsCard.ActionIcon>
-                                <FontIcon Glyph="&#xE8A7;" />
-                            </labs:SettingsCard.ActionIcon>
-                        </labs:SettingsCard>
+                    <labs:SettingsExpander.Items>                   
                         <labs:SettingsCard
                             HorizontalContentAlignment="Left"
                             ContentAlignment="Vertical"
-                            Header="Dependências e referências">
+                            x:Uid="DependenciesAndReferences.Header">
                             <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
                                 <HyperlinkButton Content="Windows UI Library" NavigateUri="https://aka.ms/winui" />
                                 <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
+                                <HyperlinkButton x:Uid="PrivacyPolicy" NavigateUri="https://www.fulcrumappofficial.com/privacypolice.html" />
+                                <HyperlinkButton x:Uid="TermsOfUse" NavigateUri="https://www.fulcrumappofficial.com/terms-of-use.html" />
+                                <HyperlinkButton Content="Web Site" NavigateUri="https://www.fulcrumappofficial.com/" />
                             </StackPanel>
-                        </labs:SettingsCard>
-                        <labs:SettingsCard
-                            HorizontalContentAlignment="Left"
-                            ContentAlignment="Vertical"
-                            Header="ESTE CÓDIGO E INFORMAÇÕES SÃO FORNECIDOS 'NO ESTADO EM QUE SE ENCONTRAM', SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO A, GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E/OU ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA.">
-                        </labs:SettingsCard>
+                        </labs:SettingsCard>                        
                     </labs:SettingsExpander.Items>
                 </labs:SettingsExpander>
             </StackPanel>
