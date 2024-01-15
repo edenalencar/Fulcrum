@@ -24,7 +24,11 @@
             </Style.Setters>
         </Style>
     </Page.Resources>
-    <Grid x:Name="RootGrid">
+    <Grid x:Name="RootGrid" Width="390" Height="700">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>        
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState x:Name="WideLayout">
@@ -37,8 +41,8 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="contentSV.Padding" Value="16,0" />
-                        <Setter Target="PageHeader.Margin" Value="16,48,0,0" />
+                        <Setter Target="contentSV.Padding" Value="10,0" />
+                        <Setter Target="PageHeader.Margin" Value="10,48,0,10" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -48,21 +52,14 @@
             Margin="20,0,20,0"
             Style="{StaticResource TitleTextBlockStyle}"
             x:Uid="Settings" />
-        <ScrollViewer
-            x:Name="contentSV"
-            Grid.Row="1"            
-            Padding="0,0,0,0"
-            IsTabStop="False"
-            UseSystemFocusVisuals="False"
-            VerticalScrollBarVisibility="Auto"
-            VerticalScrollMode="Auto">
+        <ScrollViewer x:Name="contentSV" Grid.Row="1" Padding="0,0,0,0" IsTabStop="False" UseSystemFocusVisuals="False" VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
             <StackPanel Spacing="{StaticResource SettingsCardSpacing}">
                 <StackPanel.ChildrenTransitions>
                     <EntranceThemeTransition FromVerticalOffset="50" />
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
-                <TextBlock Margin="0,60,0,0" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance"/>
-                <labs:SettingsCard x:Uid="AppTheme">
+                <TextBlock Margin="20,20,0,0" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Appearance"/>
+                <labs:SettingsCard x:Uid="AppTheme" Margin="20,0,50,0">
                     <labs:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE790;" />
                     </labs:SettingsCard.HeaderIcon>
@@ -72,27 +69,20 @@
                         <ComboBoxItem x:Name="Padrao" x:Uid="Default" />
                     </ComboBox>
                 </labs:SettingsCard>
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="About" />
-                <labs:SettingsExpander Description="{x:Bind direitos}" Header="Fulcrum" IsExpanded="True">
-                    <TextBlock
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        IsTextSelectionEnabled="True"
-                        Text="0.1.0" />
-                    <labs:SettingsExpander.Items>                   
-                        <labs:SettingsCard
-                            HorizontalContentAlignment="Left"
-                            ContentAlignment="Vertical"
-                            x:Uid="DependenciesAndReferences.Header">
-                            <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
-                                <HyperlinkButton Content="Windows UI Library" NavigateUri="https://aka.ms/winui" />
-                                <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
-                                <HyperlinkButton x:Uid="PrivacyPolicy" NavigateUri="https://www.fulcrumappofficial.com/privacypolice.html" />
-                                <HyperlinkButton x:Uid="TermsOfUse" NavigateUri="https://www.fulcrumappofficial.com/terms-of-use.html" />
-                                <HyperlinkButton Content="Web Site" NavigateUri="https://www.fulcrumappofficial.com/" />
-                            </StackPanel>
-                        </labs:SettingsCard>                        
-                    </labs:SettingsExpander.Items>
-                </labs:SettingsExpander>
+                <TextBlock Margin="20,20,0,0" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="About" />
+                <StackPanel Margin="20,0,0,0" Orientation="Vertical">
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" IsTextSelectionEnabled="False" x:Uid="Version"/>
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" IsTextSelectionEnabled="False" Text="{x:Bind RightsText}"/>
+                </StackPanel>
+                <StackPanel Margin="20,0,0,0" Orientation="Vertical">
+                    <HyperlinkButton Content="Windows UI Library" NavigateUri="https://aka.ms/winui" />
+                    <HyperlinkButton Content="Windows Community Toolkit" NavigateUri="https://github.com/CommunityToolkit/WindowsCommunityToolkit" />
+                    <HyperlinkButton Content="Freesound" NavigateUri="https://freesound.org/" />
+                    <HyperlinkButton Content="icon-icons" NavigateUri="https://icon-icons.com/" />
+                    <HyperlinkButton x:Uid="PrivacyPolicy" NavigateUri="https://www.fulcrumappofficial.com/privacypolice.html" />
+                    <HyperlinkButton x:Uid="TermsOfUse" NavigateUri="https://www.fulcrumappofficial.com/terms-of-use.html" />
+                    <HyperlinkButton Content="Web Site" NavigateUri="https://www.fulcrumappofficial.com/" />
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>

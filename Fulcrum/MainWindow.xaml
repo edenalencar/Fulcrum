@@ -28,7 +28,7 @@
                         <NavigationView.MenuItems>
                             <NavigationViewItem Tag="HomeSelected" x:Name="homeselected" IsSelected="True">
                                 <NavigationViewItem.Icon>
-                                    <SymbolIcon Symbol="Home" x:Name="home"/>
+                                    <SymbolIcon Symbol="Home" x:Name="home" x:Uid="Home"/>
                                 </NavigationViewItem.Icon>
                             </NavigationViewItem>
                         </NavigationView.MenuItems>

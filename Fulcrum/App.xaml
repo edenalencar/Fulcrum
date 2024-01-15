@@ -11,6 +11,41 @@
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">                    
+                    <BitmapImage x:Key="cafeteria" UriSource="ms-appx:///Assets/Images/cafeteria.png"/>
+                    <BitmapImage x:Key="chuva" UriSource="ms-appx:///Assets/Images/chuva.png"/>
+                    <BitmapImage x:Key="fogueira" UriSource="ms-appx:///Assets/Images/fogueira.png"/>
+                    <BitmapImage x:Key="lancha" UriSource="ms-appx:///Assets/Images/lancha.png"/>
+                    <BitmapImage x:Key="ondas" UriSource="ms-appx:///Assets/Images/ondas.png"/>
+                    <BitmapImage x:Key="passaros" UriSource="ms-appx:///Assets/Images/passaros.png"/>
+                    <BitmapImage x:Key="praia" UriSource="ms-appx:///Assets/Images/praia.png"/>
+                    <BitmapImage x:Key="trem" UriSource="ms-appx:///Assets/Images/trem.png"/>
+                    <BitmapImage x:Key="vento" UriSource="ms-appx:///Assets/Images/vento.png"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <BitmapImage x:Key="cafeteria" UriSource="ms-appx:///Assets/Images/cafeteria.png"/>
+                    <BitmapImage x:Key="chuva" UriSource="ms-appx:///Assets/Images/chuva.png"/>
+                    <BitmapImage x:Key="fogueira" UriSource="ms-appx:///Assets/Images/fogueira.png"/>
+                    <BitmapImage x:Key="lancha" UriSource="ms-appx:///Assets/Images/lancha.png"/>
+                    <BitmapImage x:Key="ondas" UriSource="ms-appx:///Assets/Images/ondas.png"/>
+                    <BitmapImage x:Key="passaros" UriSource="ms-appx:///Assets/Images/passaros.png"/>
+                    <BitmapImage x:Key="praia" UriSource="ms-appx:///Assets/Images/praia.png"/>
+                    <BitmapImage x:Key="trem" UriSource="ms-appx:///Assets/Images/trem.png"/>
+                    <BitmapImage x:Key="vento" UriSource="ms-appx:///Assets/Images/vento.png"/>                    
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <BitmapImage x:Key="cafeteria" UriSource="ms-appx:///Assets/Images/cafeteria-light.png"/>
+                    <BitmapImage x:Key="chuva" UriSource="ms-appx:///Assets/Images/chuva-light.png"/>
+                    <BitmapImage x:Key="fogueira" UriSource="ms-appx:///Assets/Images/fogueira-light.png"/>
+                    <BitmapImage x:Key="lancha" UriSource="ms-appx:///Assets/Images/lancha-light.png"/>
+                    <BitmapImage x:Key="ondas" UriSource="ms-appx:///Assets/Images/ondas-light.png"/>
+                    <BitmapImage x:Key="passaros" UriSource="ms-appx:///Assets/Images/passaros-light.png"/>
+                    <BitmapImage x:Key="praia" UriSource="ms-appx:///Assets/Images/praia-light.png"/>
+                    <BitmapImage x:Key="trem" UriSource="ms-appx:///Assets/Images/trem-light.png"/>
+                    <BitmapImage x:Key="vento" UriSource="ms-appx:///Assets/Images/vento-light.png"/>                    
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

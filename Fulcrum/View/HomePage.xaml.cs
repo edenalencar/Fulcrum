@@ -1,13 +1,10 @@
 using Fulcrum.Bu;
 using Fulcrum.Util;
 using Microsoft.UI;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -52,12 +49,16 @@ namespace Fulcrum.View
         {
             AudioManager.Instance.PlayAll();
             playpause.Symbol = Symbol.Pause;
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();
+            ToolTipService.SetToolTip(playpause, resourceLoader.GetString("Pause/ToolTipService/ToolTip"));
         }
 
         private void PausarSons()
         {
             AudioManager.Instance.PauseAll();
             playpause.Symbol = Symbol.Play;
+            var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();
+            ToolTipService.SetToolTip(playpause, resourceLoader.GetString("Play/ToolTipService/ToolTip"));
         }
 
         public void PlayOrPause(object sender, TappedRoutedEventArgs e)
@@ -95,25 +96,6 @@ namespace Fulcrum.View
             FontIcon status = this.FindName(slider.Name + "status") as FontIcon;
             status.Foreground = slider.Value == 0 ? new SolidColorBrush(Colors.Red) : new SolidColorBrush(Colors.Green);
             AudioManager.Instance.AlterarVolume(slider.Name, slider.Value / 100f);
-        }
-
-        public void AlteraTemaImagens(object sender, object e)
-        {
-            Image image = sender as Image;
-            BitmapImage img = image.Source as BitmapImage;
-
-            if (this.ActualTheme == ElementTheme.Light)
-            {
-                image.Opacity = 0;
-                image.Source = new BitmapImage(new Uri(img.UriSource.AbsoluteUri.Replace("-light", "")));
-                image.Opacity = 1;
-            }
-            else
-            {
-                image.Opacity = 0;
-                image.Source = new BitmapImage(new Uri(img.UriSource.AbsoluteUri.Replace(".png", "-light.png")));
-                image.Opacity = 1;
-            }
         }
     }
 }

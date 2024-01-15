@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.Storage;
-using Windows.System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -51,19 +50,18 @@ namespace Fulcrum.View
                 ApplicationData.Current.LocalSettings.Values[Constantes.TemaAppSelecionado] = frameworkElement.RequestedTheme.ToString();
             }
         }
-        private async void requistarNovoRecurso_click(object sender, RoutedEventArgs e)
-        {
-            await Launcher.LaunchUriAsync(new Uri("https://github.com/edenalencar/Fulcrum/issues"));
 
+        public string RightsText
+        {
+            get
+            {
+                var resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse();
+                var rightsText = resourceLoader.GetString("Rights/Text");
+                return string.Format(rightsText, DateTime.Now.Year);
+            }
         }
-        public string sobre = Constantes.Sobre;
-        public string configuracoes = Constantes.Configuracoes;
-        public string dark = Constantes.Dark;
-        public string light = Constantes.Light;
-        public string padrao = Constantes.Default;
-        public string claro = Constantes.Claro;
-        public string escuro = Constantes.Escuro;
-        public string usarTemaPadrao = Constantes.UsarTemaPadra;
-        public string direitos = Constantes.Direitos;
     }
+
+
+
 }

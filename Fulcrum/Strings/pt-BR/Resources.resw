@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About.Text" xml:space="preserve">
-    <value>Sobre</value>
+    <value>Sobre este app</value>
     <comment>About app</comment>
   </data>
   <data name="Appearance.Text" xml:space="preserve">
@@ -169,6 +169,10 @@
     <value>Dependências e referências</value>
     <comment>Dependencies and references used by the application</comment>
   </data>
+  <data name="Home.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inicio</value>
+    <comment>ToolTip for home icon</comment>
+  </data>
   <data name="Light.Content" xml:space="preserve">
     <value>Claro</value>
     <comment>Light Theme</comment>
@@ -181,6 +185,14 @@
     <value>Lancha</value>
     <comment>Sound of Motorboat</comment>
   </data>
+  <data name="Pause.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pausar</value>
+    <comment>ToolTipo for Pause icon</comment>
+  </data>
+  <data name="Play.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Executar</value>
+    <comment>ToolTipo for Play icon</comment>
+  </data>
   <data name="PrivacyPolicy.Content" xml:space="preserve">
     <value>Política de privacidade</value>
     <comment>Privacy Policy</comment>
@@ -188,6 +200,10 @@
   <data name="Rain.Header" xml:space="preserve">
     <value>Chuva</value>
     <comment>Sound of Rain</comment>
+  </data>
+  <data name="Rights.Text" xml:space="preserve">
+    <value>@{0} Éden Alencar.Todos os direitos reservados.</value>
+    <comment>Right about app</comment>
   </data>
   <data name="Settings.Text" xml:space="preserve">
     <value>Configurações</value>
@@ -200,6 +216,10 @@
   <data name="Train.Header" xml:space="preserve">
     <value>Trem</value>
     <comment>Sound of Train</comment>
+  </data>
+  <data name="Version.Text" xml:space="preserve">
+    <value>Fulcrum App Official 1.0.0</value>
+    <comment>Nome and version</comment>
   </data>
   <data name="Waves.Header" xml:space="preserve">
     <value>Ondas</value>
