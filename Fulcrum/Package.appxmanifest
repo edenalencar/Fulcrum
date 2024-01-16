@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="710af7b6-a1ea-47d9-b9ae-9348410c5197"
-    Publisher="CN=edena"
+    Name="61699denAlencar.FulcrumAppOfficial"
+    Publisher="CN=26939AD8-50B0-4A8B-9C77-451CFC0ED859"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="710af7b6-a1ea-47d9-b9ae-9348410c5197" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="06c35c0f-f37b-433f-9d95-fded38d46f65" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Fulcrum</DisplayName>
-    <PublisherDisplayName>edena</PublisherDisplayName>
+    <DisplayName>Fulcrum App Official</DisplayName>
+    <PublisherDisplayName>Éden Alencar</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Fulcrum"
+        DisplayName="Fulcrum App Official"
         Description="Fulcrum"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png" BackgroundColor="transparent">

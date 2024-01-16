@@ -49,6 +49,6 @@ namespace Fulcrum
             }
 
         }
-        public static Window? Window { get; private set; }
+        public static Window Window { get; private set; }
     }
 }
