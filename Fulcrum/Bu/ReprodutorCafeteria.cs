@@ -6,8 +6,7 @@ namespace Fulcrum.Bu
     {
         public ReprodutorCafeteria()
         {
-            audioFile = @"C:\Users\edena\Projetos\Fulcrum\Fulcrum\Assets\Sounds\cafeteria.wav";
-            reader = new AudioFileReader(audioFile);
+            reader = new AudioFileReader(ObterAudio("Assets\\Sounds\\cafeteria.wav"));
             reader.Volume = 0.0f;
             var fadeOut = new DelayFadeOutSampleProvider(reader);
             fadeOut.BeginFadeOut(10000, 1000);

@@ -6,8 +6,7 @@ namespace Fulcrum.Bu
     {
         public ReprodutorPassaros()
         {
-            audioFile = @"C:\Users\edena\Projetos\Fulcrum\Fulcrum\Assets\Sounds\passaros.wav";
-            reader = new AudioFileReader(audioFile);
+            reader = new AudioFileReader(ObterAudio("Assets\\Sounds\\passaros.wav"));
             reader.Volume = 0.0f;
             var fadeOut = new DelayFadeOutSampleProvider(reader);
             fadeOut.BeginFadeOut(10000, 1000);

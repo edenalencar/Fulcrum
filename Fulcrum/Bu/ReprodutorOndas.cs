@@ -6,8 +6,7 @@ namespace Fulcrum.Bu
     {
         public ReprodutorOndas()
         {
-            audioFile = @"C:\Users\edena\Projetos\Fulcrum\Fulcrum\Assets\Sounds\ondas.wav";
-            reader = new AudioFileReader(audioFile);
+            reader = new AudioFileReader(ObterAudio("Assets\\Sounds\\ondas.wav"));
             reader.Volume = 0.0f;
             var fadeOut = new DelayFadeOutSampleProvider(reader);
             fadeOut.BeginFadeOut(10000, 1000);

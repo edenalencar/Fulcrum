@@ -22,6 +22,14 @@ namespace Fulcrum.Bu
         }
         public void AlterarVolume(double volume) => reader.Volume = (float)volume;
 
+        public string ObterAudio(string urlaudio)
+        {
+            var localizacaoDoExecutavel = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var diretorioDoExecutavel = System.IO.Path.GetDirectoryName(localizacaoDoExecutavel);
+            var caminhoDoAudio = System.IO.Path.Combine(diretorioDoExecutavel, @urlaudio);
+            return caminhoDoAudio;
+        }
+
     }
 
 }
