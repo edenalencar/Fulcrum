@@ -49,8 +49,7 @@
         <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
       </uap:VisualElements>
     </Application>
-  </Applications>
-
+  </Applications> 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>

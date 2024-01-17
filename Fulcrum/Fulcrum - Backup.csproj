@@ -16,14 +16,22 @@
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundle>Never</AppxBundle>      
+    <AppxBundle>Auto</AppxBundle>      
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>    
-    <PackageCertificateThumbprint>E5EEC097382344AC7AE3FB2B1C177B3C8FF7067D</PackageCertificateThumbprint>    
+    <PackageCertificateThumbprint>62F0416E854962866965823F292F75C5332C31A5</PackageCertificateThumbprint>    
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="Assets\7_122761.png" />
+    <Content Remove="Assets\Sounds\cafeteria.wav" />
+    <Content Remove="Assets\Sounds\chuva forte.wav" />
+    <Content Remove="Assets\Sounds\fogueira.wav" />
+    <Content Remove="Assets\Sounds\manhã-praia.wav" />
+    <Content Remove="Assets\Sounds\ondas.wav" />
+    <Content Remove="Assets\Sounds\passaros.wav" />
+    <Content Remove="Assets\Sounds\trem.wav" />
+    <Content Remove="Assets\Sounds\ventos.wav" />
     <Content Remove="Assets\wind_icon-icons.com_64515.png" />
   </ItemGroup>
   <ItemGroup>
@@ -42,14 +50,6 @@
     <None Remove="Assets\Images\trem.png" />
     <None Remove="Assets\Images\vento.png" />
     <None Remove="Assets\Sounds\BadgeLogo.png" />
-    <None Remove="Assets\Sounds\cafeteria.wav" />
-    <None Remove="Assets\Sounds\chuva forte.wav" />
-    <None Remove="Assets\Sounds\fogueira.wav" />
-    <None Remove="Assets\Sounds\manhã-praia.wav" />
-    <None Remove="Assets\Sounds\ondas.wav" />
-    <None Remove="Assets\Sounds\passaros.wav" />
-    <None Remove="Assets\Sounds\trem.wav" />
-    <None Remove="Assets\Sounds\ventos.wav" />
     <None Remove="Assets\StoreLogo.png" />
     <None Remove="Assets\StoreLogo.scale-100.png" />
     <None Remove="Assets\StoreLogo.scale-125.png" />
@@ -61,7 +61,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Labs.WinUI.SettingsControls" Version="0.0.18" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.4.230913002" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
     <PackageReference Include="NAudio" Version="2.2.1" />
@@ -136,33 +135,6 @@
     </Content>
     <Content Update="Assets\BadgeLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\cafeteria.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\chuva forte.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\fogueira.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\lancha.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\manhã-praia.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\ondas.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\passaros.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\trem.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Sounds\ventos.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\SplashScreen.scale-100.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
