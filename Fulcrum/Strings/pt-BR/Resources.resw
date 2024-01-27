@@ -218,7 +218,7 @@
     <comment>Sound of Train</comment>
   </data>
   <data name="Version.Text" xml:space="preserve">
-    <value>Fulcrum App Official 1.0.0</value>
+    <value>Fulcrum App Official {0}</value>
     <comment>Nome and version</comment>
   </data>
   <data name="Waves.Header" xml:space="preserve">

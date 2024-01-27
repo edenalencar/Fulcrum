@@ -71,7 +71,7 @@
                 </labs:SettingsCard>
                 <TextBlock Margin="20,20,0,0" Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="About" />
                 <StackPanel Margin="20,0,0,0" Orientation="Vertical">
-                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" IsTextSelectionEnabled="False" x:Uid="Version"/>
+                    <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" IsTextSelectionEnabled="False" Text="{x:Bind Version}"/>
                     <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" IsTextSelectionEnabled="False" Text="{x:Bind RightsText}"/>
                 </StackPanel>
                 <StackPanel Margin="20,0,0,0" Orientation="Vertical">
