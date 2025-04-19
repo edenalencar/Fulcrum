@@ -2,40 +2,65 @@
 <Window
     x:Class="Fulcrum.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Fulcrum"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
     mc:Ignorable="d">
-    <Grid ColumnDefinitions="*,Auto" RowDefinitions="32,*">
-        <StackPanel x:Name="AppTitleBar" 
-                    Grid.Row="0" 
-                    Grid.Column="0" 
-                    Orientation="Horizontal"
-                    Background="{ThemeResource AppBarBackgroundThemeBrush}">
-            <Image Source="/Assets/LargeTile.scale-400.png"/>
-            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Fulcrum" TextWrapping="NoWrap"/>
-        </StackPanel>
-        <Border
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Margin="1"
-            Padding="1"            
-            BorderThickness="1">
-            <ScrollView Background="Transparent">
-                <StackPanel HorizontalAlignment="Center" Background="Transparent">
-                    <NavigationView PaneDisplayMode="Top" IsBackButtonVisible="Collapsed" SelectionChanged="NavigationView_SelectionChanged" x:Name="NavigationViewControl" IsTabStop="True" AutomationProperties.Name="NavigationViewControl">
-                        <NavigationView.MenuItems>
-                            <NavigationViewItem Tag="HomeSelected" x:Name="homeselected" IsSelected="True">
-                                <NavigationViewItem.Icon>
-                                    <SymbolIcon Symbol="Home" x:Name="home" x:Uid="Home"/>
-                                </NavigationViewItem.Icon>
-                            </NavigationViewItem>
-                        </NavigationView.MenuItems>
-                        <Frame x:Name="contentFrame"/>
-                    </NavigationView>
-                </StackPanel>
-            </ScrollView>
-        </Border>
+
+    <Grid>
+        <Grid.Resources>
+            <!-- Estilos dos ícones de navegação -->
+            <Style x:Key="NavigationViewItemStyle" TargetType="NavigationViewItem">
+                <Setter Property="Margin" Value="0,4"/>
+                <Setter Property="Padding" Value="10,8"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+            </Style>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Barra de título personalizada -->
+        <Grid x:Name="AppTitleBar" Height="48">
+            <Grid.Background>
+                <SolidColorBrush Color="{ThemeResource SystemAltHighColor}"/>
+            </Grid.Background>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            
+            <Image Source="/Assets/StoreLogo.png" Width="24" Height="24" Margin="16,0,0,0" 
+                   VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                   
+            <TextBlock Grid.Column="1" Text="Fulcrum - Sons Ambientes" 
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       FontWeight="SemiBold" VerticalAlignment="Center" Margin="12,0,0,0"
+                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+        </Grid>
+
+        <!-- Conteúdo principal -->
+        <NavigationView Grid.Row="1" x:Name="navigationView"
+                        IsSettingsVisible="True"
+                        IsBackButtonVisible="Collapsed"
+                        PaneDisplayMode="Top"
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        SelectionChanged="NavigationView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Tag="HomeSelected" Content="Sons" IsSelected="True">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8D6;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            
+            <Frame x:Name="contentFrame" Padding="12" />
+        </NavigationView>
     </Grid>
 </Window>

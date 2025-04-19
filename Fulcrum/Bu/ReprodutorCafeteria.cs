@@ -1,23 +1,15 @@
-﻿using NAudio.Wave;
+﻿namespace Fulcrum.Bu;
 
-namespace Fulcrum.Bu
+/// <summary>
+/// Reprodutor especializado para som ambiente de cafeteria
+/// </summary>
+public class ReprodutorCafeteria : Reprodutor
 {
-    public class ReprodutorCafeteria : Reprodutor
+    /// <summary>
+    /// Inicializa um novo reprodutor de som de cafeteria
+    /// </summary>
+    public ReprodutorCafeteria()
     {
-        public ReprodutorCafeteria()
-        {
-            reader = new AudioFileReader(ObterAudio("Assets\\Sounds\\cafeteria.wav"));
-            reader.Volume = 0.0f;
-            var fadeOut = new DelayFadeOutSampleProvider(reader);
-            fadeOut.BeginFadeOut(10000, 1000);
-            waveOut = new WaveOutEvent();
-            waveOut.Init(reader);
-            waveOut.Play();
-            waveOut.PlaybackStopped += (s, e) =>
-            {
-                reader.Position = 0; // Reinicie o áudio do início
-                waveOut.Play(); // Comece a tocar novamente
-            };
-        }
+        Initialize("Assets\\Sounds\\cafeteria.wav");
     }
 }

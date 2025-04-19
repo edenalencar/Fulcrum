@@ -1,29 +1,61 @@
-﻿using System;
+﻿namespace Fulcrum.Util;
 
-namespace Fulcrum.Util
+/// <summary>
+/// Constantes utilizadas pela aplicação
+/// </summary>
+public static class Constantes
 {
-    public class Constantes
+    // Identificadores dos sons
+    public static class Sons
     {
-        public const string lancha = "lancha";
-        public const string cafeteria = "cafeteria";
-        public const string chuva = "chuva";
-        public const string fogueira = "fogueira";
-        public const string ondas = "ondas";
-        public const string passaros = "passaros";
-        public const string praia = "praia";
-        public const string trem = "trem";
-        public const string ventos = "ventos";
+        public const string Lancha = "lancha";
+        public const string Cafeteria = "cafeteria";
+        public const string Chuva = "chuva";
+        public const string Fogueira = "fogueira";
+        public const string Ondas = "ondas";
+        public const string Passaros = "passaros";
+        public const string Praia = "praia";
+        public const string Trem = "trem";
+        public const string Ventos = "ventos";
+    }
 
-        //Preferências
-        public const string TemaAppSelecionado = "TemaAppSelecionado";
+    /// <summary>
+    /// Constantes relacionadas ao tema da aplicação
+    /// </summary>
+    public static class Tema
+    {
+        /// <summary>
+        /// Chave para armazenar o tema selecionado nas configurações
+        /// </summary>
+        public const string TemaAppSelecionado = "TemaAplicativoSelecionado";
+
+        /// <summary>
+        /// Tema claro
+        /// </summary>
         public const string Light = "Light";
+
+        /// <summary>
+        /// Tema escuro
+        /// </summary>
         public const string Dark = "Dark";
+
+        /// <summary>
+        /// Tema padrão do sistema
+        /// </summary>
         public const string Default = "Default";
+
         public const string Claro = "Claro";
         public const string Escuro = "Escuro";
         public const string UsarTemaPadra = "Usar configuração do sistema";
+    }
+
+    // Configuração geral
+    public static class Config
+    {
         public const string Sobre = "Sobre";
-        public static string Direitos = $"@{DateTime.Now.Year} Éden Alencar.Todos os direitos reservados.";
         public const string Configuracoes = "Configurações";
     }
+
+    // Valores calculados dinamicamente
+    public static string Direitos => $"© {DateTime.Now.Year} Éden Alencar. Todos os direitos reservados.";
 }

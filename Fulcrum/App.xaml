@@ -4,48 +4,117 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Fulcrum">
+    
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <!-- Other merged dictionaries here -->
+                <!-- Outros estilos específicos do app -->
+                <ResourceDictionary>
+                    <!-- Paleta de cores personalizada -->
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Light">
+                            <!-- Cores principais do tema Light -->
+                            <Color x:Key="PrimaryColor">#0078D4</Color>
+                            <Color x:Key="SecondaryColor">#0063B1</Color>
+                            <Color x:Key="AccentColor">#005EA3</Color>
+                            <Color x:Key="BackgroundColor">#F9F9F9</Color>
+                            <Color x:Key="CardBackgroundColor">#FFFFFF</Color>
+                            <Color x:Key="BorderColor">#E0E0E0</Color>
+                            <Color x:Key="TextPrimaryColor">#202020</Color>
+                            <Color x:Key="TextSecondaryColor">#505050</Color>
+                            
+                            <!-- Brushes baseados nas cores -->
+                            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+                            <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}" />
+                            <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+                            <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+                            <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackgroundColor}" />
+                            <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+                            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+                            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
+                            
+                            <!-- Brushes específicos da UI -->
+                            <SolidColorBrush x:Key="WindowCaptionBackground" Color="Transparent"/>
+                            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled" Color="Transparent"/>
+                            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#F9F9F9"/>
+                            <SolidColorBrush x:Key="AppBarBackgroundBrush" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="AppBarSeparatorBrush" Color="#DDDDDD"/>
+                            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="#E0E0E0"/>
+                            
+                            <!-- Brushes específicos para NavigationView -->
+                            <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="NavigationViewItemForeground" Color="#202020"/>
+                            <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="#202020"/>
+                        </ResourceDictionary>
+                        
+                        <ResourceDictionary x:Key="Dark">
+                            <!-- Cores principais do tema Dark -->
+                            <Color x:Key="PrimaryColor">#0078D4</Color>
+                            <Color x:Key="SecondaryColor">#2986D8</Color>
+                            <Color x:Key="AccentColor">#4B9BDF</Color>
+                            <Color x:Key="BackgroundColor">#1F1F1F</Color>
+                            <Color x:Key="CardBackgroundColor">#2D2D2D</Color>
+                            <Color x:Key="BorderColor">#454545</Color>
+                            <Color x:Key="TextPrimaryColor">#FFFFFF</Color>
+                            <Color x:Key="TextSecondaryColor">#B0B0B0</Color>
+                            
+                            <!-- Brushes baseados nas cores -->
+                            <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+                            <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}" />
+                            <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+                            <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+                            <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackgroundColor}" />
+                            <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
+                            <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}" />
+                            <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}" />
+                            
+                            <!-- Brushes específicos da UI -->
+                            <SolidColorBrush x:Key="WindowCaptionBackground" Color="Transparent"/>
+                            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled" Color="Transparent"/>
+                            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#1F1F1F"/>
+                            <SolidColorBrush x:Key="AppBarBackgroundBrush" Color="#2D2D2D"/>
+                            <SolidColorBrush x:Key="AppBarSeparatorBrush" Color="#454545"/>
+                            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="#2D2D2D"/>
+                            <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="#454545"/>
+                            
+                            <!-- Brushes específicos para NavigationView -->
+                            <SolidColorBrush x:Key="NavigationViewTopPaneBackground" Color="#2D2D2D"/>
+                            <SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="#2D2D2D"/>
+                            <SolidColorBrush x:Key="NavigationViewItemForeground" Color="#FFFFFF"/>
+                            <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="#FFFFFF"/>
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+                    
+                    <!-- Estilos personalizados para os controles -->
+                    <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="FontSize" Value="16" />
+                        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+                    </Style>
+                    
+                    <Style x:Key="SmallTitleStyle" TargetType="TextBlock">
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+                    </Style>
+                    
+                    <Style x:Key="CaptionStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="Foreground" Value="{ThemeResource TextSecondaryBrush}" />
+                    </Style>
+                    
+                    <!-- Animações e transições -->
+                    <TransitionCollection x:Key="DefaultTransitionCollection">
+                        <EntranceThemeTransition />
+                    </TransitionCollection>
+                    
+                    <Thickness x:Key="DefaultMargin">16</Thickness>
+                    <CornerRadius x:Key="DefaultCornerRadius">8</CornerRadius>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">                    
-                    <BitmapImage x:Key="cafeteria" UriSource="ms-appx:///Assets/Images/cafeteria.png"/>
-                    <BitmapImage x:Key="chuva" UriSource="ms-appx:///Assets/Images/chuva.png"/>
-                    <BitmapImage x:Key="fogueira" UriSource="ms-appx:///Assets/Images/fogueira.png"/>
-                    <BitmapImage x:Key="lancha" UriSource="ms-appx:///Assets/Images/lancha.png"/>
-                    <BitmapImage x:Key="ondas" UriSource="ms-appx:///Assets/Images/ondas.png"/>
-                    <BitmapImage x:Key="passaros" UriSource="ms-appx:///Assets/Images/passaros.png"/>
-                    <BitmapImage x:Key="praia" UriSource="ms-appx:///Assets/Images/praia.png"/>
-                    <BitmapImage x:Key="trem" UriSource="ms-appx:///Assets/Images/trem.png"/>
-                    <BitmapImage x:Key="vento" UriSource="ms-appx:///Assets/Images/vento.png"/>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <BitmapImage x:Key="cafeteria" UriSource="ms-appx:///Assets/Images/cafeteria.png"/>
-                    <BitmapImage x:Key="chuva" UriSource="ms-appx:///Assets/Images/chuva.png"/>
-                    <BitmapImage x:Key="fogueira" UriSource="ms-appx:///Assets/Images/fogueira.png"/>
-                    <BitmapImage x:Key="lancha" UriSource="ms-appx:///Assets/Images/lancha.png"/>
-                    <BitmapImage x:Key="ondas" UriSource="ms-appx:///Assets/Images/ondas.png"/>
-                    <BitmapImage x:Key="passaros" UriSource="ms-appx:///Assets/Images/passaros.png"/>
-                    <BitmapImage x:Key="praia" UriSource="ms-appx:///Assets/Images/praia.png"/>
-                    <BitmapImage x:Key="trem" UriSource="ms-appx:///Assets/Images/trem.png"/>
-                    <BitmapImage x:Key="vento" UriSource="ms-appx:///Assets/Images/vento.png"/>                    
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Dark">
-                    <BitmapImage x:Key="cafeteria" UriSource="ms-appx:///Assets/Images/cafeteria-light.png"/>
-                    <BitmapImage x:Key="chuva" UriSource="ms-appx:///Assets/Images/chuva-light.png"/>
-                    <BitmapImage x:Key="fogueira" UriSource="ms-appx:///Assets/Images/fogueira-light.png"/>
-                    <BitmapImage x:Key="lancha" UriSource="ms-appx:///Assets/Images/lancha-light.png"/>
-                    <BitmapImage x:Key="ondas" UriSource="ms-appx:///Assets/Images/ondas-light.png"/>
-                    <BitmapImage x:Key="passaros" UriSource="ms-appx:///Assets/Images/passaros-light.png"/>
-                    <BitmapImage x:Key="praia" UriSource="ms-appx:///Assets/Images/praia-light.png"/>
-                    <BitmapImage x:Key="trem" UriSource="ms-appx:///Assets/Images/trem-light.png"/>
-                    <BitmapImage x:Key="vento" UriSource="ms-appx:///Assets/Images/vento-light.png"/>                    
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

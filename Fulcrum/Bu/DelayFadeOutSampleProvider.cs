@@ -1,156 +1,111 @@
 ﻿using NAudio.Wave;
+using System;
 
-namespace Fulcrum.Bu
+namespace Fulcrum.Bu;
+
+/// <summary>
+/// Fornecedor de amostras de áudio que implementa efeito de fade out com atraso
+/// </summary>
+public class DelayFadeOutSampleProvider : ISampleProvider
 {
-    public class DelayFadeOutSampleProvider : ISampleProvider
+    private readonly ISampleProvider _source;
+    private int _fadeSamplePosition;
+    private int _fadeSampleCount;
+    private int _delaySampleCount;
+    private bool _fadingOut;
+    private readonly object _lockObject = new();
+
+    /// <summary>
+    /// Inicializa uma nova instância da classe DelayFadeOutSampleProvider
+    /// </summary>
+    /// <param name="source">Fonte de amostras de áudio</param>
+    public DelayFadeOutSampleProvider(ISampleProvider source)
     {
-        public WaveFormat WaveFormat
+        _source = source;
+        WaveFormat = source.WaveFormat;
+    }
+
+    /// <summary>
+    /// Obtém o formato de onda do áudio
+    /// </summary>
+    public WaveFormat WaveFormat { get; }
+
+    /// <summary>
+    /// Inicia o processo de fade out após um atraso especificado
+    /// </summary>
+    /// <param name="delayMs">Atraso em milissegundos antes do fade out começar</param>
+    /// <param name="fadeOutMs">Duração do fade out em milissegundos</param>
+    public void BeginFadeOut(int delayMs, int fadeOutMs)
+    {
+        lock (_lockObject)
         {
-            get { return source.WaveFormat; }
+            // Calcular quantas amostras duram o atraso
+            _delaySampleCount = (int)(WaveFormat.SampleRate * delayMs / 1000.0);
+            
+            // Calcular quantas amostras duram o fade out
+            _fadeSampleCount = (int)(WaveFormat.SampleRate * fadeOutMs / 1000.0);
+            
+            // Resetar a posição para indicar que estamos começando o atraso
+            _fadeSamplePosition = -_delaySampleCount;
+            
+            // Indicar que estamos entrando no processo de fade out
+            _fadingOut = true;
         }
+    }
 
-        public int Read(float[] buffer, int offset, int count)
+    /// <summary>
+    /// Lê amostras do provedor de origem e aplica o efeito de fade out conforme configurado
+    /// </summary>
+    /// <param name="buffer">Buffer para receber as amostras</param>
+    /// <param name="offset">Deslocamento inicial no buffer</param>
+    /// <param name="count">Número de amostras a serem lidas</param>
+    /// <returns>Número de amostras lidas</returns>
+    public int Read(float[] buffer, int offset, int count)
+    {
+        // Ler amostras da fonte
+        int sourceSamplesRead = _source.Read(buffer, offset, count);
+
+        lock (_lockObject)
         {
-            int sourceSamplesRead = source.Read(buffer, offset, count);
-
-            lock (lockObject)
+            if (_fadingOut)
             {
-                if (fadeOutDelaySamples > 0)
+                // Processar as amostras aplicando o efeito de fade out
+                for (int n = 0; n < sourceSamplesRead; n++)
                 {
-                    int oldFadeOutDelayPos = fadeOutDelayPosition;
-                    fadeOutDelayPosition += sourceSamplesRead / WaveFormat.Channels;
-                    if (fadeOutDelayPosition > fadeOutDelaySamples)
+                    // Incrementar a posição atual
+                    _fadeSamplePosition++;
+                    
+                    // Se ainda estamos na fase de atraso, não modificar o som
+                    if (_fadeSamplePosition < 0)
+                        continue;
+                        
+                    // Se já passou o período de fade out, definir o volume para 0
+                    if (_fadeSamplePosition >= _fadeSampleCount)
                     {
-                        int normalSamples = (fadeOutDelaySamples - oldFadeOutDelayPos) * WaveFormat.Channels;
-                        int fadeOutSamples = (fadeOutDelayPosition - fadeOutDelaySamples) * WaveFormat.Channels;
-                        // apply the fade-out only to the samples after fadeOutDelayPosition
-                        FadeOut(buffer, offset + normalSamples, fadeOutSamples);
-
-                        fadeOutDelaySamples = 0;
-                        fadeState = FadeState.FadingOut;
-                        return sourceSamplesRead;
+                        buffer[offset + n] = 0f;
+                    }
+                    // Durante o fade out, aplicar uma transição gradual do volume
+                    else
+                    {
+                        // Calcular o fator de escala para o fade out
+                        float fadeOutFactor = 1.0f - (_fadeSamplePosition / (float)_fadeSampleCount);
+                        buffer[offset + n] *= fadeOutFactor;
                     }
                 }
-                if (fadeState == FadeState.FadingIn)
-                {
-                    FadeIn(buffer, offset, sourceSamplesRead);
-                }
-                else if (fadeState == FadeState.FadingOut)
-                {
-                    FadeOut(buffer, offset, sourceSamplesRead);
-                }
-                else if (fadeState == FadeState.Silence)
-                {
-                    ClearBuffer(buffer, offset, count);
-                }
-            }
-            return sourceSamplesRead;
-        }
-        enum FadeState
-        {
-            Silence,
-            FadingIn,
-            FullVolume,
-            FadingOut,
-        }
-
-        private readonly object lockObject = new object();
-        private readonly ISampleProvider source;
-        private int fadeSamplePosition;
-        private int fadeSampleCount;
-        private int fadeOutDelaySamples;
-        private int fadeOutDelayPosition;
-        private FadeState fadeState;
-
-        /// <summary>
-        /// Creates a new FadeInOutSampleProvider
-        /// </summary>
-        /// <param name="source">The source stream with the audio to be faded in or out</param>
-        /// <param name="initiallySilent">If true, we start faded out</param>
-        public DelayFadeOutSampleProvider(ISampleProvider source, bool initiallySilent = false)
-        {
-            this.source = source;
-            this.fadeState = initiallySilent ? FadeState.Silence : FadeState.FullVolume;
-        }
-
-        /// <summary>
-        /// Requests that a fade-in begins (will start on the next call to Read)
-        /// </summary>
-        /// <param name="fadeDurationInMilliseconds">Duration of fade in milliseconds</param>
-        public void BeginFadeIn(double fadeDurationInMilliseconds)
-        {
-            lock (lockObject)
-            {
-                fadeSamplePosition = 0;
-                fadeSampleCount = (int)((fadeDurationInMilliseconds * source.WaveFormat.SampleRate) / 1000);
-                fadeState = FadeState.FadingIn;
             }
         }
 
-        /// <summary>
-        /// Requests that a fade-out begins (will start on the next call to Read)
-        /// </summary>
-        /// <param name="fadeDurationInMilliseconds">Duration of fade in milliseconds</param>
-        public void BeginFadeOut(double fadeAfterMilliseconds, double fadeDurationInMilliseconds)
-        {
-            lock (lockObject)
-            {
-                fadeSamplePosition = 0;
-                fadeSampleCount = (int)((fadeDurationInMilliseconds * source.WaveFormat.SampleRate) / 1000);
-                fadeOutDelaySamples = (int)((fadeAfterMilliseconds * source.WaveFormat.SampleRate) / 1000);
-                fadeOutDelayPosition = 0;
+        return sourceSamplesRead;
+    }
 
-                //fadeState = FadeState.FadingOut;
-            }
-        }
-        private static void ClearBuffer(float[] buffer, int offset, int count)
+    /// <summary>
+    /// Cancela o fade out em andamento
+    /// </summary>
+    public void CancelFadeOut()
+    {
+        lock (_lockObject)
         {
-            for (int n = 0; n < count; n++)
-            {
-                buffer[n + offset] = 0;
-            }
+            _fadingOut = false;
         }
-
-        private void FadeOut(float[] buffer, int offset, int sourceSamplesRead)
-        {
-            int sample = 0;
-            while (sample < sourceSamplesRead)
-            {
-                float multiplier = 1.0f - (fadeSamplePosition / (float)fadeSampleCount);
-                for (int ch = 0; ch < source.WaveFormat.Channels; ch++)
-                {
-                    buffer[offset + sample++] *= multiplier;
-                }
-                fadeSamplePosition++;
-                if (fadeSamplePosition > fadeSampleCount)
-                {
-                    fadeState = FadeState.Silence;
-                    // clear out the end
-                    ClearBuffer(buffer, sample + offset, sourceSamplesRead - sample);
-                    break;
-                }
-            }
-        }
-
-        private void FadeIn(float[] buffer, int offset, int sourceSamplesRead)
-        {
-            int sample = 0;
-            while (sample < sourceSamplesRead)
-            {
-                float multiplier = (fadeSamplePosition / (float)fadeSampleCount);
-                for (int ch = 0; ch < source.WaveFormat.Channels; ch++)
-                {
-                    buffer[offset + sample++] *= multiplier;
-                }
-                fadeSamplePosition++;
-                if (fadeSamplePosition > fadeSampleCount)
-                {
-                    fadeState = FadeState.FullVolume;
-                    // no need to multiply any more
-                    break;
-                }
-            }
-        }
-
     }
 }

@@ -1,58 +1,128 @@
 using Fulcrum.View;
-using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Data;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Windowing;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Microsoft.UI;
+using WinRT.Interop;
+using Microsoft.UI.Xaml.Media.Animation;
+using Windows.Storage; // Adicionado para o ApplicationDataContainer
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+namespace Fulcrum;
 
-namespace Fulcrum
+/// <summary>
+/// Janela principal do aplicativo
+/// </summary>
+public sealed partial class MainWindow : Window
 {
+    // Armazenamento local para as configurações
+    private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
+
     /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
+    /// Inicializa uma nova instância da classe MainWindow
     /// </summary>
-    public sealed partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            this.InitializeComponent();
-            this.AppWindow.MoveAndResize(new Windows.Graphics.RectInt32(700, 130, 390, 700));
-            SystemBackdrop = new MicaBackdrop() { Kind = MicaKind.BaseAlt };
-            SetTitleBar(AppTitleBar);
-        }
+        this.InitializeComponent();
+        this.Title = "Fulcrum - Sons Ambientes";
 
-        private void NavigationView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        // Configura a barra de título personalizada
+        ExtendsContentIntoTitleBar = true;
+        SetTitleBar(AppTitleBar);
+
+        // Registra manipuladores de evento após a inicialização
+        this.Activated += MainWindow_Activated;
+
+        // Configura a navegação inicial
+        ConfigureNavigation();
+
+        // Aplica o tema escolhido pelo usuário
+        AplicarTema();
+    }
+
+    /// <summary>
+    /// Manipulador do evento ativado da janela
+    /// </summary>
+    private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        // Ajusta a opacidade da barra de título quando a janela estiver ativa/inativa
+        if (args.WindowActivationState == WindowActivationState.Deactivated)
         {
-            FrameNavigationOptions navOptions = new FrameNavigationOptions();
-            navOptions.TransitionInfoOverride = args.RecommendedNavigationTransitionInfo;
-            if (sender.PaneDisplayMode == NavigationViewPaneDisplayMode.Top)
+            AppTitleBar.Opacity = 0.8;
+        }
+        else
+        {
+            AppTitleBar.Opacity = 1.0;
+        }
+    }
+
+    /// <summary>
+    /// Aplica o tema escolhido pelo usuário
+    /// </summary>
+    private void AplicarTema()
+    {
+        // Obtém o tema das configurações
+        var tema = _localSettings.Values["TemaAppSelecionado"] as string ?? "Default";
+
+        // Define o tema da aplicação
+        if (Content is FrameworkElement rootElement)
+        {
+            rootElement.RequestedTheme = tema switch
             {
-                navOptions.IsNavigationStackEnabled = false;
+                "Light" => ElementTheme.Light,
+                "Dark" => ElementTheme.Dark,
+                _ => ElementTheme.Default
+            };
+        }
+    }
+
+    /// <summary>
+    /// Configura a navegação inicial para a página inicial (HomePage)
+    /// </summary>
+    private void ConfigureNavigation()
+    {
+        // Navega para a página inicial
+        contentFrame.Navigate(typeof(HomePage), null, new EntranceNavigationTransitionInfo());
+    }
+
+    /// <summary>
+    /// Manipula a mudança de seleção na barra de navegação
+    /// </summary>
+    private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+    {
+        if (args.IsSettingsSelected)
+        {
+            // Navega para a página de configurações
+            contentFrame.Navigate(typeof(SettingsPage), null, new SlideNavigationTransitionInfo());
+        }
+        else if (args.SelectedItem is NavigationViewItem selectedItem)
+        {
+            // Identifica a página selecionada com base na tag
+            Type? pageType = null;
+
+            // Usa a tag para determinar a página de destino
+            var tag = selectedItem.Tag as string;
+            if (tag == "HomeSelected")
+            {
+                pageType = typeof(HomePage);
             }
 
-            var selectedItem = (NavigationViewItem)args.SelectedItem;
-            switch (selectedItem.Tag.ToString())
+            // Navega para a página selecionada se foi identificada
+            if (pageType != null && contentFrame.CurrentSourcePageType != pageType)
             {
-                case "HomeSelected":
-                    {
-                        Type pageType = typeof(HomePage);
-                        _ = contentFrame.Navigate(pageType);
-                        break;
-                    }
-
-                default:
-                    {
-                        Type pageType = typeof(SettingsPage);
-                        _ = contentFrame.Navigate(pageType);
-                        break;
-                    }
+                contentFrame.Navigate(pageType, null, new SlideNavigationTransitionInfo());
             }
-
-
         }
-
     }
 }

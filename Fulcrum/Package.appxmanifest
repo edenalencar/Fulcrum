@@ -2,20 +2,17 @@
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="61699denAlencar.FulcrumAppOfficial"
+    Name="61699denAlencar.FulcrumApp"
     Publisher="CN=26939AD8-50B0-4A8B-9C77-451CFC0ED859"
-    Version="1.0.1.0" />
-
-  <mp:PhoneIdentity PhoneProductId="06c35c0f-f37b-433f-9d95-fded38d46f65" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+    Version="1.0.5.0" />
 
   <Properties>
-    <DisplayName>Fulcrum App Official</DisplayName>
+    <DisplayName>Fulcrum App</DisplayName>
     <PublisherDisplayName>Éden Alencar</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -34,22 +31,17 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Fulcrum App Official"
-        Description="Fulcrum"
+        DisplayName="Fulcrum App"
+        Description="Aplicativo de sons ambientes para relaxamento e concentração"
+        BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png" BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  ShortName="Fulcrum" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo"/>
-            <uap:ShowOn Tile="wide310x150Logo"/>
-            <uap:ShowOn Tile="square310x310Logo"/>
-          </uap:ShowNameOnTiles>
-        </uap:DefaultTile >
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
-        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
       </uap:VisualElements>
     </Application>
-  </Applications> 
+  </Applications>
+
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
