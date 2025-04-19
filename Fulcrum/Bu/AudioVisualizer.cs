@@ -61,7 +61,7 @@ public class AudioVisualizer
     /// <summary>
     /// Manipulador de evento para atualizar a visualização da onda
     /// </summary>
-    private void UpdateTimer_Tick(object sender, object e)
+    private void UpdateTimer_Tick(object? sender, object e)
     {
         UpdateWaveform();
     }

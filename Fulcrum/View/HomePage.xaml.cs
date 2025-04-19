@@ -15,14 +15,28 @@ namespace Fulcrum.View;
 /// </summary>
 public sealed partial class HomePage : Page
 {
+    private bool _isInitialized = false;
+
     /// <summary>
     /// Inicializa uma nova instância da classe HomePage
     /// </summary>
     public HomePage()
     {
         this.InitializeComponent();
-        InitializeAudioPlayers();
+        
+        // Se já existirem reprodutores, não inicializa novamente
+        if (AudioManager.Instance.GetQuantidadeReprodutor > 0)
+        {
+            _isInitialized = true;
+        }
+        else
+        {
+            InitializeAudioPlayers();
+            _isInitialized = true;
+        }
+        
         Loaded += HomePage_Loaded;
+        Unloaded += HomePage_Unloaded;
     }
 
     /// <summary>
@@ -35,6 +49,21 @@ public sealed partial class HomePage : Page
         
         // Configura os visualizadores de áudio
         ConfigureWaveformVisualizers();
+        
+        // Sincroniza os valores dos sliders com os valores dos reprodutores
+        if (_isInitialized)
+        {
+            SyncSliderValues();
+        }
+    }
+    
+    /// <summary>
+    /// Manipula o evento de página descarregada
+    /// </summary>
+    private void HomePage_Unloaded(object sender, RoutedEventArgs e)
+    {
+        // Salva o estado dos volumes antes de navegar para outra página
+        AudioManager.Instance.SalvarEstadoVolumes();
     }
 
     /// <summary>
@@ -115,6 +144,52 @@ public sealed partial class HomePage : Page
     }
 
     /// <summary>
+    /// Sincroniza os valores dos sliders com os valores atuais dos reprodutores
+    /// </summary>
+    private void SyncSliderValues()
+    {
+        try
+        {
+            // Sincroniza cada slider com o volume atual do reprodutor correspondente
+            SyncSliderValue(Constantes.Sons.Chuva, FindName("chuva") as Slider);
+            SyncSliderValue(Constantes.Sons.Fogueira, FindName("fogueira") as Slider);
+            SyncSliderValue(Constantes.Sons.Lancha, FindName("lancha") as Slider);
+            SyncSliderValue(Constantes.Sons.Ondas, FindName("ondas") as Slider);
+            SyncSliderValue(Constantes.Sons.Passaros, FindName("passaros") as Slider);
+            SyncSliderValue(Constantes.Sons.Praia, FindName("praia") as Slider);
+            SyncSliderValue(Constantes.Sons.Trem, FindName("trem") as Slider);
+            SyncSliderValue(Constantes.Sons.Ventos, FindName("ventos") as Slider);
+            SyncSliderValue(Constantes.Sons.Cafeteria, FindName("cafeteria") as Slider);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao sincronizar sliders: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Sincroniza um slider específico com o volume atual do reprodutor
+    /// </summary>
+    private void SyncSliderValue(string soundId, Slider slider)
+    {
+        try
+        {
+            if (slider == null)
+            {
+                System.Diagnostics.Debug.WriteLine($"Slider para {soundId} não encontrado");
+                return;
+            }
+            
+            var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
+            slider.Value = reprodutor.Reader.Volume;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao sincronizar slider para {soundId}: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// Evento de mudança de valor do controle deslizante (slider)
     /// </summary>
     private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -163,7 +238,6 @@ public sealed partial class HomePage : Page
         }
         catch (Exception ex)
         {
-            // Log de erro ou exibir mensagem para o usuário
             System.Diagnostics.Debug.WriteLine($"Erro ao pausar: {ex.Message}");
         }
     }
