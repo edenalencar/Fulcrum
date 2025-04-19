@@ -1,4 +1,4 @@
-name: .NET 6 WinUI 3 CI
+name: .NET 8 WinUI 3 CI
 
 on:
   push:
@@ -12,22 +12,27 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '8.0.x'
+
+    - name: Setup Windows App SDK
+      uses: microsoft/setup-windows-sdk-action@v1
+      with:
+        sdk-version: 1.4.231219000
 
     - name: Add NuGet package source
       run: |
-        nuget sources Add -Name "CommunityToolkit-Labs" -Source "https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-Labs/nuget/v3/index.json"
+        nuget sources Add -Name "CommunityToolkit-WinUI" -Source "https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-WinUI/nuget/v3/index.json"
 
     - name: Restore dependencies
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration Release
 
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal --configuration Release
