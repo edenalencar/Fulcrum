@@ -45,6 +45,21 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
             new EqualizerBand(8000, 1.0f, 0, "Alta")
         };
         Equalizer = new EqualizadorAudio(_source, bands);
+        
+        // Inicializa os provedores de efeitos
+        _reverbProvider = new ReverbSampleProvider(_source);
+        _pitchProvider = new PitchShiftingSampleProvider(_source);
+        _echoProvider = new EchoSampleProvider(_source);
+        _flangerProvider = new FlangerSampleProvider(_source);
+        
+        // Aplica as configurações iniciais aos provedores
+        _reverbProvider.ReverbMix = _reverbMix;
+        _reverbProvider.ReverbTime = _reverbTime;
+        _pitchProvider.PitchFactor = _pitchFactor;
+        _echoProvider.Delay = _echoDelay;
+        _echoProvider.Mix = _echoMix;
+        _flangerProvider.Rate = _flangerRate;
+        _flangerProvider.Depth = _flangerDepth;
     }
 
     /// <summary>

@@ -230,32 +230,50 @@ public sealed partial class HomePage : Page
             var reprodutores = AudioManager.Instance.GetListReprodutores();
             
             // Sincroniza apenas sliders cujos reprodutores existem
-            if (reprodutores.ContainsKey(Constantes.Sons.Chuva))
-                SyncSliderValue(Constantes.Sons.Chuva, FindName("chuva") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Chuva)) {
+                var slider = FindName("chuva") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Chuva, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Fogueira))
-                SyncSliderValue(Constantes.Sons.Fogueira, FindName("fogueira") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Fogueira)) {
+                var slider = FindName("fogueira") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Fogueira, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Lancha))
-                SyncSliderValue(Constantes.Sons.Lancha, FindName("lancha") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Lancha)) {
+                var slider = FindName("lancha") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Lancha, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Ondas))
-                SyncSliderValue(Constantes.Sons.Ondas, FindName("ondas") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Ondas)) {
+                var slider = FindName("ondas") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Ondas, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Passaros))
-                SyncSliderValue(Constantes.Sons.Passaros, FindName("passaros") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Passaros)) {
+                var slider = FindName("passaros") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Passaros, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Praia))
-                SyncSliderValue(Constantes.Sons.Praia, FindName("praia") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Praia)) {
+                var slider = FindName("praia") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Praia, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Trem))
-                SyncSliderValue(Constantes.Sons.Trem, FindName("trem") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Trem)) {
+                var slider = FindName("trem") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Trem, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Ventos))
-                SyncSliderValue(Constantes.Sons.Ventos, FindName("ventos") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Ventos)) {
+                var slider = FindName("ventos") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Ventos, slider);
+            }
                 
-            if (reprodutores.ContainsKey(Constantes.Sons.Cafeteria))
-                SyncSliderValue(Constantes.Sons.Cafeteria, FindName("cafeteria") as Slider);
+            if (reprodutores.ContainsKey(Constantes.Sons.Cafeteria)) {
+                var slider = FindName("cafeteria") as Slider;
+                if (slider != null) SyncSliderValue(Constantes.Sons.Cafeteria, slider);
+            }
         }
         catch (Exception ex)
         {
@@ -345,7 +363,7 @@ public sealed partial class HomePage : Page
     /// <summary>
     /// Atualiza o temporizador de exibição a cada 10 segundos
     /// </summary>
-    private void SleepTimerDisplayUpdateTimer_Tick(object sender, object e)
+    private void SleepTimerDisplayUpdateTimer_Tick(object? sender, object e)
     {
         UpdateTimerDisplay();
     }
@@ -353,7 +371,7 @@ public sealed partial class HomePage : Page
     /// <summary>
     /// Evento chamado quando o temporizador de sono é iniciado
     /// </summary>
-    private void SleepTimer_TimerStarted(object sender, EventArgs e)
+    private void SleepTimer_TimerStarted(object? sender, EventArgs e)
     {
         _sleepTimerDisplayUpdateTimer.Start();
         UpdateTimerDisplay();
@@ -362,7 +380,7 @@ public sealed partial class HomePage : Page
     /// <summary>
     /// Evento chamado quando o temporizador de sono é cancelado
     /// </summary>
-    private void SleepTimer_TimerCancelled(object sender, EventArgs e)
+    private void SleepTimer_TimerCancelled(object? sender, EventArgs e)
     {
         _sleepTimerDisplayUpdateTimer.Stop();
         UpdateTimerDisplay();
@@ -371,7 +389,7 @@ public sealed partial class HomePage : Page
     /// <summary>
     /// Evento chamado quando o temporizador de sono é completado
     /// </summary>
-    private void SleepTimer_TimerCompleted(object sender, EventArgs e)
+    private void SleepTimer_TimerCompleted(object? sender, EventArgs e)
     {
         _sleepTimerDisplayUpdateTimer.Stop();
         UpdateTimerDisplay();
@@ -412,7 +430,7 @@ public sealed partial class HomePage : Page
     /// <summary>
     /// Evento chamado quando o temporizador de sono é atualizado
     /// </summary>
-    private void SleepTimer_TimerUpdated(object sender, int remainingMinutes)
+    private void SleepTimer_TimerUpdated(object? sender, int remainingMinutes)
     {
         UpdateTimerDisplay();
     }
@@ -498,7 +516,9 @@ public sealed partial class HomePage : Page
             dialog.Content = panel;
 
             var result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary)
+            
+            // Corrigido: verifica se comboBox não é nulo e se tem um item selecionado
+            if (result == ContentDialogResult.Primary && comboBox != null && comboBox.SelectedIndex >= 0)
             {
                 // Converter a seleção em minutos
                 int minutes = GetMinutesFromSelection(comboBox.SelectedIndex);

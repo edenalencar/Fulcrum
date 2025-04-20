@@ -15,7 +15,7 @@ public static class AudioFileValidator
     /// </summary>
     /// <param name="filePath">Caminho completo para o arquivo</param>
     /// <returns>True se o arquivo for válido, false caso contrário</returns>
-    public static (bool isValid, string message, WaveFormat format) ValidateWavFile(string filePath)
+    public static (bool isValid, string message, WaveFormat? format) ValidateWavFile(string filePath)
     {
         if (!File.Exists(filePath))
         {
@@ -188,8 +188,14 @@ public static class AudioFileValidator
             }
             else
             {
+                string? directoryName = Path.GetDirectoryName(file);
+                if (directoryName == null)
+                {
+                    directoryName = Directory.GetCurrentDirectory();
+                }
+                
                 string repairPath = Path.Combine(
-                    Path.GetDirectoryName(file),
+                    directoryName,
                     Path.GetFileNameWithoutExtension(file) + "_repaired" + Path.GetExtension(file)
                 );
                 

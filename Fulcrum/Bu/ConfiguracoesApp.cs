@@ -56,14 +56,15 @@ public static class ConfiguracoesApp
     /// <summary>
     /// Carrega as configurações de equalização do armazenamento local
     /// </summary>
-    /// <returns>Dicionário com configurações de equalização ou null se não existir</returns>
+    /// <returns>Dicionário com configurações de equalização</returns>
     public static Dictionary<string, float[]> CarregarConfiguracoesEqualizer()
     {
         try
         {
             if (_localSettings.Values.TryGetValue(EqualizerSettingsKey, out var jsonData) && jsonData is string jsonString)
             {
-                return JsonSerializer.Deserialize<Dictionary<string, float[]>>(jsonString);
+                var result = JsonSerializer.Deserialize<Dictionary<string, float[]>>(jsonString);
+                return result ?? new Dictionary<string, float[]>();
             }
         }
         catch (Exception ex)
@@ -77,14 +78,15 @@ public static class ConfiguracoesApp
     /// <summary>
     /// Carrega as configurações de efeitos do armazenamento local
     /// </summary>
-    /// <returns>Dicionário com configurações de efeitos ou null se não existir</returns>
+    /// <returns>Dicionário com configurações de efeitos</returns>
     public static Dictionary<string, EffectSettings> CarregarConfiguracoesEfeitos()
     {
         try
         {
             if (_localSettings.Values.TryGetValue(EffectSettingsKey, out var jsonData) && jsonData is string jsonString)
             {
-                return JsonSerializer.Deserialize<Dictionary<string, EffectSettings>>(jsonString);
+                var result = JsonSerializer.Deserialize<Dictionary<string, EffectSettings>>(jsonString);
+                return result ?? new Dictionary<string, EffectSettings>();
             }
         }
         catch (Exception ex)

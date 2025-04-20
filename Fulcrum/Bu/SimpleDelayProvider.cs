@@ -9,7 +9,7 @@ namespace Fulcrum.Bu;
 public class SimpleDelayProvider : ISampleProvider
 {
     private readonly ISampleProvider _source;
-    private float[] _delayBuffer;
+    private float[]? _delayBuffer;
     private int _delayBufferPosition;
     private int _delayBufferLength;
     private float _delayMilliseconds = 250f;
@@ -85,6 +85,12 @@ public class SimpleDelayProvider : ISampleProvider
     /// </summary>
     public int Read(float[] buffer, int offset, int count)
     {
+        // Garante que o buffer de atraso esteja inicializado
+        if (_delayBuffer == null)
+        {
+            RecalcularBuffer();
+        }
+
         int samplesRead = _source.Read(buffer, offset, count);
 
         if (samplesRead > 0 && _mix > 0.001f) // Só aplica se o mix não for zero
@@ -98,7 +104,7 @@ public class SimpleDelayProvider : ISampleProvider
                 float originalSample = buffer[offset + i];
                 
                 // Obtém a amostra atrasada do buffer circular
-                float delaySample = _delayBuffer[_delayBufferPosition];
+                float delaySample = _delayBuffer![_delayBufferPosition];
                 
                 // Combina a amostra original com a amostra atrasada (com feedback)
                 _delayBuffer[_delayBufferPosition] = originalSample + (delaySample * _feedback);

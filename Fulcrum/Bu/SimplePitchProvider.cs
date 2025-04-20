@@ -10,7 +10,6 @@ public class SimplePitchProvider : ISampleProvider
 {
     private readonly ISampleProvider _source;
     private float _pitchFactor = 1.0f;
-    private float _sampleBuffer;
     private float _position;
     private float _previousSample;
 

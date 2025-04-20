@@ -101,7 +101,7 @@ public sealed partial class PerfisPage : Page
     /// <summary>
     /// Encontra um elemento filho dentro da árvore visual
     /// </summary>
-    private T FindVisualChild<T>(DependencyObject parent, string name) where T : DependencyObject
+    private T? FindVisualChild<T>(DependencyObject parent, string name) where T : DependencyObject
     {
         if (parent == null)
             return null;
@@ -325,7 +325,9 @@ public sealed partial class PerfisPage : Page
                 // Se era o perfil ativo, remove a referência
                 if (eraPerfilAtivo)
                 {
-                    GerenciadorPerfis.Instance.DefinirPerfilAtivo((PerfilSom)null);
+                    // Utiliza a sobrecarga que aceita PerfilSom explicitamente
+                    PerfilSom? perfilNulo = null;
+                    GerenciadorPerfis.Instance.DefinirPerfilAtivo(perfilNulo);
                     AtualizarPerfilAtivoUI();
                 }
                 

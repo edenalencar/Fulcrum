@@ -1,143 +1,77 @@
 using NAudio.Wave;
 using System;
-using System.Collections.Generic;
 
 namespace Fulcrum.Bu;
 
 /// <summary>
-/// Implementa um filtro de limpeza para remover anomalias e valores extremos no áudio
+/// Filtro de limpeza de áudio que remove artefatos e ruídos
 /// </summary>
 public class AudioCleanerFilter : ISampleProvider
 {
     private readonly ISampleProvider _source;
-    private readonly float _thresholdLevel;
-    private readonly int _medianFilterSize;
-    private readonly Queue<float> _medianFilterBuffer;
-    private readonly float[] _sortBuffer;
-    private float _lastValidSample = 0.0f;
-    private bool _useSmoothTransition = true;
-    private float _recoveryFactor = 0.1f;
-    private int _consecutiveExtremeValues = 0;
-    private readonly int _maxConsecutiveExtreme = 100;
-    private bool _isEnabled = true;
-    
+    private readonly float _threshold;
+    private readonly float _attackTime;
+    private readonly float _releaseTime;
+    private float _envelope;
+
     /// <summary>
     /// Inicializa uma nova instância do filtro de limpeza de áudio
     /// </summary>
-    /// <param name="source">Fonte de áudio a ser filtrada</param>
-    /// <param name="thresholdLevel">Limite para considerar uma amostra como anômala (padrão 10.0)</param>
-    /// <param name="medianFilterSize">Tamanho do filtro de mediana para suavização (padrão 5)</param>
-    public AudioCleanerFilter(ISampleProvider source, float thresholdLevel = 20.0f, int medianFilterSize = 5)
+    /// <param name="source">Fonte de áudio</param>
+    /// <param name="threshold">Limiar para detecção de ruído (0.0 a 1.0)</param>
+    /// <param name="attackTime">Tempo de ataque em milissegundos</param>
+    /// <param name="releaseTime">Tempo de liberação em milissegundos</param>
+    public AudioCleanerFilter(ISampleProvider source, float threshold = 0.1f, float attackTime = 10f, float releaseTime = 100f)
     {
-        _source = source ?? throw new ArgumentNullException(nameof(source));
-        _thresholdLevel = thresholdLevel;
-        _medianFilterSize = medianFilterSize;
-        _medianFilterBuffer = new Queue<float>(_medianFilterSize);
-        _sortBuffer = new float[_medianFilterSize];
-        
-        // Preenche o buffer inicial com zeros
-        for (int i = 0; i < _medianFilterSize; i++)
-        {
-            _medianFilterBuffer.Enqueue(0.0f);
-        }
-        
-        System.Diagnostics.Debug.WriteLine($"AudioCleanerFilter inicializado: Threshold={_thresholdLevel}, MedianFilterSize={_medianFilterSize}");
+        _source = source;
+        _threshold = Math.Clamp(threshold, 0.0f, 1.0f);
+        _attackTime = attackTime;
+        _releaseTime = releaseTime;
+        _envelope = 0.0f;
     }
 
     /// <summary>
-    /// Obtém ou define se o filtro está ativo
-    /// </summary>
-    public bool IsEnabled
-    {
-        get => _isEnabled;
-        set => _isEnabled = value;
-    }
-
-    /// <summary>
-    /// Obtém o formato de onda da fonte
+    /// Obtém o formato de onda
     /// </summary>
     public WaveFormat WaveFormat => _source.WaveFormat;
-    
-    /// <summary>
-    /// Calcula a mediana dos valores no buffer
-    /// </summary>
-    private float CalculateMedian()
-    {
-        _medianFilterBuffer.CopyTo(_sortBuffer, 0);
-        Array.Sort(_sortBuffer);
-        return _sortBuffer[_medianFilterSize / 2];
-    }
 
     /// <summary>
-    /// Lê amostras da fonte e aplica o filtro de limpeza
+    /// Lê amostras de áudio e aplica a limpeza
     /// </summary>
     public int Read(float[] buffer, int offset, int count)
     {
-        // Lê amostras da fonte
         int samplesRead = _source.Read(buffer, offset, count);
-
-        if (samplesRead <= 0 || !_isEnabled)
-            return samplesRead;
-
-        // Processa cada amostra
-        for (int i = 0; i < samplesRead; i++)
+        
+        if (samplesRead > 0)
         {
-            float sample = buffer[offset + i];
-            float absSample = Math.Abs(sample);
+            // Calcula as constantes de tempo baseadas na taxa de amostragem
+            float attackCoeff = (float)Math.Exp(-1.0 / (_attackTime * 0.001f * WaveFormat.SampleRate));
+            float releaseCoeff = (float)Math.Exp(-1.0 / (_releaseTime * 0.001f * WaveFormat.SampleRate));
             
-            // Verifica se a amostra é anômala (muito acima do limiar)
-            if (absSample > _thresholdLevel)
+            // Processa cada amostra
+            for (int i = 0; i < samplesRead; i++)
             {
-                // Incrementa contador de valores extremos consecutivos
-                _consecutiveExtremeValues++;
+                float input = buffer[offset + i];
+                float inputAbs = Math.Abs(input);
                 
-                if (_consecutiveExtremeValues > _maxConsecutiveExtreme)
+                // Atualiza o envelope seguidor
+                if (inputAbs > _envelope)
                 {
-                    // Se houver muitos valores extremos consecutivos, é uma corrução prolongada
-                    // Reduzimos a amostra mas não silenciamos completamente
-                    float sign = Math.Sign(sample);
-                    buffer[offset + i] = sign * (_thresholdLevel * 0.9f);
-                    
-                    // Registra a ocorrência apenas periodicamente para não sobrecarregar o log
-                    if (_consecutiveExtremeValues % 1000 == 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Corrução prolongada detectada: {_consecutiveExtremeValues} amostras consecutivas acima do limite.");
-                    }
+                    _envelope = attackCoeff * _envelope + (1 - attackCoeff) * inputAbs;
                 }
                 else
                 {
-                    if (_useSmoothTransition)
-                    {
-                        // Não substituímos completamente, apenas limitamos a um valor máximo
-                        // preservando o sinal original para manter características do áudio
-                        float sign = Math.Sign(sample);
-                        buffer[offset + i] = sign * Math.Min(absSample, _thresholdLevel * 0.9f);
-                    }
-                    else
-                    {
-                        // Alternativa: substitui pela mediana dos valores recentes
-                        buffer[offset + i] = CalculateMedian();
-                    }
-                    
-                    // Registra a substituição (limitado para não sobrecarregar o log)
-                    if (_consecutiveExtremeValues == 1 || _consecutiveExtremeValues % 1000 == 0)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Amostra anômala corrigida: {sample} limitada para {buffer[offset + i]}");
-                    }
+                    _envelope = releaseCoeff * _envelope + (1 - releaseCoeff) * inputAbs;
+                }
+                
+                // Aplica o gate baseado no envelope e threshold
+                if (_envelope < _threshold)
+                {
+                    buffer[offset + i] = 0.0f; // Silencia amostras abaixo do threshold
                 }
             }
-            else
-            {
-                // Amostra dentro dos limites normais
-                _lastValidSample = sample;
-                _consecutiveExtremeValues = 0;
-            }
-            
-            // Atualiza o buffer do filtro de mediana
-            _medianFilterBuffer.Dequeue();
-            _medianFilterBuffer.Enqueue(buffer[offset + i]);
         }
-
+        
         return samplesRead;
     }
 }

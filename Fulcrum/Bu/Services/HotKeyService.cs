@@ -19,7 +19,7 @@ namespace Fulcrum.Bu.Services
         private readonly Dictionary<int, Action> _registeredHotKeys = new();
         private int _currentId = 1;
         private bool _isDisposed = false;
-        private Microsoft.UI.Dispatching.DispatcherQueue _dispatcherQueue;
+        private Microsoft.UI.Dispatching.DispatcherQueue? _dispatcherQueue;
 
         // Constantes para modificadores
         private const uint MOD_ALT = 0x0001;
@@ -112,11 +112,11 @@ namespace Fulcrum.Bu.Services
             if (msg == WM_HOTKEY)
             {
                 int id = wParam.ToInt32();
-                if (_registeredHotKeys.TryGetValue(id, out var action))
+                if (_registeredHotKeys.TryGetValue(id, out var action) && action != null && _dispatcherQueue != null)
                 {
                     // Executar a ação na thread da UI
                     _dispatcherQueue.TryEnqueue(() => {
-                        action?.Invoke();
+                        action.Invoke();
                     });
                     return true;
                 }

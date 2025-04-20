@@ -9,13 +9,13 @@ namespace Fulcrum.Bu;
 public class SimpleReverbProvider : ISampleProvider
 {
     private readonly ISampleProvider _source;
-    private float[] _reverbBuffer;
+    private float[]? _reverbBuffer;
     private int _bufferPosition;
     private int _bufferLength;
     private float _decayTime = 1.0f;
     private float _mix = 0.3f;
-    private float[] _tapDelays;
-    private float[] _tapGains;
+    private float[]? _tapDelays;
+    private float[]? _tapGains;
 
     /// <summary>
     /// Inicializa uma nova instância do provedor de reverberação
@@ -100,6 +100,20 @@ public class SimpleReverbProvider : ISampleProvider
     /// </summary>
     public int Read(float[] buffer, int offset, int count)
     {
+        // Garante que os buffers estão inicializados
+        if (_reverbBuffer == null || _tapDelays == null || _tapGains == null)
+        {
+            RecalcularBuffer();
+            ConfigurarTaps();
+        }
+
+        // Verifique novamente se os buffers foram inicializados corretamente
+        if (_reverbBuffer == null || _tapDelays == null || _tapGains == null)
+        {
+            // Se não conseguiu inicializar, apenas passa o áudio sem processamento
+            return _source.Read(buffer, offset, count);
+        }
+
         int samplesRead = _source.Read(buffer, offset, count);
 
         if (samplesRead > 0 && _mix > 0.001f) // Só aplica se o mix não for zero
@@ -113,19 +127,24 @@ public class SimpleReverbProvider : ISampleProvider
                 float originalSample = buffer[offset + i];
                 float reverbSample = 0;
                 
+                // Referências locais para evitar verificações de nulidade repetidas
+                var tapDelays = _tapDelays;
+                var tapGains = _tapGains;
+                var reverbBuffer = _reverbBuffer;
+                
                 // Soma as contribuições de cada tap
-                for (int tapIndex = 0; tapIndex < _tapDelays.Length; tapIndex++)
+                for (int tapIndex = 0; tapIndex < tapDelays.Length; tapIndex++)
                 {
                     // Calcula a posição do tap no buffer circular
-                    int tapPosition = (_bufferPosition - (int)_tapDelays[tapIndex]);
+                    int tapPosition = (_bufferPosition - (int)tapDelays[tapIndex]);
                     if (tapPosition < 0) tapPosition += _bufferLength;
                     
                     // Adiciona a contribuição deste tap
-                    reverbSample += _reverbBuffer[tapPosition] * _tapGains[tapIndex] * (_decayTime / 1.0f);
+                    reverbSample += reverbBuffer[tapPosition] * tapGains[tapIndex] * (_decayTime / 1.0f);
                 }
                 
                 // Armazena a amostra original + feedback no buffer de reverberação
-                _reverbBuffer[_bufferPosition] = originalSample + (reverbSample * 0.4f); // 40% feedback
+                reverbBuffer[_bufferPosition] = originalSample + (reverbSample * 0.4f); // 40% feedback
                 
                 // Avança a posição no buffer circular
                 _bufferPosition = (_bufferPosition + 1) % _bufferLength;

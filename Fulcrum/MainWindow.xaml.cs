@@ -28,13 +28,13 @@ namespace Fulcrum;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
-    private AppWindow _appWindow;
+    private AppWindow? _appWindow;
     private AppHotKeyManager _hotKeyManager;
     private IntPtr _windowHandle;
 
     // Para interceptar mensagens do Windows
     private delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-    private WndProc _newWndProc = null;
+    private WndProc _newWndProc;
     private IntPtr _oldWndProc = IntPtr.Zero;
 
     [DllImport("user32.dll")]

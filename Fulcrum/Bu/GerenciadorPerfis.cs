@@ -60,7 +60,7 @@ public class GerenciadorPerfis
     /// <summary>
     /// Obtém o perfil ativo atual ou null se nenhum perfil estiver ativo
     /// </summary>
-    public PerfilSom PerfilAtivo
+    public PerfilSom? PerfilAtivo
     {
         get
         {
@@ -92,7 +92,7 @@ public class GerenciadorPerfis
     /// Define o perfil ativo atual
     /// </summary>
     /// <param name="perfil">Perfil a ser definido como ativo</param>
-    public void DefinirPerfilAtivo(PerfilSom perfil)
+    public void DefinirPerfilAtivo(PerfilSom? perfil)
     {
         if (perfil != null)
         {

@@ -50,6 +50,7 @@ public class EqualizerBand
 /// </summary>
 public class EqualizadorAudio : ISampleProvider, IDisposable
 {
+    // Alterando para usar inicialização em construtor em vez de 'required'
     private readonly ISampleProvider _source;
     private readonly EqualizerBand[] _bands;
     
@@ -66,8 +67,8 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
     /// <param name="bands">Bandas de equalização</param>
     public EqualizadorAudio(ISampleProvider source, EqualizerBand[] bands)
     {
-        _source = source;
-        _bands = bands;
+        _source = source ?? throw new ArgumentNullException(nameof(source));
+        _bands = bands ?? throw new ArgumentNullException(nameof(bands));
         WaveFormat = source.WaveFormat;
         
         // Inicializa os filtros
@@ -87,7 +88,7 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
     /// <param name="source">Fonte de áudio</param>
     public EqualizadorAudio(ISampleProvider source)
     {
-        _source = source;
+        _source = source ?? throw new ArgumentNullException(nameof(source));
         WaveFormat = source.WaveFormat;
         
         // Cria bandas padrão (baixa, média e alta frequência)
@@ -115,6 +116,7 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
     public EqualizadorAudio()
     {
         // Construtor padrão para quando o GerenciadorEfeitos não tiver uma fonte externa
+        _source = null!;
         WaveFormat = new WaveFormat(44100, 1);
         _bands = new EqualizerBand[]
         {

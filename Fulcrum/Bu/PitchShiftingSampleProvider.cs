@@ -11,14 +11,6 @@ public class PitchShiftingSampleProvider : ISampleProvider
     private readonly ISampleProvider _source;
     private float _pitchFactor = 1.0f;
     private bool _isEnabled = false;
-    
-    // Buffers para processamento
-    private float[] _inputBuffer;
-    private float[] _outputBuffer;
-    private readonly int _bufferSize = 4096;
-    private int _inputBufferPosition;
-    private int _outputBufferPosition;
-    private int _outputBufferValidSamples;
 
     /// <summary>
     /// Inicializa uma nova instância do provedor de alteração de tom
@@ -28,13 +20,6 @@ public class PitchShiftingSampleProvider : ISampleProvider
     {
         _source = source;
         WaveFormat = source.WaveFormat;
-        
-        // Inicializa os buffers
-        _inputBuffer = new float[_bufferSize];
-        _outputBuffer = new float[_bufferSize];
-        _inputBufferPosition = 0;
-        _outputBufferPosition = 0;
-        _outputBufferValidSamples = 0;
     }
 
     /// <summary>
