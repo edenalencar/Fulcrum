@@ -1,5 +1,6 @@
 ﻿using Fulcrum.Bu;
 using Fulcrum.Util;
+using Fulcrum.Bu.Services;
 using Microsoft.UI.Xaml;
 using Windows.Storage;
 using Microsoft.Windows.AppLifecycle;
@@ -131,6 +132,10 @@ public partial class App : Application
         try
         {
             Window = new MainWindow();
+            
+            // Inicializa o serviço de notificações
+            NotificationService.Instance.Initialize(Window.DispatcherQueue);
+            
             Window.Activate();
         }
         catch (Exception ex)

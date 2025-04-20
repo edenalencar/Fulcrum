@@ -121,6 +121,9 @@ public sealed partial class MainWindow : Window
         // Desregistra todas as teclas de atalho e libera recursos
         _hotKeyManager?.Dispose();
         HotKeyService.Instance.Dispose();
+        
+        // Libera recursos do serviço de notificações
+        NotificationService.Instance.Dispose();
     }
 
     /// <summary>

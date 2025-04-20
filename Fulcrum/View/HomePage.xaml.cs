@@ -394,7 +394,7 @@ public sealed partial class HomePage : Page
         _sleepTimerDisplayUpdateTimer.Stop();
         UpdateTimerDisplay();
 
-        // Exibe notificação de que o timer foi concluído
+        // Exibe notificação dentro do aplicativo (InfoBar)
         DispatcherQueue.TryEnqueue(() =>
         {
             var infoBar = new InfoBar

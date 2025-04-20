@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Fulcrum.Bu.Services;
 
 namespace Fulcrum.Bu;
 
@@ -136,6 +137,12 @@ public sealed class SleepTimerService
 
                     // Pausa todos os áudios quando o temporizador termina
                     AudioManager.Instance.PauseAll();
+                    
+                    // Envia notificação do sistema
+                    NotificationService.Instance.ShowSleepTimerNotification(
+                        "Temporizador de Sono Concluído", 
+                        "O temporizador de sono foi encerrado e todos os sons foram pausados."
+                    );
                 }
             }
         }
