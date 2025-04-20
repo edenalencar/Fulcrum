@@ -7,7 +7,7 @@ namespace Fulcrum.Bu;
 /// <summary>
 /// Classe base para todos os reprodutores de som
 /// </summary>
-public abstract class Reprodutor
+public abstract class Reprodutor : IDisposable
 {
     public WaveOutEvent WaveOut { get; protected set; } = null!;
     public AudioFileReader Reader { get; protected set; } = null!;
@@ -427,5 +427,48 @@ public abstract class Reprodutor
     {
         EffectsManager.FlangerRate = rate;
         EffectsManager.FlangerDepth = depth;
+    }
+    
+    /// <summary>
+    /// Libera recursos gerenciados e não-gerenciados utilizados pelo reprodutor
+    /// </summary>
+    public void Dispose()
+    {
+        try
+        {
+            // Para a visualização se estiver em execução
+            StopVisualization();
+            
+            // Para a reprodução
+            if (WaveOut != null)
+            {
+                WaveOut.Stop();
+                WaveOut.Dispose();
+            }
+            
+            // Libera o leitor de áudio
+            if (Reader != null)
+            {
+                Reader.Dispose();
+            }
+            
+            // Libera recursos do equalizador
+            if (Equalizer != null)
+            {
+                Equalizer.Dispose();
+            }
+            
+            // Libera recursos do gerenciador de efeitos
+            EffectsManager?.Dispose();
+            
+            // Libera o visualizador
+            Visualizer?.Dispose();
+            
+            System.Diagnostics.Debug.WriteLine("Recursos do reprodutor liberados com sucesso");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao liberar recursos do reprodutor: {ex.Message}");
+        }
     }
 }

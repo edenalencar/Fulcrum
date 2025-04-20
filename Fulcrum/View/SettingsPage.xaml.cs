@@ -1,3 +1,4 @@
+using Fulcrum.Bu.Services;
 using Fulcrum.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -8,20 +9,29 @@ using Windows.System;
 namespace Fulcrum.View;
 
 /// <summary>
-/// Página de configurações do aplicativo
+/// Página para editar as configurações do aplicativo
 /// </summary>
 public sealed partial class SettingsPage : Page
 {
-    // Armazenamento local para as configurações
     private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
+    private AppHotKeyManager _hotKeyManager;
 
     /// <summary>
-    /// Inicializa uma nova instância da classe SettingsPage
+    /// Inicializa uma nova instância da página de configurações
     /// </summary>
     public SettingsPage()
     {
         this.InitializeComponent();
         Loaded += SettingsPage_Loaded;
+
+        // Carrega o tema atual
+        CarregarTemaAtual();
+        
+        // Carrega as configurações de teclas de atalho
+        CarregarConfiguracoesAtalhos();
+        
+        // Obtém a instância do gerenciador de teclas de atalho
+        _hotKeyManager = new AppHotKeyManager();
     }
 
     /// <summary>
@@ -31,13 +41,10 @@ public sealed partial class SettingsPage : Page
     {
         // Define o texto de copyright
         txtDireitos.Text = "© 2024 Éden Alencar. Todos os direitos reservados.";
-        
-        // Carrega a configuração salva do tema
-        CarregarTemaAtual();
     }
 
     /// <summary>
-    /// Carrega a configuração do tema salva nas preferências
+    /// Carrega o tema atual das configurações
     /// </summary>
     private void CarregarTemaAtual()
     {
@@ -60,7 +67,24 @@ public sealed partial class SettingsPage : Page
     }
 
     /// <summary>
-    /// Altera o tema do aplicativo com base na seleção dos RadioButtons
+    /// Carrega as configurações de teclas de atalho
+    /// </summary>
+    private void CarregarConfiguracoesAtalhos()
+    {
+        // Carrega a configuração de habilitação de teclas de atalho globais
+        bool atalhosGlobaisHabilitados = true; // Valor padrão é habilitado
+        
+        if (_localSettings.Values.ContainsKey(Constantes.Config.AtalhosGlobaisHabilitados))
+        {
+            atalhosGlobaisHabilitados = (bool)_localSettings.Values[Constantes.Config.AtalhosGlobaisHabilitados];
+        }
+        
+        // Define o estado do toggle de atalhos globais
+        toggleAtalhosGlobais.IsOn = atalhosGlobaisHabilitados;
+    }
+
+    /// <summary>
+    /// Manipula a alteração na seleção de tema
     /// </summary>
     private void OnThemeSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -94,6 +118,39 @@ public sealed partial class SettingsPage : Page
         {
             rootElement.RequestedTheme = requestedTheme;
         }
+    }
+
+    /// <summary>
+    /// Manipula a alteração na opção de atalhos globais
+    /// </summary>
+    private void ToggleAtalhosGlobais_Toggled(object sender, RoutedEventArgs e)
+    {
+        bool isEnabled = toggleAtalhosGlobais.IsOn;
+        
+        // Salva a configuração
+        _localSettings.Values[Constantes.Config.AtalhosGlobaisHabilitados] = isEnabled;
+        
+        // Atualiza o status no gerenciador de teclas de atalho
+        // Verifica se o objeto foi inicializado antes de usá-lo
+        if (_hotKeyManager == null)
+        {
+            _hotKeyManager = new AppHotKeyManager();
+        }
+        _hotKeyManager.HotKeysEnabled = isEnabled;
+        
+        // Mostra uma mensagem informativa
+        atalhosMensagemInfo.Message = isEnabled
+            ? "Teclas de atalho globais habilitadas. Você pode controlar o Fulcrum mesmo quando ele estiver em segundo plano."
+            : "Teclas de atalho globais desabilitadas.";
+            
+        atalhosMensagemInfo.IsOpen = true;
+        
+        // Esconde a mensagem após alguns segundos
+        DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, async () =>
+        {
+            await System.Threading.Tasks.Task.Delay(4000);
+            atalhosMensagemInfo.IsOpen = false;
+        });
     }
 
     /// <summary>

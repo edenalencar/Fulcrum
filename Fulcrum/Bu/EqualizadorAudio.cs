@@ -48,7 +48,7 @@ public class EqualizerBand
 /// <summary>
 /// Implementa um equalizador de áudio de 3 bandas
 /// </summary>
-public class EqualizadorAudio : ISampleProvider
+public class EqualizadorAudio : ISampleProvider, IDisposable
 {
     private readonly ISampleProvider _source;
     private readonly EqualizerBand[] _bands;
@@ -69,6 +69,34 @@ public class EqualizadorAudio : ISampleProvider
         _source = source;
         _bands = bands;
         WaveFormat = source.WaveFormat;
+        
+        // Inicializa os filtros
+        _filters = new BiQuadFilter[_bands.Length];
+        for (int i = 0; i < _bands.Length; i++)
+        {
+            _filters[i] = BiQuadFilter.PeakingEQ(WaveFormat.SampleRate, _bands[i].Frequency, _bands[i].Bandwidth, GainToAmplitude(_bands[i].Gain));
+        }
+        
+        // Inicializa o buffer de processamento
+        _sampleBuffer = new float[4096];
+    }
+    
+    /// <summary>
+    /// Inicializa um novo equalizador de áudio com bandas padrão
+    /// </summary>
+    /// <param name="source">Fonte de áudio</param>
+    public EqualizadorAudio(ISampleProvider source)
+    {
+        _source = source;
+        WaveFormat = source.WaveFormat;
+        
+        // Cria bandas padrão (baixa, média e alta frequência)
+        _bands = new EqualizerBand[]
+        {
+            new EqualizerBand(100, 1.0f, 0, "Baixa"),
+            new EqualizerBand(1000, 1.0f, 0, "Média"),
+            new EqualizerBand(8000, 1.0f, 0, "Alta")
+        };
         
         // Inicializa os filtros
         _filters = new BiQuadFilter[_bands.Length];
@@ -205,6 +233,22 @@ public class EqualizadorAudio : ISampleProvider
         {
             _bands[i].Gain = 0;
             UpdateBand(i);
+        }
+    }
+    
+    /// <summary>
+    /// Libera os recursos utilizados pelo equalizador
+    /// </summary>
+    public void Dispose()
+    {
+        try
+        {
+            // Libera recursos do equalizador, se houver algum específico
+            System.Diagnostics.Debug.WriteLine("Recursos do equalizador liberados com sucesso");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao liberar recursos do equalizador: {ex.Message}");
         }
     }
 }

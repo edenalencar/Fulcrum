@@ -12,7 +12,7 @@ namespace Fulcrum.Bu;
 /// <summary>
 /// Classe responsável pela visualização das ondas de áudio
 /// </summary>
-public class AudioVisualizer
+public class AudioVisualizer : IDisposable
 {
     private readonly ISampleProvider _sampleProvider;
     private readonly Polyline _waveformPolyline;
@@ -188,6 +188,24 @@ public class AudioVisualizer
     private void ClearWaveform()
     {
         _waveformPolyline.Points.Clear();
+    }
+
+    /// <summary>
+    /// Libera os recursos utilizados pelo visualizador
+    /// </summary>
+    public void Dispose()
+    {
+        try
+        {
+            // Para a visualização se estiver em execução
+            Stop();
+            
+            System.Diagnostics.Debug.WriteLine("Recursos do visualizador liberados com sucesso");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao liberar recursos do visualizador: {ex.Message}");
+        }
     }
 }
 

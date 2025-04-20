@@ -79,6 +79,65 @@
                 </RadioButtons>
             </Grid>
             
+            <!-- Teclas de Atalho -->
+            <InfoBar x:Name="atalhosMensagemInfo" 
+                     IsOpen="False" 
+                     Severity="Informational" 
+                     Title="Teclas de Atalho"
+                     IsClosable="True"
+                     Margin="0,0,0,16"/>
+                     
+            <Grid Style="{StaticResource SettingsCardStyle}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock Text="Teclas de Atalho" 
+                           Style="{StaticResource SectionTitleStyle}"/>
+                           
+                <ToggleSwitch x:Name="toggleAtalhosGlobais" 
+                              Header="Habilitar teclas de atalho globais"
+                              Grid.Row="1"
+                              Toggled="ToggleAtalhosGlobais_Toggled"/>
+                
+                <TextBlock Text="Quando habilitado, você pode controlar o Fulcrum mesmo quando ele não estiver em foco, utilizando as seguintes teclas:" 
+                           TextWrapping="Wrap"
+                           Grid.Row="2"
+                           Margin="0,16,0,16"/>
+                
+                <Grid RowSpacing="8" ColumnSpacing="16" Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock Text="Função" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0"/>
+                    <TextBlock Text="Tecla de Atalho" FontWeight="SemiBold" Grid.Row="0" Grid.Column="1"/>
+                    
+                    <TextBlock Text="Reproduzir/Pausar" Grid.Row="1" Grid.Column="0"/>
+                    <TextBlock Text="Ctrl + Alt + P" Grid.Row="1" Grid.Column="1"/>
+                    
+                    <TextBlock Text="Aumentar Volume" Grid.Row="2" Grid.Column="0"/>
+                    <TextBlock Text="Ctrl + Alt + ↑" Grid.Row="2" Grid.Column="1"/>
+                    
+                    <TextBlock Text="Diminuir Volume" Grid.Row="3" Grid.Column="0"/>
+                    <TextBlock Text="Ctrl + Alt + ↓" Grid.Row="3" Grid.Column="1"/>
+                    
+                    <TextBlock Text="Mutar/Desmutar" Grid.Row="4" Grid.Column="0"/>
+                    <TextBlock Text="Ctrl + Alt + M" Grid.Row="4" Grid.Column="1"/>
+                </Grid>
+            </Grid>
+            
             <!-- Sobre o aplicativo -->
             <Grid Style="{StaticResource SettingsCardStyle}">
                 <Grid.RowDefinitions>

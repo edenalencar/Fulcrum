@@ -4,26 +4,9 @@ using System;
 namespace Fulcrum.Bu;
 
 /// <summary>
-/// Tipo de efeito de áudio
-/// </summary>
-public enum TipoEfeito
-{
-    /// <summary>Nenhum efeito</summary>
-    Nenhum,
-    /// <summary>Efeito de reverberação</summary>
-    Reverb,
-    /// <summary>Efeito de alteração de tom</summary>
-    Pitch,
-    /// <summary>Efeito de eco</summary>
-    Echo,
-    /// <summary>Efeito flanger</summary>
-    Flanger
-}
-
-/// <summary>
 /// Gerenciador de efeitos de áudio
 /// </summary>
-public class GerenciadorEfeitos : ISampleProvider
+public class GerenciadorEfeitos : ISampleProvider, IDisposable
 {
     private readonly ISampleProvider _source;
     private TipoEfeito _tipoEfeito = TipoEfeito.Nenhum;
@@ -54,14 +37,14 @@ public class GerenciadorEfeitos : ISampleProvider
     {
         _source = source;
         
-        // Inicializa os provedores de efeito
-        _reverbProvider = new ReverbSampleProvider(source);
-        _pitchProvider = new PitchShiftingSampleProvider(source);
-        _echoProvider = new EchoSampleProvider(source);
-        _flangerProvider = new FlangerSampleProvider(source);
-        
-        // Configura o equalizador
-        Equalizer = new EqualizadorAudio();
+        // Define as bandas do equalizador
+        var bands = new EqualizerBand[]
+        {
+            new EqualizerBand(100, 1.0f, 0, "Baixa"),
+            new EqualizerBand(1000, 1.0f, 0, "Média"),
+            new EqualizerBand(8000, 1.0f, 0, "Alta")
+        };
+        Equalizer = new EqualizadorAudio(_source, bands);
     }
 
     /// <summary>
@@ -250,5 +233,21 @@ public class GerenciadorEfeitos : ISampleProvider
         }
         
         return samplesRead;
+    }
+
+    /// <summary>
+    /// Libera os recursos utilizados pelo gerenciador de efeitos
+    /// </summary>
+    public void Dispose()
+    {
+        try
+        {
+            // Libera recursos específicos dos efeitos, se houver
+            System.Diagnostics.Debug.WriteLine("Recursos do gerenciador de efeitos liberados com sucesso");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao liberar recursos do gerenciador de efeitos: {ex.Message}");
+        }
     }
 }

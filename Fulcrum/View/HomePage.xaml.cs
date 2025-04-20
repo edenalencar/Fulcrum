@@ -301,8 +301,8 @@ public sealed partial class HomePage : Page
         
         try
         {
-            // Atualiza o volume do reprodutor correspondente
-            AudioManager.Instance.AlterarVolume(soundId, e.NewValue);
+            // Atualiza o volume do reprodutor correspondente - convertendo explicitamente para float
+            AudioManager.Instance.AlterarVolume(soundId, (float)e.NewValue);
         }
         catch (Exception ex)
         {
@@ -564,7 +564,7 @@ public sealed partial class HomePage : Page
             // Ajusta o volume para todos os reprodutores
             foreach (var reprodutor in AudioManager.Instance.GetListReprodutores())
             {
-                AudioManager.Instance.AlterarVolume(reprodutor.Key, slider.Value);
+                AudioManager.Instance.AlterarVolume(reprodutor.Key, (float)slider.Value);
             }
         }
     }

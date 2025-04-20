@@ -1,4 +1,5 @@
 using Fulcrum.View;
+using Fulcrum.Bu.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -26,6 +28,24 @@ namespace Fulcrum;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
+    private AppWindow _appWindow;
+    private AppHotKeyManager _hotKeyManager;
+    private IntPtr _windowHandle;
+
+    // Para interceptar mensagens do Windows
+    private delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+    private WndProc _newWndProc = null;
+    private IntPtr _oldWndProc = IntPtr.Zero;
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+    // Constante para substituir o procedimento de janela
+    private const int GWLP_WNDPROC = -4;
+
     // Armazenamento local para as configurações
     private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
 
@@ -41,13 +61,32 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
 
-        // Define o tamanho inicial da janela para ser mais adequado ao conteúdo
-        var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
-        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
-        
-        // Define um tamanho inicial mais compacto: 1000x700 pixels
-        appWindow.Resize(new Windows.Graphics.SizeInt32(1000, 700));
+        // Obtém o handle da janela para o gerenciamento de teclas de atalho
+        _windowHandle = WindowNative.GetWindowHandle(this);
+
+        // Configura o hook para mensagens do Windows
+        _newWndProc = new WndProc(WindowProc);
+        _oldWndProc = SetWindowLongPtr(_windowHandle, GWLP_WNDPROC,
+            Marshal.GetFunctionPointerForDelegate(_newWndProc));
+
+        // Inicializa o serviço de teclas de atalho
+        HotKeyService.Instance.Initialize(_windowHandle, DispatcherQueue);
+
+        // Inicializa o gerenciador de teclas de atalho do aplicativo
+        _hotKeyManager = new AppHotKeyManager();
+
+        // Obtém a AppWindow para configuração adicional
+        var windowId = Win32Interop.GetWindowIdFromWindow(_windowHandle);
+        _appWindow = AppWindow.GetFromWindowId(windowId);
+
+        if (_appWindow != null)
+        {
+            // Configura o tamanho inicial da janela
+            _appWindow.Resize(new Windows.Graphics.SizeInt32(1000, 700));
+
+            // Tratamento para quando o aplicativo for fechado
+            _appWindow.Closing += AppWindow_Closing;
+        }
 
         // Registra manipuladores de evento após a inicialização
         this.Activated += MainWindow_Activated;
@@ -57,6 +96,31 @@ public sealed partial class MainWindow : Window
 
         // Aplica o tema escolhido pelo usuário
         AplicarTema();
+    }
+
+    /// <summary>
+    /// Procedimento de janela customizado para capturar mensagens do Windows
+    /// </summary>
+    private IntPtr WindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+    {
+        // Permite que o serviço de teclas de atalho processe mensagens
+        if (HotKeyService.Instance.ProcessWindowMessage(hWnd, msg, wParam, lParam))
+        {
+            return IntPtr.Zero;
+        }
+
+        // Passa para o procedimento de janela original
+        return CallWindowProc(_oldWndProc, hWnd, msg, wParam, lParam);
+    }
+
+    /// <summary>
+    /// Manipula o evento de fechamento da janela
+    /// </summary>
+    private void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+    {
+        // Desregistra todas as teclas de atalho e libera recursos
+        _hotKeyManager?.Dispose();
+        HotKeyService.Instance.Dispose();
     }
 
     /// <summary>
@@ -117,7 +181,7 @@ public sealed partial class MainWindow : Window
         else if (args.SelectedItemContainer != null)
         {
             var navItemTag = args.SelectedItemContainer.Tag.ToString();
-            
+
             switch (navItemTag)
             {
                 case "home":
