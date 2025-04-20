@@ -19,10 +19,13 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Setup Windows App SDK
-      uses: microsoft/setup-windows-sdk-action@v1
-      with:
-        sdk-version: 1.4.231219000
+    - name: Install Windows App SDK
+      shell: pwsh
+      run: |
+        $progressPreference = 'silentlyContinue'
+        Invoke-WebRequest -Uri https://aka.ms/windowsappsdk/1.4/1.4.231219000/windowsappruntimeinstall-x64.exe -OutFile windowsappruntimeinstall-x64.exe
+        Start-Process -FilePath .\windowsappruntimeinstall-x64.exe -ArgumentList "/quiet" -Wait
+        Remove-Item -Path .\windowsappruntimeinstall-x64.exe
 
     - name: Add NuGet package source
       run: |
