@@ -27,12 +27,22 @@ jobs:
         Start-Process -FilePath .\windowsappruntimeinstall-x64.exe -ArgumentList "/quiet" -Wait
         Remove-Item -Path .\windowsappruntimeinstall-x64.exe
 
-    - name: Add NuGet package source
+    - name: Setup NuGet sources
+      shell: pwsh
       run: |
-        nuget sources Add -Name "CommunityToolkit-WinUI" -Source "https://pkgs.dev.azure.com/dotnet/CommunityToolkit/_packaging/CommunityToolkit-WinUI/nuget/v3/index.json"
+        # Remover a fonte antiga que não está funcionando
+        dotnet nuget remove source "CommunityToolkit-WinUI" --configfile $env:APPDATA\NuGet\NuGet.Config || echo "Fonte não encontrada, continuando"
+        
+        # Adicionar fontes do CommunityToolkit atualizadas
+        dotnet nuget add source "https://pkgs.dev.azure.com/dotnet/Community.Toolkit/_packaging/CommunityToolkit-Labs/nuget/v3/index.json" --name "CommunityToolkit-Labs"
+        dotnet nuget add source "https://api.nuget.org/v3/index.json" --name "NuGet.org" --configfile $env:APPDATA\NuGet\NuGet.Config
+        
+        # Listar fontes configuradas para diagnóstico
+        dotnet nuget list source
 
     - name: Restore dependencies
       run: dotnet restore
+      continue-on-error: false
       
     - name: Check solution format
       run: dotnet format --verify-no-changes --verbosity diagnostic || echo "Há problemas de formatação no código, mas continuando build"
