@@ -48,6 +48,12 @@
             <Setter Property="TickFrequency" Value="0.1"/>
             <Setter Property="TickPlacement" Value="Outside"/>
             <Setter Property="IsThumbToolTipEnabled" Value="True"/>
+            <Setter Property="ThumbToolTipValueConverter">
+                <Setter.Value>
+                    <local:VolumePercentageConverter/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="{ThemeResource SystemAccentColor}"/>
         </Style>
 
         <!-- Estilo para os visualizadores de onda -->
@@ -60,16 +66,85 @@
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        
+        <!-- Estilo para o botão de cancelar timer -->
+        <Style x:Key="TimerCancelButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Opacity" Value="0.8"/>
+            <Setter Property="animations:Implicit.ShowAnimations">
+                <Setter.Value>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.2"/>
+                        <animations:ScaleAnimation From="0.8" To="1" Duration="0:0:0.2"/>
+                    </animations:ImplicitAnimationSet>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="animations:Implicit.HideAnimations">
+                <Setter.Value>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation From="1" To="0" Duration="0:0:0.2"/>
+                        <animations:ScaleAnimation From="1" To="0.8" Duration="0:0:0.2"/>
+                    </animations:ImplicitAnimationSet>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
-    <ScrollViewer Padding="16" VerticalScrollBarVisibility="Auto">
-        <StackPanel Orientation="Vertical" Spacing="12">
+    <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto">
+        <StackPanel x:Name="rootPanel" Orientation="Vertical" Spacing="16" MaxWidth="800" HorizontalAlignment="Center">
             <TextBlock Text="Sons Ambientes" 
                        Style="{StaticResource TitleTextBlockStyle}" 
                        Margin="0,0,0,20" 
                        HorizontalAlignment="Center"/>
             
-            <controls:UniformGrid Columns="2" Rows="0" HorizontalAlignment="Stretch">
+            <!-- Timer de Sono -->
+            <Grid Margin="0,0,0,24" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="SetSleepTimerButton" 
+                        Grid.Column="0"
+                        Click="SetSleepTimer_Click"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource DefaultButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE916;" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="Definir Timer" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+
+                <StackPanel x:Name="timerContainer" 
+                            Grid.Column="1"
+                            Orientation="Horizontal" 
+                            Visibility="Collapsed" 
+                            Spacing="8"
+                            Background="{ThemeResource SystemAccentColorLight1}"
+                            CornerRadius="16"
+                            Padding="10,4,4,4"
+                            VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE916;" FontFamily="Segoe MDL2 Assets" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
+                    <TextBlock x:Name="timerDisplay" 
+                               Text="00:00" 
+                               FontWeight="SemiBold" 
+                               VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
+                    <Button x:Name="cancelTimerButton" 
+                            Style="{StaticResource TimerCancelButtonStyle}"
+                            Click="CancelTimer_Click">
+                        <FontIcon Glyph="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="12"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <controls:UniformGrid Columns="3" Rows="0" ColumnSpacing="16" RowSpacing="16">
                 <!-- Cartão de Som - Chuva -->
                 <Grid Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
@@ -81,7 +156,7 @@
                     
                     <TextBlock Text="Chuva" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/chuva.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/chuva.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="chuvaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -101,7 +176,7 @@
                     
                     <TextBlock Text="Fogueira" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/fogueira.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/fogueira.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="fogueiraWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -121,7 +196,7 @@
                     
                     <TextBlock Text="Ondas" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/ondas.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/ondas.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="ondasWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -141,7 +216,7 @@
                     
                     <TextBlock Text="Pássaros" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/passaros.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/passaros.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="passarosWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -161,7 +236,7 @@
                     
                     <TextBlock Text="Praia" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/praia.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/praia.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="praiaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -181,7 +256,7 @@
                     
                     <TextBlock Text="Trem" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/trem.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/trem.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="tremWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -201,7 +276,7 @@
                     
                     <TextBlock Text="Ventos" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/vento.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/vento.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="ventosWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -221,7 +296,7 @@
                     
                     <TextBlock Text="Cafeteria" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/cafeteria.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/cafeteria.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="cafeteriaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -241,7 +316,7 @@
                     
                     <TextBlock Text="Lancha" Style="{StaticResource CardTitleStyle}"/>
                     
-                    <Image Grid.Row="1" Source="/Assets/Images/lancha.png" Width="120" Height="120" 
+                    <Image Grid.Row="1" Source="/Assets/Images/lancha.png" Width="140" Height="140" 
                            HorizontalAlignment="Center" Margin="0,8"/>
                     
                     <Polyline x:Name="lanchaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
@@ -253,14 +328,24 @@
             
             <!-- Botões de controle -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,24,0,12" Spacing="16">
-                <Button x:Name="PlayButton" Content="Reproduzir Todos" 
+                <Button x:Name="PlayButton" 
                         Click="Play_Click" 
                         Style="{StaticResource AccentButtonStyle}"
-                        Padding="16,8"/>
+                        Padding="16,8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE768;" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="Reproduzir Todos" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
                 
-                <Button x:Name="PauseButton" Content="Pausar Todos" 
+                <Button x:Name="PauseButton"
                         Click="Pause_Click"
-                        Padding="16,8"/>
+                        Padding="16,8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE769;" FontFamily="Segoe MDL2 Assets"/>
+                        <TextBlock Text="Pausar Todos" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

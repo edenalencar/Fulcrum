@@ -16,6 +16,7 @@ namespace Fulcrum.View;
 public sealed partial class HomePage : Page
 {
     private bool _isInitialized = false;
+    private DispatcherTimer _sleepTimerDisplayUpdateTimer;
 
     /// <summary>
     /// Inicializa uma nova instância da classe HomePage
@@ -34,6 +35,20 @@ public sealed partial class HomePage : Page
             InitializeAudioPlayers();
             _isInitialized = true;
         }
+        
+        // Inicializar timer de atualização do display
+        _sleepTimerDisplayUpdateTimer = new DispatcherTimer();
+        _sleepTimerDisplayUpdateTimer.Interval = TimeSpan.FromSeconds(10);
+        _sleepTimerDisplayUpdateTimer.Tick += SleepTimerDisplayUpdateTimer_Tick;
+        
+        // Registrar manipuladores de eventos para o SleepTimerService
+        SleepTimerService.Instance.TimerStarted += SleepTimer_TimerStarted;
+        SleepTimerService.Instance.TimerCancelled += SleepTimer_TimerCancelled;
+        SleepTimerService.Instance.TimerCompleted += SleepTimer_TimerCompleted;
+        SleepTimerService.Instance.TimerUpdated += SleepTimer_TimerUpdated;
+        
+        // Atualizar visibilidade do timer
+        UpdateTimerDisplay();
         
         Loaded += HomePage_Loaded;
         Unloaded += HomePage_Unloaded;
@@ -240,6 +255,206 @@ public sealed partial class HomePage : Page
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao pausar: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Atualiza o temporizador de exibição a cada 10 segundos
+    /// </summary>
+    private void SleepTimerDisplayUpdateTimer_Tick(object sender, object e)
+    {
+        UpdateTimerDisplay();
+    }
+
+    /// <summary>
+    /// Evento chamado quando o temporizador de sono é iniciado
+    /// </summary>
+    private void SleepTimer_TimerStarted(object sender, EventArgs e)
+    {
+        _sleepTimerDisplayUpdateTimer.Start();
+        UpdateTimerDisplay();
+    }
+
+    /// <summary>
+    /// Evento chamado quando o temporizador de sono é cancelado
+    /// </summary>
+    private void SleepTimer_TimerCancelled(object sender, EventArgs e)
+    {
+        _sleepTimerDisplayUpdateTimer.Stop();
+        UpdateTimerDisplay();
+    }
+
+    /// <summary>
+    /// Evento chamado quando o temporizador de sono é completado
+    /// </summary>
+    private void SleepTimer_TimerCompleted(object sender, EventArgs e)
+    {
+        _sleepTimerDisplayUpdateTimer.Stop();
+        UpdateTimerDisplay();
+
+        // Exibe notificação de que o timer foi concluído
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            var infoBar = new InfoBar
+            {
+                Title = "Temporizador concluído",
+                Message = "O temporizador de sono foi encerrado. Todos os sons foram pausados.",
+                Severity = InfoBarSeverity.Informational,
+                IsOpen = true
+            };
+
+            // Adiciona a InfoBar diretamente ao ScrollViewer
+            if (this.Content is ScrollViewer scrollViewer && 
+                scrollViewer.Content is StackPanel mainStackPanel)
+            {
+                mainStackPanel.Children.Insert(0, infoBar);
+
+                // Configurar um timer para remover a notificação após 5 segundos
+                var notificationTimer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromSeconds(5)
+                };
+                notificationTimer.Tick += (s, e) =>
+                {
+                    infoBar.IsOpen = false;
+                    mainStackPanel.Children.Remove(infoBar);
+                    (s as DispatcherTimer).Stop();
+                };
+                notificationTimer.Start();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Evento chamado quando o temporizador de sono é atualizado
+    /// </summary>
+    private void SleepTimer_TimerUpdated(object sender, int remainingMinutes)
+    {
+        UpdateTimerDisplay();
+    }
+
+    /// <summary>
+    /// Atualiza a exibição do temporizador de sono
+    /// </summary>
+    private void UpdateTimerDisplay()
+    {
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            var isActive = SleepTimerService.Instance.IsTimerActive;
+            if (isActive)
+            {
+                timerDisplay.Text = SleepTimerService.Instance.GetFormattedTimeRemaining();
+                timerContainer.Visibility = Visibility.Visible;
+                SetSleepTimerButton.Content = "Alterar Timer";
+                cancelTimerButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                timerContainer.Visibility = Visibility.Collapsed;
+                SetSleepTimerButton.Content = "Definir Timer";
+                cancelTimerButton.Visibility = Visibility.Collapsed;
+            }
+        });
+    }
+
+    /// <summary>
+    /// Manipulador para o botão de definir temporizador
+    /// </summary>
+    private async void SetSleepTimer_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // Opções de tempo para o temporizador
+            var timeOptions = new string[]
+            {
+                "5 minutos",
+                "15 minutos",
+                "30 minutos",
+                "45 minutos", 
+                "1 hora",
+                "2 horas",
+                "3 horas",
+                "4 horas",
+                "8 horas"
+            };
+
+            var dialog = new ContentDialog
+            {
+                Title = "Temporizador de Sono",
+                PrimaryButtonText = "Confirmar",
+                CloseButtonText = "Cancelar",
+                DefaultButton = ContentDialogButton.Primary,
+                XamlRoot = this.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style
+            };
+
+            var panel = new StackPanel
+            {
+                Spacing = 12
+            };
+
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Escolha quanto tempo o Fulcrum deve reproduzir antes de pausar automaticamente:",
+                TextWrapping = TextWrapping.Wrap
+            });
+
+            var comboBox = new ComboBox
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                SelectedIndex = 2 // 30 minutos como padrão
+            };
+
+            foreach (var option in timeOptions)
+            {
+                comboBox.Items.Add(option);
+            }
+
+            panel.Children.Add(comboBox);
+            dialog.Content = panel;
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                // Converter a seleção em minutos
+                int minutes = GetMinutesFromSelection(comboBox.SelectedIndex);
+                if (minutes > 0)
+                {
+                    SleepTimerService.Instance.StartTimer(minutes);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao definir timer: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Converte o índice de seleção em minutos
+    /// </summary>
+    private int GetMinutesFromSelection(int selectedIndex)
+    {
+        return selectedIndex switch
+        {
+            0 => 5,      // 5 minutos
+            1 => 15,     // 15 minutos
+            2 => 30,     // 30 minutos
+            3 => 45,     // 45 minutos
+            4 => 60,     // 1 hora
+            5 => 120,    // 2 horas
+            6 => 180,    // 3 horas
+            7 => 240,    // 4 horas
+            8 => 480,    // 8 horas
+            _ => 30      // Padrão: 30 minutos
+        };
+    }
+
+    /// <summary>
+    /// Manipulador para o botão de cancelar temporizador
+    /// </summary>
+    private void CancelTimer_Click(object sender, RoutedEventArgs e)
+    {
+        SleepTimerService.Instance.CancelTimer();
     }
 }
 

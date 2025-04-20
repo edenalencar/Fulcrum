@@ -41,6 +41,14 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
 
+        // Define o tamanho inicial da janela para ser mais adequado ao conteúdo
+        var windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(windowHandle);
+        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+        
+        // Define um tamanho inicial mais compacto: 1000x700 pixels
+        appWindow.Resize(new Windows.Graphics.SizeInt32(1000, 700));
+
         // Registra manipuladores de evento após a inicialização
         this.Activated += MainWindow_Activated;
 
