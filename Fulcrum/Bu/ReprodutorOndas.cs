@@ -10,6 +10,7 @@ public class ReprodutorOndas : Reprodutor
     /// </summary>
     public ReprodutorOndas()
     {
+        // Garante que o nome do arquivo corresponda ao ID usado no sistema
         Initialize("Assets\\Sounds\\ondas.wav");
     }
 }

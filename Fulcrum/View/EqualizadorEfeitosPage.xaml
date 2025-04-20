@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="Fulcrum.View.EqualizadorEfeitosPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Fulcrum.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Cabeçalho -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock x:Name="titleTextBlock" Text="Equalização e Efeitos" 
+                           Style="{ThemeResource TitleLargeTextBlockStyle}" 
+                           FontWeight="SemiBold"
+                           Margin="0,10,0,0"/>
+                
+                <Button Grid.Column="1" Click="BtnVoltar_Click" 
+                       Style="{StaticResource DefaultButtonStyle}"
+                       ToolTipService.ToolTip="Voltar">
+                    <FontIcon Glyph="&#xE72B;" FontFamily="Segoe MDL2 Assets"/>
+                </Button>
+            </Grid>
+            
+            <TextBlock x:Name="soundNameTextBlock" Text="Nome do Som" 
+                       Style="{ThemeResource SubtitleTextBlockStyle}" 
+                       Opacity="0.8" 
+                       Margin="0,5,0,0"/>
+            
+            <!-- Info Bar para mensagens -->
+            <InfoBar x:Name="infoBar" IsOpen="False" Margin="0,16,0,0"
+                     Severity="Informational" Title="Informação"/>
+        </StackPanel>
+
+        <!-- Conteúdo Principal -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                     HorizontalScrollBarVisibility="Disabled"
+                     Padding="0,0,12,0">
+            <StackPanel Spacing="24">
+                
+                <!-- Painel de Equalização -->
+                <Expander Header="Equalização" IsExpanded="True"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          BorderThickness="1"
+                          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                          CornerRadius="8">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" 
+                                      Style="{ThemeResource SubtitleTextBlockStyle}"
+                                      FontWeight="SemiBold"
+                                      Margin="8,12"/>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    
+                    <Grid Padding="24,16,24,24">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Switch para ativar/desativar equalização -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <ToggleSwitch x:Name="equalizerSwitch" Header="Ativar Equalização"
+                                         Toggled="EqualizerSwitch_Toggled"
+                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                        </StackPanel>
+                        
+                        <!-- Painel de controles de equalização -->
+                        <StackPanel x:Name="equalizerPanel" Grid.Row="1" Margin="0,16,0,0" Visibility="Collapsed">
+                            
+                            <!-- Banda Baixa -->
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Text="Baixa (100 Hz)" VerticalAlignment="Center" MinWidth="120"
+                                          Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <Slider x:Name="sliderBaixa" Grid.Column="1" Minimum="-15" Maximum="15" 
+                                        StepFrequency="0.5" Value="0" ValueChanged="SliderBaixa_ValueChanged"/>
+                                <TextBlock x:Name="txtBaixaValor" Grid.Column="2" Text="0 dB" 
+                                           VerticalAlignment="Center" MinWidth="60" TextAlignment="Right"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+                            
+                            <!-- Banda Média -->
+                            <Grid Margin="0,0,0,16">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Text="Média (1 kHz)" VerticalAlignment="Center" MinWidth="120"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <Slider x:Name="sliderMedia" Grid.Column="1" Minimum="-15" Maximum="15" 
+                                        StepFrequency="0.5" Value="0" ValueChanged="SliderMedia_ValueChanged"/>
+                                <TextBlock x:Name="txtMediaValor" Grid.Column="2" Text="0 dB" 
+                                           VerticalAlignment="Center" MinWidth="60" TextAlignment="Right"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+                            
+                            <!-- Banda Alta -->
+                            <Grid Margin="0,0,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <TextBlock Text="Alta (8 kHz)" VerticalAlignment="Center" MinWidth="120"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <Slider x:Name="sliderAlta" Grid.Column="1" Minimum="-15" Maximum="15" 
+                                        StepFrequency="0.5" Value="0" ValueChanged="SliderAlta_ValueChanged"/>
+                                <TextBlock x:Name="txtAltaValor" Grid.Column="2" Text="0 dB" 
+                                           VerticalAlignment="Center" MinWidth="60" TextAlignment="Right"
+                                           FontWeight="SemiBold"/>
+                            </Grid>
+                            
+                            <!-- Botão para resetar equalização -->
+                            <Button Content="Resetar Equalização" Click="BtnResetEqualizer_Click" 
+                                    HorizontalAlignment="Center"
+                                    FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Grid>
+                </Expander>
+                
+                <!-- Painel de Efeitos -->
+                <Expander Header="Efeitos Sonoros" IsExpanded="True"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          BorderThickness="1"
+                          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                          Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                          CornerRadius="8">
+                    <Expander.HeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" 
+                                      Style="{ThemeResource SubtitleTextBlockStyle}"
+                                      FontWeight="SemiBold"
+                                      Margin="8,12"/>
+                        </DataTemplate>
+                    </Expander.HeaderTemplate>
+                    
+                    <Grid Padding="24,16,24,24">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <!-- Switch para ativar/desativar efeitos -->
+                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <ToggleSwitch x:Name="effectsSwitch" Header="Ativar Efeitos"
+                                         Toggled="EffectsSwitch_Toggled"
+                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                        </StackPanel>
+                        
+                        <!-- Seleção de tipo de efeito -->
+                        <StackPanel Grid.Row="1" Margin="0,12,0,0">
+                            <TextBlock Text="Tipo de Efeito" Margin="0,0,0,8"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <ComboBox x:Name="tipoEfeitoComboBox" Width="240" 
+                                      SelectionChanged="TipoEfeito_SelectionChanged"
+                                      HorizontalAlignment="Left" 
+                                      CornerRadius="4"/>
+                        </StackPanel>
+                        
+                        <!-- Painel de controles de efeitos -->
+                        <StackPanel x:Name="effectsPanel" Grid.Row="2" Margin="0,20,0,0" Visibility="Collapsed">
+                            
+                            <!-- Painel de Reverberação -->
+                            <StackPanel x:Name="reverbPanel" Visibility="Collapsed" Spacing="16">
+                                <TextBlock Text="Reverberação" 
+                                          Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                                          Margin="0,0,0,8"/>
+                                
+                                <!-- Reverb Mix -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="Mix" VerticalAlignment="Center" MinWidth="80"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Slider x:Name="sliderReverbMix" Grid.Column="1" Minimum="0" Maximum="1" 
+                                            StepFrequency="0.01" Value="0.3" ValueChanged="SliderReverbMix_ValueChanged"/>
+                                    <TextBlock x:Name="txtReverbMixValor" Grid.Column="2" Text="0.3" 
+                                              VerticalAlignment="Center" MinWidth="50" TextAlignment="Right"
+                                              FontWeight="SemiBold"/>
+                                </Grid>
+                                
+                                <!-- Reverb Time -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="Tempo" VerticalAlignment="Center" MinWidth="80"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Slider x:Name="sliderReverbTime" Grid.Column="1" Minimum="0.1" Maximum="10" 
+                                            StepFrequency="0.1" Value="1.0" ValueChanged="SliderReverbTime_ValueChanged"/>
+                                    <TextBlock x:Name="txtReverbTimeValor" Grid.Column="2" Text="1.0 s" 
+                                              VerticalAlignment="Center" MinWidth="50" TextAlignment="Right"
+                                              FontWeight="SemiBold"/>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <!-- Painel de Pitch -->
+                            <StackPanel x:Name="pitchPanel" Visibility="Collapsed" Spacing="16">
+                                <TextBlock Text="Ajuste de Pitch" 
+                                          Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                                          Margin="0,0,0,8"/>
+                                
+                                <!-- Pitch Factor -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="Fator" VerticalAlignment="Center" MinWidth="80"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Slider x:Name="sliderPitchFactor" Grid.Column="1" Minimum="0.5" Maximum="2.0" 
+                                            StepFrequency="0.01" Value="1.0" ValueChanged="SliderPitchFactor_ValueChanged"/>
+                                    <TextBlock x:Name="txtPitchFactorValor" Grid.Column="2" Text="1.0" 
+                                              VerticalAlignment="Center" MinWidth="50" TextAlignment="Right"
+                                              FontWeight="SemiBold"/>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <!-- Painel de Echo -->
+                            <StackPanel x:Name="echoPanel" Visibility="Collapsed" Spacing="16">
+                                <TextBlock Text="Eco" 
+                                          Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                                          Margin="0,0,0,8"/>
+                                
+                                <!-- Echo Delay -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="Atraso" VerticalAlignment="Center" MinWidth="80"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Slider x:Name="sliderEchoDelay" Grid.Column="1" Minimum="10" Maximum="1000" 
+                                            StepFrequency="10" Value="250" ValueChanged="SliderEchoDelay_ValueChanged"/>
+                                    <TextBlock x:Name="txtEchoDelayValor" Grid.Column="2" Text="250 ms" 
+                                              VerticalAlignment="Center" MinWidth="70" TextAlignment="Right"
+                                              FontWeight="SemiBold"/>
+                                </Grid>
+                                
+                                <!-- Echo Mix -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="Mix" VerticalAlignment="Center" MinWidth="80"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Slider x:Name="sliderEchoMix" Grid.Column="1" Minimum="0" Maximum="1" 
+                                            StepFrequency="0.01" Value="0.5" ValueChanged="SliderEchoMix_ValueChanged"/>
+                                    <TextBlock x:Name="txtEchoMixValor" Grid.Column="2" Text="0.5" 
+                                              VerticalAlignment="Center" MinWidth="50" TextAlignment="Right"
+                                              FontWeight="SemiBold"/>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <!-- Painel de Flanger -->
+                            <StackPanel x:Name="flangerPanel" Visibility="Collapsed" Spacing="16">
+                                <TextBlock Text="Flanger" 
+                                          Style="{ThemeResource BodyStrongTextBlockStyle}" 
+                                          Margin="0,0,0,8"/>
+                                
+                                <!-- Flanger Rate -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="Taxa" VerticalAlignment="Center" MinWidth="80"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Slider x:Name="sliderFlangerRate" Grid.Column="1" Minimum="0.1" Maximum="2.0" 
+                                            StepFrequency="0.1" Value="0.5" ValueChanged="SliderFlangerRate_ValueChanged"/>
+                                    <TextBlock x:Name="txtFlangerRateValor" Grid.Column="2" Text="0.5 Hz" 
+                                              VerticalAlignment="Center" MinWidth="70" TextAlignment="Right"
+                                              FontWeight="SemiBold"/>
+                                </Grid>
+                                
+                                <!-- Flanger Depth -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <TextBlock Text="Profundidade" VerticalAlignment="Center" MinWidth="80"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    <Slider x:Name="sliderFlangerDepth" Grid.Column="1" Minimum="0.001" Maximum="0.01" 
+                                            StepFrequency="0.001" Value="0.005" ValueChanged="SliderFlangerDepth_ValueChanged"/>
+                                    <TextBlock x:Name="txtFlangerDepthValor" Grid.Column="2" Text="0.005" 
+                                              VerticalAlignment="Center" MinWidth="70" TextAlignment="Right"
+                                              FontWeight="SemiBold"/>
+                                </Grid>
+                            </StackPanel>
+                            
+                            <!-- Botão para resetar efeitos -->
+                            <Button Content="Resetar Efeitos" Click="BtnResetEffects_Click" 
+                                    HorizontalAlignment="Center" Margin="0,24,0,0"
+                                    FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Grid>
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <!-- Botões de ação -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0">
+            <Button Content="Salvar Configurações" Click="BtnSalvarConfiguracoes_Click" 
+                    Style="{StaticResource AccentButtonStyle}" Margin="0,0,16,0"
+                    MinWidth="180"/>
+            <Button Content="Cancelar" Click="BtnVoltar_Click"
+                    MinWidth="100"/>
+        </StackPanel>
+    </Grid>
+</Page>

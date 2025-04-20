@@ -34,11 +34,10 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
-  <Target Name="RemoveARM64" BeforeTargets="Build">
-    <ItemGroup>
-      <IntermediateAssembly Remove="obj\ARM64\**\*" />
-      <IntermediateRefAssembly Remove="obj\ARM64\**\*" />
-    </ItemGroup>
+  <!-- Melhorada a estratégia de limpeza de ARM64 -->
+  <Target Name="CleanARM64Files" BeforeTargets="BeforeBuild">
+    <RemoveDir Directories="$(MSBuildProjectDirectory)\obj\ARM64" />
+    <Message Text="Diretório ARM64 removido com sucesso" Importance="high" />
   </Target>
 
   <ItemGroup>
@@ -70,10 +69,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240227000" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.2428" />
+    <!-- Adicionando referência ao pacote NAudio -->
     <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />    
+    <!-- Outras referências de pacotes existentes -->
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250401001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Animations" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Media" Version="7.1.2" />
     <Manifest Include="$(ApplicationManifest)" />
@@ -163,6 +165,11 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\EqualizadorEfeitosPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

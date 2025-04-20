@@ -4,108 +4,104 @@ using System;
 namespace Fulcrum.Bu;
 
 /// <summary>
-/// Fornecedor de amostras de áudio que implementa efeito de fade out com atraso
+/// Provedor de amostras com capacidade de fade in/out
 /// </summary>
 public class DelayFadeOutSampleProvider : ISampleProvider
 {
     private readonly ISampleProvider _source;
-    private int _fadeSamplePosition;
+    private float _fadeDurationMs;
     private int _fadeSampleCount;
-    private int _delaySampleCount;
-    private bool _fadingOut;
-    private readonly object _lockObject = new();
+    private int _fadeSamplesRemaining;
+    private bool _isFadingOut;
 
     /// <summary>
-    /// Inicializa uma nova instância da classe DelayFadeOutSampleProvider
+    /// Inicializa uma nova instância do provedor de fade
     /// </summary>
-    /// <param name="source">Fonte de amostras de áudio</param>
-    public DelayFadeOutSampleProvider(ISampleProvider source)
+    /// <param name="source">Fonte de áudio</param>
+    /// <param name="fadeDurationMs">Duração do fade em milissegundos</param>
+    public DelayFadeOutSampleProvider(ISampleProvider source, float fadeDurationMs = 500f)
     {
-        _source = source;
+        _source = source ?? throw new ArgumentNullException(nameof(source));
+        _fadeDurationMs = fadeDurationMs;
         WaveFormat = source.WaveFormat;
+        
+        // Calcular o número de amostras para o fade
+        _fadeSampleCount = (int)((fadeDurationMs / 1000.0) * WaveFormat.SampleRate * WaveFormat.Channels);
+        System.Diagnostics.Debug.WriteLine($"DelayFadeOutSampleProvider inicializado: Canais={WaveFormat.Channels}, " +
+                                         $"Taxa={WaveFormat.SampleRate}, FadeSamples={_fadeSampleCount}");
     }
 
     /// <summary>
-    /// Obtém o formato de onda do áudio
+    /// Obtém o formato de onda
     /// </summary>
     public WaveFormat WaveFormat { get; }
 
     /// <summary>
-    /// Inicia o processo de fade out após um atraso especificado
+    /// Inicia o processo de fade out
     /// </summary>
-    /// <param name="delayMs">Atraso em milissegundos antes do fade out começar</param>
-    /// <param name="fadeOutMs">Duração do fade out em milissegundos</param>
-    public void BeginFadeOut(int delayMs, int fadeOutMs)
+    public void BeginFadeOut()
     {
-        lock (_lockObject)
-        {
-            // Calcular quantas amostras duram o atraso
-            _delaySampleCount = (int)(WaveFormat.SampleRate * delayMs / 1000.0);
-            
-            // Calcular quantas amostras duram o fade out
-            _fadeSampleCount = (int)(WaveFormat.SampleRate * fadeOutMs / 1000.0);
-            
-            // Resetar a posição para indicar que estamos começando o atraso
-            _fadeSamplePosition = -_delaySampleCount;
-            
-            // Indicar que estamos entrando no processo de fade out
-            _fadingOut = true;
-        }
+        _isFadingOut = true;
+        _fadeSamplesRemaining = _fadeSampleCount;
+        System.Diagnostics.Debug.WriteLine("Iniciando fade out");
     }
 
     /// <summary>
-    /// Lê amostras do provedor de origem e aplica o efeito de fade out conforme configurado
+    /// Lê amostras de áudio e aplica o efeito de fade
     /// </summary>
-    /// <param name="buffer">Buffer para receber as amostras</param>
-    /// <param name="offset">Deslocamento inicial no buffer</param>
-    /// <param name="count">Número de amostras a serem lidas</param>
-    /// <returns>Número de amostras lidas</returns>
     public int Read(float[] buffer, int offset, int count)
     {
-        // Ler amostras da fonte
-        int sourceSamplesRead = _source.Read(buffer, offset, count);
+        // Ler da fonte
+        int samplesRead = _source.Read(buffer, offset, count);
 
-        lock (_lockObject)
+        if (samplesRead <= 0)
         {
-            if (_fadingOut)
+            System.Diagnostics.Debug.WriteLine("Nenhuma amostra lida da fonte");
+            return 0;
+        }
+
+        if (_isFadingOut)
+        {
+            // Aplica o fade out
+            for (int i = 0; i < samplesRead; i++)
             {
-                // Processar as amostras aplicando o efeito de fade out
-                for (int n = 0; n < sourceSamplesRead; n++)
+                if (_fadeSamplesRemaining > 0)
                 {
-                    // Incrementar a posição atual
-                    _fadeSamplePosition++;
-                    
-                    // Se ainda estamos na fase de atraso, não modificar o som
-                    if (_fadeSamplePosition < 0)
-                        continue;
-                        
-                    // Se já passou o período de fade out, definir o volume para 0
-                    if (_fadeSamplePosition >= _fadeSampleCount)
-                    {
-                        buffer[offset + n] = 0f;
-                    }
-                    // Durante o fade out, aplicar uma transição gradual do volume
-                    else
-                    {
-                        // Calcular o fator de escala para o fade out
-                        float fadeOutFactor = 1.0f - (_fadeSamplePosition / (float)_fadeSampleCount);
-                        buffer[offset + n] *= fadeOutFactor;
-                    }
+                    // Fator de atenuação: 1.0 -> 0.0 conforme _fadeSamplesRemaining diminui
+                    float fadeOutFactor = (float)_fadeSamplesRemaining / _fadeSampleCount;
+                    buffer[offset + i] *= fadeOutFactor;
+                    _fadeSamplesRemaining--;
+                }
+                else
+                {
+                    // Quando o fade completa, silencia o áudio
+                    buffer[offset + i] = 0;
+                }
+            }
+
+            // Log periódico para diagnóstico (a cada 10000 amostras)
+            if (_fadeSamplesRemaining % 10000 == 0 && _fadeSamplesRemaining > 0)
+            {
+                System.Diagnostics.Debug.WriteLine($"Fade out em progresso: {_fadeSamplesRemaining} amostras restantes");
+            }
+        }
+        else
+        {
+            // Verificação de integridade de áudio (para depuração)
+            if (samplesRead > 0)
+            {
+                float maxSample = 0;
+                for (int i = 0; i < Math.Min(100, samplesRead); i++)
+                {
+                    maxSample = Math.Max(maxSample, Math.Abs(buffer[offset + i]));
+                }
+                if (maxSample > 1.0f)
+                {
+                    System.Diagnostics.Debug.WriteLine($"AVISO: Amostras com valor acima de 1.0 detectadas: {maxSample}");
                 }
             }
         }
 
-        return sourceSamplesRead;
-    }
-
-    /// <summary>
-    /// Cancela o fade out em andamento
-    /// </summary>
-    public void CancelFadeOut()
-    {
-        lock (_lockObject)
-        {
-            _fadingOut = false;
-        }
+        return samplesRead;
     }
 }

@@ -10,6 +10,7 @@ public class ReprodutorCafeteria : Reprodutor
     /// </summary>
     public ReprodutorCafeteria()
     {
+        // Garante que o nome do arquivo corresponda ao ID usado no sistema
         Initialize("Assets\\Sounds\\cafeteria.wav");
     }
 }

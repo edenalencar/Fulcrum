@@ -247,9 +247,37 @@ public class GerenciadorPerfis
         perfil.DefinirVolumeSom(Constantes.Sons.Praia, 0.4f);
         perfil.DefinirVolumeSom(Constantes.Sons.Trem, 0.2f);
         perfil.DefinirVolumeSom(Constantes.Sons.Ventos, 0.2f);
-        perfil.DefinirVolumeSom(Constantes.Sons.Cafeteria, 0.3f);
+        perfil.DefinirVolumeSom(Constantes.Sons.Cafeteria, 0.25f);
+        
+        // Define configurações de efeitos padrão
+        ConfigurarEfeitosPadrao(perfil);
+        
+        // Adiciona o perfil à lista interna
+        _perfis.Add(perfil);
         
         return perfil;
+    }
+    
+    /// <summary>
+    /// Configura efeitos padrão para um perfil de som
+    /// </summary>
+    /// <param name="perfil">Perfil a receber as configurações padrão de efeitos</param>
+    private void ConfigurarEfeitosPadrao(PerfilSom perfil)
+    {
+        // Esta é uma implementação básica que pode ser expandida no futuro
+        // para incluir configurações específicas de efeitos para cada som
+        
+        // Atualmente, apenas garantimos que o perfil existe e está registrado
+        // As configurações específicas de efeitos serão gerenciadas pelo AudioManager
+        if (perfil == null)
+        {
+            System.Diagnostics.Debug.WriteLine("Erro: Tentativa de configurar efeitos para um perfil nulo");
+            return;
+        }
+        
+        // Pode ser expandido para incluir configurações iniciais específicas
+        // como valores de equalização padrão, configurações de reverb, etc.
+        System.Diagnostics.Debug.WriteLine($"Configurações de efeitos padrão aplicadas ao perfil: {perfil.Nome}");
     }
     
     /// <summary>

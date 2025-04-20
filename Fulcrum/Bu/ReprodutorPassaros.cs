@@ -1,4 +1,6 @@
-﻿namespace Fulcrum.Bu;
+﻿using NAudio.Wave;
+
+namespace Fulcrum.Bu;
 
 /// <summary>
 /// Reprodutor especializado para som de pássaros
@@ -10,6 +12,7 @@ public class ReprodutorPassaros : Reprodutor
     /// </summary>
     public ReprodutorPassaros()
     {
+        // Garante que o nome do arquivo corresponda ao ID usado no sistema
         Initialize("Assets\\Sounds\\passaros.wav");
     }
 }

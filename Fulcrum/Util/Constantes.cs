@@ -1,15 +1,15 @@
 ﻿namespace Fulcrum.Util;
 
 /// <summary>
-/// Constantes utilizadas pela aplicação
+/// Classe de constantes utilizadas no aplicativo
 /// </summary>
 public static class Constantes
 {
-    // Identificadores dos sons
+    /// <summary>
+    /// Constantes para os IDs dos sons
+    /// </summary>
     public static class Sons
     {
-        public const string Lancha = "lancha";
-        public const string Cafeteria = "cafeteria";
         public const string Chuva = "chuva";
         public const string Fogueira = "fogueira";
         public const string Ondas = "ondas";
@@ -17,6 +17,8 @@ public static class Constantes
         public const string Praia = "praia";
         public const string Trem = "trem";
         public const string Ventos = "ventos";
+        public const string Cafeteria = "cafeteria";
+        public const string Lancha = "lancha";
     }
 
     /// <summary>

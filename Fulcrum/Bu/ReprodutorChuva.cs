@@ -12,6 +12,7 @@ public class ReprodutorChuva : Reprodutor
     /// </summary>
     public ReprodutorChuva()
     {
+        // Alterado para usar o nome completo do arquivo conforme registrado no csproj
         Initialize("Assets\\Sounds\\chuva forte.wav");
     }
 }

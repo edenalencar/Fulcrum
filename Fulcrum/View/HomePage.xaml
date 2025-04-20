@@ -94,6 +94,61 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Card para um som com controles -->
+        <DataTemplate x:Key="SoundCardTemplate">
+            <Border Style="{StaticResource CardBorderStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Título e ícone -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <FontIcon Glyph="{Binding Glyph}" 
+                                    FontFamily="Segoe Fluent Icons" 
+                                    Foreground="{ThemeResource TextSecondaryBrush}"
+                                    FontSize="16"
+                                    Margin="0,0,8,0"/>
+                        <TextBlock Text="{Binding Title}" 
+                                    Style="{StaticResource CardTitleStyle}"/>
+                    </StackPanel>
+                    
+                    <!-- Visualizador de forma de onda -->
+                    <Border Grid.Row="1" 
+                            Style="{StaticResource WaveformBorderStyle}">
+                        <Polyline x:Name="polyWaveform"
+                                Style="{StaticResource WaveformStyle}"
+                                Points="{Binding WaveformPoints}"/>
+                    </Border>
+                    
+                    <!-- Slider de volume -->
+                    <Slider Grid.Row="2" 
+                            Style="{StaticResource VolumeSliderStyle}"
+                            Value="{Binding Volume, Mode=TwoWay}"
+                            ValueChanged="Volume_ValueChanged"/>
+
+                    <!-- Botões de controle -->
+                    <Grid Grid.Row="3" Margin="0,4,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Botão de reprodução -->
+                        <Button x:Name="btnPlay"
+                                Style="{StaticResource DefaultButtonStyle}"
+                                Click="PlayButton_Click"
+                                ToolTipService.ToolTip="Reproduzir/Pausar">
+                            <FontIcon Glyph="&#xE768;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Border>
+        </DataTemplate>
     </Page.Resources>
 
     <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto">
@@ -151,7 +206,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Chuva" Style="{StaticResource CardTitleStyle}"/>
@@ -163,6 +219,27 @@
                     
                     <Slider x:Name="chuva" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=chuva, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="chuva"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Fogueira -->
@@ -171,7 +248,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Fogueira" Style="{StaticResource CardTitleStyle}"/>
@@ -183,6 +261,27 @@
                     
                     <Slider x:Name="fogueira" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=fogueira, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="fogueira"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Ondas -->
@@ -191,7 +290,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Ondas" Style="{StaticResource CardTitleStyle}"/>
@@ -203,6 +303,27 @@
                     
                     <Slider x:Name="ondas" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=ondas, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="ondas"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Pássaros -->
@@ -211,7 +332,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Pássaros" Style="{StaticResource CardTitleStyle}"/>
@@ -223,6 +345,27 @@
                     
                     <Slider x:Name="passaros" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=passaros, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="passaros"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Praia -->
@@ -231,7 +374,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Praia" Style="{StaticResource CardTitleStyle}"/>
@@ -243,6 +387,27 @@
                     
                     <Slider x:Name="praia" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=praia, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="praia"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Trem -->
@@ -251,7 +416,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Trem" Style="{StaticResource CardTitleStyle}"/>
@@ -263,6 +429,27 @@
                     
                     <Slider x:Name="trem" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=trem, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="trem"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Ventos -->
@@ -271,7 +458,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Ventos" Style="{StaticResource CardTitleStyle}"/>
@@ -283,6 +471,27 @@
                     
                     <Slider x:Name="ventos" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=ventos, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="ventos"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Cafeteria -->
@@ -291,7 +500,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Cafeteria" Style="{StaticResource CardTitleStyle}"/>
@@ -303,6 +513,27 @@
                     
                     <Slider x:Name="cafeteria" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=cafeteria, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="cafeteria"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
                 
                 <!-- Cartão de Som - Lancha -->
@@ -311,7 +542,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     
                     <TextBlock Text="Lancha" Style="{StaticResource CardTitleStyle}"/>
@@ -323,6 +555,27 @@
                     
                     <Slider x:Name="lancha" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
                             ValueChanged="Slider_ValueChanged"/>
+                            
+                    <!-- Controles adicionais -->
+                    <Grid Grid.Row="4" Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <!-- Percentual de volume -->
+                        <TextBlock Text="{Binding Value, ElementName=lancha, Converter={StaticResource VolumePercentageConverter}}" 
+                                   Style="{StaticResource VolumeTextStyle}"/>
+                        
+                        <!-- Botão de equalização/efeitos -->
+                        <Button Grid.Column="1" 
+                                Click="BtnEqualizer_Click"
+                                Tag="lancha"
+                                Style="{StaticResource EqualizerButtonStyle}"
+                                ToolTipService.ToolTip="Equalização e efeitos">
+                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
+                        </Button>
+                    </Grid>
                 </Grid>
             </controls:UniformGrid>
             

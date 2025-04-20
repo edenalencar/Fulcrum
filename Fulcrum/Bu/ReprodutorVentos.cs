@@ -10,6 +10,7 @@ public class ReprodutorVentos : Reprodutor
     /// </summary>
     public ReprodutorVentos()
     {
+        // Garante que o nome do arquivo corresponda ao ID usado no sistema
         Initialize("Assets\\Sounds\\ventos.wav");
     }
 }

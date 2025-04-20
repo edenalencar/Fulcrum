@@ -10,6 +10,7 @@ public class ReprodutorTrem : Reprodutor
     /// </summary>
     public ReprodutorTrem()
     {
+        // Garante que o nome do arquivo corresponda ao ID usado no sistema
         Initialize("Assets\\Sounds\\trem.wav");
     }
 }

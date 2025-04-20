@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Navigation;
+using NAudio.Wave;
 using System;
 using Windows.UI;
 
@@ -79,6 +81,7 @@ public sealed partial class HomePage : Page
     {
         // Salva o estado dos volumes antes de navegar para outra página
         AudioManager.Instance.SalvarEstadoVolumes();
+        AudioManager.Instance.SalvarEstadoEfeitos();
     }
 
     /// <summary>
@@ -96,16 +99,42 @@ public sealed partial class HomePage : Page
     {
         try
         {
-            // Configura cada visualizador com uma cor diferente baseada no tipo de som
-            ConfigureVisualizer(Constantes.Sons.Chuva, chuvaWaveform, Colors.DeepSkyBlue);
-            ConfigureVisualizer(Constantes.Sons.Fogueira, fogueiraWaveform, Colors.OrangeRed);
-            ConfigureVisualizer(Constantes.Sons.Ondas, ondasWaveform, Colors.LightSeaGreen);
-            ConfigureVisualizer(Constantes.Sons.Passaros, passarosWaveform, Colors.YellowGreen);
-            ConfigureVisualizer(Constantes.Sons.Praia, praiaWaveform, Colors.Gold);
-            ConfigureVisualizer(Constantes.Sons.Trem, tremWaveform, Colors.Gray);
-            ConfigureVisualizer(Constantes.Sons.Ventos, ventosWaveform, Colors.LightBlue);
-            ConfigureVisualizer(Constantes.Sons.Cafeteria, cafeteriaWaveform, Colors.SandyBrown);
-            ConfigureVisualizer(Constantes.Sons.Lancha, lanchaWaveform, Colors.MediumPurple);
+            // Verifica se os reprodutores foram inicializados corretamente antes de configurar os visualizadores
+            if (AudioManager.Instance.GetQuantidadeReprodutor == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Não há reprodutores inicializados para configurar visualizadores");
+                return;
+            }
+
+            // Configura cada visualizador apenas se o reprodutor correspondente existir
+            var reprodutores = AudioManager.Instance.GetListReprodutores();
+            
+            if (reprodutores.ContainsKey(Constantes.Sons.Chuva))
+                ConfigureVisualizer(Constantes.Sons.Chuva, chuvaWaveform, Colors.DeepSkyBlue);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Fogueira))
+                ConfigureVisualizer(Constantes.Sons.Fogueira, fogueiraWaveform, Colors.OrangeRed);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Ondas))
+                ConfigureVisualizer(Constantes.Sons.Ondas, ondasWaveform, Colors.LightSeaGreen);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Passaros))
+                ConfigureVisualizer(Constantes.Sons.Passaros, passarosWaveform, Colors.YellowGreen);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Praia))
+                ConfigureVisualizer(Constantes.Sons.Praia, praiaWaveform, Colors.Gold);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Trem))
+                ConfigureVisualizer(Constantes.Sons.Trem, tremWaveform, Colors.Gray);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Ventos))
+                ConfigureVisualizer(Constantes.Sons.Ventos, ventosWaveform, Colors.LightBlue);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Cafeteria))
+                ConfigureVisualizer(Constantes.Sons.Cafeteria, cafeteriaWaveform, Colors.SandyBrown);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Lancha))
+                ConfigureVisualizer(Constantes.Sons.Lancha, lanchaWaveform, Colors.MediumPurple);
         }
         catch (Exception ex)
         {
@@ -121,11 +150,17 @@ public sealed partial class HomePage : Page
     {
         try
         {
+            // Verificação já foi feita no método principal, então podemos prosseguir diretamente
             var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
-            reprodutor.ConfigureVisualizer(waveformElement);
-            
-            // Define a cor da forma de onda
-            waveformElement.Stroke = new SolidColorBrush(color);
+            if (reprodutor != null)
+            {
+                reprodutor.ConfigureVisualizer(waveformElement);
+                
+                // Define a cor da forma de onda
+                waveformElement.Stroke = new SolidColorBrush(color);
+                
+                System.Diagnostics.Debug.WriteLine($"Visualizador configurado com sucesso para {soundId}");
+            }
         }
         catch (Exception ex)
         {
@@ -138,23 +173,43 @@ public sealed partial class HomePage : Page
     /// </summary>
     private void InitializeAudioPlayers()
     {
-        // Inicializa e registra os reprodutores
         try
         {
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Chuva, new ReprodutorChuva());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Fogueira, new ReprodutorFogueira());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Lancha, new ReprodutorLancha());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Ondas, new ReprodutorOndas());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Passaros, new ReprodutorPassaros());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Praia, new ReprodutorPraia());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Trem, new ReprodutorTrem());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Ventos, new ReprodutorVentos());
-            AudioManager.Instance.AddAudioPlayer(Constantes.Sons.Cafeteria, new ReprodutorCafeteria());
+            System.Diagnostics.Debug.WriteLine("Iniciando carregamento dos reprodutores de áudio...");
+            
+            // Adiciona os reprodutores ao gerenciador de áudio, com tratamento de erros individual
+            TryAddAudioPlayer(Constantes.Sons.Chuva, () => new ReprodutorChuva());
+            TryAddAudioPlayer(Constantes.Sons.Fogueira, () => new ReprodutorFogueira());
+            TryAddAudioPlayer(Constantes.Sons.Lancha, () => new ReprodutorLancha());
+            TryAddAudioPlayer(Constantes.Sons.Ondas, () => new ReprodutorOndas());
+            TryAddAudioPlayer(Constantes.Sons.Passaros, () => new ReprodutorPassaros());
+            TryAddAudioPlayer(Constantes.Sons.Praia, () => new ReprodutorPraia());
+            TryAddAudioPlayer(Constantes.Sons.Trem, () => new ReprodutorTrem());
+            TryAddAudioPlayer(Constantes.Sons.Ventos, () => new ReprodutorVentos());
+            TryAddAudioPlayer(Constantes.Sons.Cafeteria, () => new ReprodutorCafeteria());
+            
+            System.Diagnostics.Debug.WriteLine($"Reprodutores carregados: {AudioManager.Instance.GetQuantidadeReprodutor}");
         }
         catch (Exception ex)
         {
             // Log de erro ou exibir mensagem para o usuário
-            System.Diagnostics.Debug.WriteLine($"Erro ao inicializar reprodutores: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Erro geral ao inicializar reprodutores: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Tenta adicionar um reprodutor de áudio com tratamento de exceção individual
+    /// </summary>
+    private void TryAddAudioPlayer(string soundId, Func<Reprodutor> creatorFunc)
+    {
+        try
+        {
+            AudioManager.Instance.AddAudioPlayer(soundId, creatorFunc());
+            System.Diagnostics.Debug.WriteLine($"Reprodutor {soundId} inicializado com sucesso");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao inicializar reprodutor {soundId}: {ex.Message}");
         }
     }
 
@@ -165,16 +220,42 @@ public sealed partial class HomePage : Page
     {
         try
         {
-            // Sincroniza cada slider com o volume atual do reprodutor correspondente
-            SyncSliderValue(Constantes.Sons.Chuva, FindName("chuva") as Slider);
-            SyncSliderValue(Constantes.Sons.Fogueira, FindName("fogueira") as Slider);
-            SyncSliderValue(Constantes.Sons.Lancha, FindName("lancha") as Slider);
-            SyncSliderValue(Constantes.Sons.Ondas, FindName("ondas") as Slider);
-            SyncSliderValue(Constantes.Sons.Passaros, FindName("passaros") as Slider);
-            SyncSliderValue(Constantes.Sons.Praia, FindName("praia") as Slider);
-            SyncSliderValue(Constantes.Sons.Trem, FindName("trem") as Slider);
-            SyncSliderValue(Constantes.Sons.Ventos, FindName("ventos") as Slider);
-            SyncSliderValue(Constantes.Sons.Cafeteria, FindName("cafeteria") as Slider);
+            // Verifica se há reprodutores antes de tentar sincronizar
+            if (AudioManager.Instance.GetQuantidadeReprodutor == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Não há reprodutores para sincronizar com os sliders");
+                return;
+            }
+            
+            var reprodutores = AudioManager.Instance.GetListReprodutores();
+            
+            // Sincroniza apenas sliders cujos reprodutores existem
+            if (reprodutores.ContainsKey(Constantes.Sons.Chuva))
+                SyncSliderValue(Constantes.Sons.Chuva, FindName("chuva") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Fogueira))
+                SyncSliderValue(Constantes.Sons.Fogueira, FindName("fogueira") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Lancha))
+                SyncSliderValue(Constantes.Sons.Lancha, FindName("lancha") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Ondas))
+                SyncSliderValue(Constantes.Sons.Ondas, FindName("ondas") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Passaros))
+                SyncSliderValue(Constantes.Sons.Passaros, FindName("passaros") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Praia))
+                SyncSliderValue(Constantes.Sons.Praia, FindName("praia") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Trem))
+                SyncSliderValue(Constantes.Sons.Trem, FindName("trem") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Ventos))
+                SyncSliderValue(Constantes.Sons.Ventos, FindName("ventos") as Slider);
+                
+            if (reprodutores.ContainsKey(Constantes.Sons.Cafeteria))
+                SyncSliderValue(Constantes.Sons.Cafeteria, FindName("cafeteria") as Slider);
         }
         catch (Exception ex)
         {
@@ -196,7 +277,11 @@ public sealed partial class HomePage : Page
             }
             
             var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
-            slider.Value = reprodutor.Reader.Volume;
+            if (reprodutor != null && reprodutor.Reader != null)
+            {
+                slider.Value = reprodutor.Reader.Volume;
+                System.Diagnostics.Debug.WriteLine($"Slider para {soundId} sincronizado com volume {reprodutor.Reader.Volume}");
+            }
         }
         catch (Exception ex)
         {
@@ -455,6 +540,101 @@ public sealed partial class HomePage : Page
     private void CancelTimer_Click(object sender, RoutedEventArgs e)
     {
         SleepTimerService.Instance.CancelTimer();
+    }
+
+    /// <summary>
+    /// Manipula o evento de clique nos botões de equalização de cada card
+    /// </summary>
+    private void BtnEqualizer_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is string soundId)
+        {
+            // Navega para a página de equalização/efeitos com o ID do som como parâmetro
+            Frame.Navigate(typeof(EqualizadorEfeitosPage), soundId);
+        }
+    }
+
+    /// <summary>
+    /// Manipula o evento de alteração de volume do controle principal
+    /// </summary>
+    private void Volume_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+    {
+        if (sender is Microsoft.UI.Xaml.Controls.Slider slider)
+        {
+            // Ajusta o volume para todos os reprodutores
+            foreach (var reprodutor in AudioManager.Instance.GetListReprodutores())
+            {
+                AudioManager.Instance.AlterarVolume(reprodutor.Key, slider.Value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Manipula o evento de clique no botão de reprodução principal
+    /// </summary>
+    private void PlayButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        try {
+            // Verificamos se algum reprodutor está tocando
+            bool isPlaying = false;
+            
+            // Verifica se há reprodutores antes de tentar manipulá-los
+            if (AudioManager.Instance.GetQuantidadeReprodutor == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Não há reprodutores para controlar");
+                return;
+            }
+            
+            foreach (var reprodutor in AudioManager.Instance.GetListReprodutores())
+            {
+                if (reprodutor.Value.WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Playing)
+                {
+                    isPlaying = true;
+                    break;
+                }
+            }
+
+            if (isPlaying)
+            {
+                AudioManager.Instance.PauseAll();
+            }
+            else
+            {
+                AudioManager.Instance.PlayAll();
+            }
+            
+            // Atualiza o estado visual do botão
+            UpdatePlayButtonState(!isPlaying);  // Invertemos o estado atual
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao manipular botão de reprodução: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Atualiza o estado visual do botão de reprodução
+    /// </summary>
+    private void UpdatePlayButtonState(bool isPlaying)
+    {
+        if (PlayButton is Button playButton)
+        {
+            // Se estiver usando um ícone ou símbolo para o botão de play/pause
+            if (playButton.Content is SymbolIcon symbolIcon)
+            {
+                symbolIcon.Symbol = isPlaying ? Symbol.Pause : Symbol.Play;
+            }
+            // Se estiver usando texto
+            else if (playButton.Content is string)
+            {
+                playButton.Content = isPlaying ? "Pausar" : "Reproduzir";
+            }
+            // Se estiver usando FontIcon
+            else if (playButton.Content is FontIcon fontIcon)
+            {
+                fontIcon.Glyph = isPlaying ? "\uE769" : "\uE768"; // Unicode para Pause/Play no Segoe MDL2 Assets
+            }
+        }
     }
 }
 
