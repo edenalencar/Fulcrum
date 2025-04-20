@@ -15,7 +15,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
-    <!-- Controle explícito sobre os itens XAML -->
+    <!-- Configurações XAML -->
     <EnableDefaultXamlItems>false</EnableDefaultXamlItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
@@ -28,6 +28,10 @@
     <XamlDebuggingInformation>True</XamlDebuggingInformation>
     <!-- Adicionar propriedade para resolver problemas de compilação ARM64 -->
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
+    <!-- Configuração adicional para resolver erro WMC1006 -->
+    <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
+    <DisableXbfGeneration>false</DisableXbfGeneration>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <Target Name="RemoveARM64" BeforeTargets="Build">
@@ -144,6 +148,16 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\HomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\PerfisPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AboutPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

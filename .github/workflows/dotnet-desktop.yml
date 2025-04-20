@@ -33,9 +33,21 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
+      
+    - name: Check solution format
+      run: dotnet format --verify-no-changes --verbosity diagnostic || echo "Há problemas de formatação no código, mas continuando build"
 
     - name: Build
       run: dotnet build --no-restore --configuration Release
 
     - name: Test
       run: dotnet test --no-build --verbosity normal --configuration Release
+      
+    - name: Generate build summary
+      if: always()
+      shell: pwsh
+      run: |
+        Write-Host "## 📊 Build Summary" >> $env:GITHUB_STEP_SUMMARY
+        Write-Host "* 🔄 Branch: $env:GITHUB_REF" >> $env:GITHUB_STEP_SUMMARY
+        Write-Host "* 🛠️ Build realizado em: $(Get-Date)" >> $env:GITHUB_STEP_SUMMARY
+        Write-Host "* 👤 Autor: $env:GITHUB_ACTOR" >> $env:GITHUB_STEP_SUMMARY

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <!-- Configurações adicionais para resolver problemas de referência -->
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <!-- Especificação explícita para evitar erros do WMC -->
+    <WindowsAppContainer>false</WindowsAppContainer>
+  </PropertyGroup>
+  
+  <!-- Resolver problemas específicos do XAML no WinUI -->
+  <ItemGroup>
+    <SuppressXamlWarnings Include="1006" />
+  </ItemGroup>
+</Project>

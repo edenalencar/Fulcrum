@@ -56,6 +56,17 @@ public static class Constantes
         public const string Configuracoes = "Configurações";
     }
 
+    /// <summary>
+    /// Constantes para perfis
+    /// </summary>
+    public static class Perfis
+    {
+        /// <summary>
+        /// Chave para o perfil ativo nas configurações
+        /// </summary>
+        public const string PerfilAtivo = "PerfilAtivoNome";
+    }
+
     // Valores calculados dinamicamente
     public static string Direitos => $"© {DateTime.Now.Year} Éden Alencar. Todos os direitos reservados.";
 }

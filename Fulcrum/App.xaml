@@ -3,7 +3,8 @@
     x:Class="Fulcrum.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Fulcrum">
+    xmlns:local="using:Fulcrum"
+    xmlns:converters="using:Fulcrum.Converters">
     
     <Application.Resources>
         <ResourceDictionary>
@@ -115,6 +116,10 @@
                     <CornerRadius x:Key="DefaultCornerRadius">8</CornerRadius>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Conversores -->
+            <converters:DateConverter x:Key="DateConverter"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

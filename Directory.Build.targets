@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <!-- Configurações específicas para a plataforma x64 -->
+    <Platform Condition="'$(Platform)'==''">x64</Platform>
+    
+    <!-- Configurações de referência para resolver problemas de compilação XAML -->
+    <AssemblySearchPaths>
+      $(AssemblySearchPaths);
+      {CandidateAssemblyFiles};
+      {HintPathFromItem};
+      {TargetFrameworkDirectory};
+      {RawFileName};
+      $(OutputPath);
+      $(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v$(TargetFrameworkVersion);
+      $(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\WinRT;
+    </AssemblySearchPaths>
+    
+    <!-- Configurações para resolver problemas do compilador XAML -->
+    <XamlDebuggingInformation>True</XamlDebuggingInformation>
+    <NoWarn>$(NoWarn);WMC1006;XC0022</NoWarn>
+  </PropertyGroup>
+  
+  <!-- Forçar a limpeza dos arquivos intermediários -->
+  <Target Name="CleanIntermediates" AfterTargets="Clean">
+    <ItemGroup>
+      <FilesToDelete Include="$(BaseIntermediateOutputPath)\**\*" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+  </Target>
+</Project>

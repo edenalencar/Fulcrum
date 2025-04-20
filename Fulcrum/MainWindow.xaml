@@ -47,17 +47,16 @@
 
         <!-- Conteúdo principal -->
         <NavigationView Grid.Row="1" x:Name="navigationView"
-                        IsSettingsVisible="True"
+                        IsSettingsVisible="False"
                         IsBackButtonVisible="Collapsed"
                         PaneDisplayMode="Top"
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         SelectionChanged="NavigationView_SelectionChanged">
             <NavigationView.MenuItems>
-                <NavigationViewItem Tag="HomeSelected" Content="Sons" IsSelected="True">
-                    <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8D6;"/>
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
+                <NavigationViewItem Content="Início" Tag="home" Icon="Home"/>
+                <NavigationViewItem Content="Perfis de Som" Tag="perfis" Icon="Audio"/>
+                <NavigationViewItem Content="Configurações" Tag="settings" Icon="Setting"/>
+                <NavigationViewItem Content="Sobre" Tag="sobre" Icon="Help"/>
             </NavigationView.MenuItems>
             
             <Frame x:Name="contentFrame" Padding="12" />

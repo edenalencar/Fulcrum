@@ -1,0 +1,133 @@
+<Page
+    x:Class="Fulcrum.View.AboutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Fulcrum.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <!-- Estilo para os cartões informativos -->
+        <Style x:Key="InfoCardStyle" TargetType="Grid">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,8"/>
+            <Setter Property="animations:Implicit.ShowAnimations">
+                <Setter.Value>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.4"/>
+                        <animations:TranslationAnimation From="0,20,0" To="0,0,0" Duration="0:0:0.4"/>
+                    </animations:ImplicitAnimationSet>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Estilo para títulos de seção -->
+        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+        
+        <!-- Estilo para links -->
+        <Style x:Key="HyperlinkButtonStyle" TargetType="HyperlinkButton">
+            <Setter Property="Margin" Value="0,4"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer Padding="24" VerticalScrollBarVisibility="Auto">
+        <StackPanel MaxWidth="800" HorizontalAlignment="Center">
+            <!-- Cabeçalho da página -->
+            <StackPanel Margin="0,0,0,20" HorizontalAlignment="Center">
+                <Image Source="/Assets/StoreLogo.png" Width="80" Height="80" Margin="0,0,0,16"/>
+                <TextBlock Text="Fulcrum" Style="{StaticResource TitleTextBlockStyle}" 
+                           FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="txtVersion" Text="Versão 1.0.0.0" 
+                           Style="{StaticResource CaptionTextBlockStyle}" 
+                           HorizontalAlignment="Center" Opacity="0.7" Margin="0,4,0,0"/>
+            </StackPanel>
+            
+            <!-- Descrição do aplicativo -->
+            <Grid Style="{StaticResource InfoCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Sobre o Aplicativo" Style="{StaticResource SectionTitleStyle}"/>
+                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,12">
+                        <Run>Fulcrum é um aplicativo de sons ambientes projetado para melhorar sua concentração, relaxamento e produtividade.</Run>
+                        <LineBreak/><LineBreak/>
+                        <Run>Combine diferentes sons da natureza e ambientes para criar a atmosfera perfeita para trabalhar, estudar, meditar ou dormir.</Run>
+                    </TextBlock>
+                    
+                    <TextBlock Text="Principais recursos:" FontWeight="SemiBold" Margin="0,8,0,4"/>
+                    <ListView IsItemClickEnabled="False" SelectionMode="None" Padding="0" Margin="0,0,0,8">
+                        <ListViewItem Padding="0,2">• Misturador de sons ambiente para criar combinações perfeitas</ListViewItem>
+                        <ListViewItem Padding="0,2">• Temporizadores e controles de sono</ListViewItem>
+                        <ListViewItem Padding="0,2">• Visualizações de ondas de áudio</ListViewItem>
+                        <ListViewItem Padding="0,2">• Perfis personalizados de som</ListViewItem>
+                        <ListViewItem Padding="0,2">• Interface moderna e intuitiva</ListViewItem>
+                    </ListView>
+                </StackPanel>
+            </Grid>
+            
+            <!-- Links e recursos -->
+            <Grid Style="{StaticResource InfoCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Links e Recursos" Style="{StaticResource SectionTitleStyle}"/>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,4">
+                        <FontIcon Glyph="&#xE946;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <Button x:Name="BtnSourceCode" Click="BtnSourceCode_Click" Padding="8,4" CornerRadius="4">
+                            Ver código-fonte no GitHub
+                        </Button>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                        <FontIcon Glyph="&#xE716;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <Button x:Name="BtnReportIssue" Click="BtnReportIssue_Click" Padding="8,4" CornerRadius="4">
+                            Relatar um problema
+                        </Button>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                        <FontIcon Glyph="&#xE8BD;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <Button x:Name="BtnContactDeveloper" Click="BtnContactDeveloper_Click" Padding="8,4" CornerRadius="4">
+                            Entrar em contato com o desenvolvedor
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            
+            <!-- Informações técnicas -->
+            <Grid Style="{StaticResource InfoCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Informações Técnicas" Style="{StaticResource SectionTitleStyle}"/>
+                    <StackPanel Margin="0,0,0,8">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run>Fulcrum é desenvolvido usando WinUI 3 e .NET 8, oferecendo uma experiência moderna e nativa do Windows.</Run>
+                            <LineBreak/><LineBreak/>
+                            <Run>Tecnologias utilizadas:</Run>
+                        </TextBlock>
+                        <ListView IsItemClickEnabled="False" SelectionMode="None" Padding="0" Margin="0,4,0,0">
+                            <ListViewItem Padding="0,2">• Windows App SDK / WinUI 3</ListViewItem>
+                            <ListViewItem Padding="0,2">• .NET 8</ListViewItem>
+                            <ListViewItem Padding="0,2">• Windows Community Toolkit</ListViewItem>
+                            <ListViewItem Padding="0,2">• Project ReunionNet</ListViewItem>
+                        </ListView>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            
+            <!-- Direitos autorais -->
+            <TextBlock Text="© 2024 Éden Alencar. Todos os direitos reservados." 
+                       Style="{StaticResource CaptionTextBlockStyle}" 
+                       HorizontalAlignment="Center" Margin="0,20,0,0" Opacity="0.6"/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

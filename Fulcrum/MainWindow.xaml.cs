@@ -105,31 +105,33 @@ public sealed partial class MainWindow : Window
     }
 
     /// <summary>
-    /// Manipula a mudança de seleção na barra de navegação
+    /// Manipula o evento de seleção alterada na navegação
     /// </summary>
     private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
         if (args.IsSettingsSelected)
         {
-            // Navega para a página de configurações
-            contentFrame.Navigate(typeof(SettingsPage), null, new SlideNavigationTransitionInfo());
+            // Navegar para a página de configurações
+            contentFrame.Navigate(typeof(View.SettingsPage));
         }
-        else if (args.SelectedItem is NavigationViewItem selectedItem)
+        else if (args.SelectedItemContainer != null)
         {
-            // Identifica a página selecionada com base na tag
-            Type? pageType = null;
-
-            // Usa a tag para determinar a página de destino
-            var tag = selectedItem.Tag as string;
-            if (tag == "HomeSelected")
+            var navItemTag = args.SelectedItemContainer.Tag.ToString();
+            
+            switch (navItemTag)
             {
-                pageType = typeof(HomePage);
-            }
-
-            // Navega para a página selecionada se foi identificada
-            if (pageType != null && contentFrame.CurrentSourcePageType != pageType)
-            {
-                contentFrame.Navigate(pageType, null, new SlideNavigationTransitionInfo());
+                case "home":
+                    contentFrame.Navigate(typeof(View.HomePage));
+                    break;
+                case "perfis":
+                    contentFrame.Navigate(typeof(View.PerfisPage));
+                    break;
+                case "settings":
+                    contentFrame.Navigate(typeof(View.SettingsPage));
+                    break;
+                case "sobre":
+                    contentFrame.Navigate(typeof(View.AboutPage));
+                    break;
             }
         }
     }
