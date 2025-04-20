@@ -1,7 +1,7 @@
 # Fulcrum 🎵
 
 <div align="center">
-  <img src="Assets/StoreLogo.png" alt="Fulcrum Logo" width="100" />
+  <img src="Fulcrum/Assets/StoreLogo.backup.png" alt="Fulcrum Logo" width="100" />
   <h3>Reprodutor de Sons Ambientes para Relaxamento e Concentração</h3>
 </div>
 
