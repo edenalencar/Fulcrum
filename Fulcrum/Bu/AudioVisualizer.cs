@@ -243,89 +243,175 @@ internal class SampleProviderWaveReader
     private readonly ISampleProvider _sampleProvider;
     private volatile bool _isDisposed = false;
     private readonly object _lock = new object();
+    private WeakReference<AudioFileReader> _cachedAudioFileReader = null;
 
     public SampleProviderWaveReader(ISampleProvider sampleProvider)
     {
         _sampleProvider = sampleProvider ?? throw new ArgumentNullException(nameof(sampleProvider));
+        
+        // Armazena uma referência fraca se for um AudioFileReader
+        if (sampleProvider is AudioFileReader afr)
+        {
+            _cachedAudioFileReader = new WeakReference<AudioFileReader>(afr);
+        }
     }
 
     public int Read(float[] buffer, int offset, int count)
     {
+        // Verificação rápida antes de fazer qualquer operação
         if (_isDisposed || _sampleProvider == null)
             return 0;
 
         try
         {
+            // Usando um lock para garantir thread-safety
             lock (_lock)
             {
-                // Se foi marcado como descartado enquanto aguardava o lock
+                // Verificação após obter o lock
                 if (_isDisposed || _sampleProvider == null)
                     return 0;
 
-                // Verificação específica para AudioFileReader
-                if (_sampleProvider is AudioFileReader afr)
+                // Verificação de tipo e validade
+                if (_sampleProvider is AudioFileReader || _cachedAudioFileReader != null)
                 {
+                    // Encapsular todo o código em um único try/catch
                     try
                     {
-                        // Uma verificação preliminar - não executa código real ainda
-                        if (afr == null)
+                        // Checar a referência do AudioFileReader
+                        AudioFileReader audioReader = null;
+                        
+                        // Tentativa 1: Obter do cache WeakReference
+                        if (_cachedAudioFileReader != null)
+                        {
+                            if (!_cachedAudioFileReader.TryGetTarget(out audioReader))
+                            {
+                                _isDisposed = true;
+                                return 0;
+                            }
+                        }
+                        
+                        // Tentativa 2: Cast direto (fallback)
+                        if (audioReader == null && _sampleProvider is AudioFileReader castReader)
+                        {
+                            audioReader = castReader;
+                        }
+                        
+                        // Se ainda for nulo após as tentativas, desistir
+                        if (audioReader == null)
+                        {
+                            _isDisposed = true;
                             return 0;
-
-                        // Tenta acessar propriedades para ver se o objeto é válido
-                        var waveFormat = afr.WaveFormat;
-                        if (waveFormat == null)
-                            return 0;
-
-                        // Evita acessar a propriedade Position diretamente, que é onde ocorre o erro
-                        // Coloca em um bloco try-catch separado e específico
+                        }
+                        
+                        // Verificação de propriedades críticas em um único bloco try/catch
                         try
                         {
-                            long position = -1;
-                            position = afr.Position; // Aqui é onde costuma falhar
-
-                            if (position < 0 || afr.Length <= 0)
+                            // Usar um método de extensão que captura exceções internamente
+                            if (!IsSafeToUse(audioReader))
+                            {
+                                _isDisposed = true;
                                 return 0;
+                            }
                         }
                         catch
                         {
-                            // Qualquer erro ao acessar Position indica que o objeto está em estado inválido
-                            _isDisposed = true; // Marca como descartado para evitar futuras tentativas
+                            // Qualquer exceção aqui indica que o objeto não é seguro para uso
+                            _isDisposed = true;
                             return 0;
                         }
                     }
-                    catch (Exception)
+                    catch
                     {
-                        _isDisposed = true; // Marca como descartado para evitar futuras tentativas
+                        // Qualquer falha no processo de verificação
+                        _isDisposed = true;
                         return 0;
                     }
                 }
-
-                // Se chegou até aqui, tenta ler as amostras
-                return _sampleProvider.Read(buffer, offset, count);
+                
+                // Feitas todas as verificações, tentar ler as amostras
+                try
+                {
+                    if (_isDisposed) return 0;
+                    return _sampleProvider.Read(buffer, offset, count);
+                }
+                catch
+                {
+                    _isDisposed = true;
+                    return 0;
+                }
             }
         }
-        catch (ObjectDisposedException)
+        catch
         {
+            // Qualquer exceção no nível superior
             _isDisposed = true;
-            System.Diagnostics.Debug.WriteLine("Objeto descartado ao tentar ler amostras");
             return 0;
         }
-        catch (NullReferenceException)
+    }
+    
+    // Método auxiliar que verifica de forma segura se um AudioFileReader está em estado válido
+    private bool IsSafeToUse(AudioFileReader reader)
+    {
+        if (reader == null || _isDisposed) 
+            return false;
+            
+        // Verificação ultra defensiva usando reflexão para verificar se o objeto
+        // ainda é válido sem tentar acessar suas propriedades diretamente
+        try
         {
-            _isDisposed = true;
-            System.Diagnostics.Debug.WriteLine("Referência nula encontrada ao ler amostras");
-            return 0;
+            // Primeiro, tentar acessar WaveFormat que geralmente é mais estável
+            var waveFormat = reader.WaveFormat;
+            if (waveFormat == null)
+                return false;
+            
+            // Verificação de Position usando reflexão para evitar acessar diretamente
+            // objetos internos que possam ter sido liberados
+            try
+            {
+                // Acessar o campo _waveStream usando reflexão (campo interno do AudioFileReader)
+                var waveStreamField = reader.GetType()
+                    .GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    .FirstOrDefault(f => f.Name.Contains("Stream"));
+                    
+                if (waveStreamField == null || waveStreamField.GetValue(reader) == null)
+                    return false;
+                    
+                // Se chegou até aqui, o objeto interno parece válido
+                // Mas ainda assim, coloque o acesso à Position em um bloco try separado
+                try
+                {
+                    var dummy = reader.Position;
+                    if (dummy < 0)
+                        return false;
+                        
+                    var length = reader.Length;
+                    if (length <= 0)
+                        return false;
+                }
+                catch
+                {
+                    // Qualquer falha ao acessar Position ou Length indica objeto inválido
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            
+            // Todas as verificações passaram
+            return true;
         }
-        catch (Exception ex)
+        catch
         {
-            _isDisposed = true;
-            System.Diagnostics.Debug.WriteLine($"Erro ao ler amostras: {ex.Message}");
-            return 0;
+            // Qualquer exceção indica que o objeto está em estado inválido
+            return false;
         }
     }
 
     public void MarkAsDisposed()
     {
         _isDisposed = true;
+        _cachedAudioFileReader = null; // Libera a referência fraca
     }
 }
