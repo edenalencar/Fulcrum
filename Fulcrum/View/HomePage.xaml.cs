@@ -905,37 +905,44 @@ public sealed partial class HomePage : Page
     /// </summary>
     private void PlayButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        try {
-            // Verificamos se algum reprodutor está tocando
-            bool isPlaying = false;
+        try 
+        {
+            // Verifica o estado atual da reprodução
+            bool estaReproduzindo = AudioManager.Instance.IsPlaying;
             
-            // Verifica se há reprodutores antes de tentar manipulá-los
-            if (AudioManager.Instance.GetQuantidadeReprodutor == 0)
+            if (estaReproduzindo)
             {
-                System.Diagnostics.Debug.WriteLine("Não há reprodutores para controlar");
-                return;
-            }
-            
-            foreach (var reprodutor in AudioManager.Instance.GetListReprodutores())
-            {
-                if (reprodutor.Value.WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Playing)
-                {
-                    isPlaying = true;
-                    break;
-                }
-            }
-
-            if (isPlaying)
-            {
+                // Se estiver tocando, pausamos todos
                 AudioManager.Instance.PauseAll();
+                System.Diagnostics.Debug.WriteLine("Pausando todos os sons");
             }
             else
             {
-                AudioManager.Instance.PlayAll();
+                // Se estiver pausado, verificamos quais players têm volume maior que zero
+                var players = AudioManager.Instance.GetListReprodutores();
+                bool peloMenosUmPlayerComVolume = false;
+                
+                foreach (var player in players)
+                {
+                    if (player.Value.Reader.Volume > 0.001f)
+                    {
+                        // Reproduz diretamente cada player com volume
+                        player.Value.Play();
+                        System.Diagnostics.Debug.WriteLine($"Reproduzindo {player.Key} com volume {player.Value.Reader.Volume}");
+                        peloMenosUmPlayerComVolume = true;
+                    }
+                }
+                
+                if (!peloMenosUmPlayerComVolume)
+                {
+                    System.Diagnostics.Debug.WriteLine("Nenhum player com volume maior que zero para reproduzir");
+                }
             }
             
-            // Atualiza o estado visual do botão
-            UpdatePlayButtonState(!isPlaying);  // Invertemos o estado atual
+            // Atualiza o estado visual do botão após a ação
+            UpdatePlayButtonState(!estaReproduzindo);
+            
+            System.Diagnostics.Debug.WriteLine($"Botão de reprodução clicado - Novo estado: {(!estaReproduzindo ? "Reproduzindo" : "Pausado")}");
         }
         catch (Exception ex)
         {

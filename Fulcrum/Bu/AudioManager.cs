@@ -116,8 +116,7 @@ public sealed class AudioManager
     /// <summary>
     /// Indica se pelo menos um som está em reprodução
     /// </summary>
-    public bool IsPlaying => _globalPlaybackState == PlaybackState.Playing && 
-                           _audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing);
+    public bool IsPlaying => _audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing);
     
     /// <summary>
     /// Indica se o áudio está em mudo
@@ -440,17 +439,38 @@ public sealed class AudioManager
     }
     
     /// <summary>
-    /// Alterna entre reprodução e pausa para todos os sons
+    /// Alterna entre reprodução e pausa para todos os sons ativos
     /// </summary>
     public void TogglePlayback()
     {
-        if (IsPlaying)
+        try
         {
-            PauseAll();
+            // Verifica o estado atual de reprodução
+            bool isCurrentlyPlaying = IsPlaying;
+            
+            // Se estiver reproduzindo, pausa todos
+            if (isCurrentlyPlaying)
+            {
+                PauseAll();
+                System.Diagnostics.Debug.WriteLine("TogglePlayback: Pausando todos os sons");
+            }
+            // Se estiver pausado, retoma todos que têm volume > 0
+            else
+            {
+                foreach (var player in _audioPlayers)
+                {
+                    if (player.Value.Reader.Volume > 0.001f)
+                    {
+                        Play(player.Key);
+                        System.Diagnostics.Debug.WriteLine($"TogglePlayback: Retomando reprodução de {player.Key}");
+                    }
+                }
+                System.Diagnostics.Debug.WriteLine($"TogglePlayback: Tentativa de retomar reprodução de sons com volume > 0");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            PlayAll();
+            System.Diagnostics.Debug.WriteLine($"Erro em TogglePlayback: {ex.Message}");
         }
     }
     
