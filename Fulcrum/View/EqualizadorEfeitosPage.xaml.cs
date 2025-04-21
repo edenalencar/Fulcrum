@@ -474,6 +474,10 @@ public sealed partial class EqualizadorEfeitosPage : Page
     /// </summary>
     private void BtnVoltar_Click(object sender, RoutedEventArgs e)
     {
+        // Salva o estado atual antes de navegar de volta
+        AudioManager.Instance.SalvarEstadoEfeitos();
+        AudioManager.Instance.SalvarEstadoVolumes();
+        
         if (Frame.CanGoBack)
         {
             Frame.GoBack();

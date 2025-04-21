@@ -21,14 +21,24 @@ public sealed partial class SettingsPage : Page
     /// </summary>
     public SettingsPage()
     {
+        // Inicializamos os componentes da interface uma única vez
         this.InitializeComponent();
-        Loaded += SettingsPage_Loaded;
-
-        // Carrega o tema atual
+        
+        // Desabilitamos temporariamente os eventos para evitar alterações de tema
+        // durante a carga inicial da página
+        ThemeRadioButtons.SelectionChanged -= OnThemeSelectionChanged;
+        
+        // Carregamos o tema atual
         CarregarTemaAtual();
         
-        // Carrega as configurações de teclas de atalho
+        // Carregamos as configurações de teclas de atalho
         CarregarConfiguracoesAtalhos();
+        
+        // Reativamos os eventos depois que a inicialização estiver completa
+        ThemeRadioButtons.SelectionChanged += OnThemeSelectionChanged;
+        
+        // Registramos o evento de carregamento da página
+        Loaded += SettingsPage_Loaded;
         
         // Obtém a instância do gerenciador de teclas de atalho
         _hotKeyManager = new AppHotKeyManager();
@@ -64,6 +74,9 @@ public sealed partial class SettingsPage : Page
                 ThemeRadioButtons.SelectedIndex = 2;
                 break;
         }
+        
+        // Importante: não alterar o tema aqui, apenas atualizar a UI
+        // para refletir a configuração atual
     }
 
     /// <summary>
@@ -88,7 +101,8 @@ public sealed partial class SettingsPage : Page
     /// </summary>
     private void OnThemeSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (ThemeRadioButtons.SelectedIndex < 0) return;
+        // Se não houver item selecionado ou se estivermos apenas carregando a página, sair
+        if (ThemeRadioButtons.SelectedIndex < 0 || e.AddedItems.Count == 0) return;
 
         string temaKey;
         ElementTheme requestedTheme;

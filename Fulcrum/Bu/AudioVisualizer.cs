@@ -125,60 +125,75 @@ public class AudioVisualizer : IDisposable
     /// </summary>
     private void UpdateWaveform()
     {
-        // Ler amostras do provedor de áudio
-        var reader = new SampleProviderWaveReader(_sampleProvider);
-        int samplesRead = reader.Read(_sampleBuffer, 0, _sampleCount);
-
-        if (samplesRead == 0)
+        try
         {
-            // Não há amostras para ler
+            // Verificar se o provedor de amostras ainda é válido
+            if (_sampleProvider == null)
+            {
+                ClearWaveform();
+                return;
+            }
+
+            // Ler amostras do provedor de áudio
+            var reader = new SampleProviderWaveReader(_sampleProvider);
+            int samplesRead = reader.Read(_sampleBuffer, 0, _sampleCount);
+
+            if (samplesRead == 0)
+            {
+                // Não há amostras para ler
+                ClearWaveform();
+                return;
+            }
+
+            // Atualizar os pontos da forma de onda
+            _points.Clear();
+
+            // Verificar se o controle tem dimensões válidas
+            if (_waveformPolyline.ActualWidth <= 0 || _waveformPolyline.ActualHeight <= 0)
+            {
+                // Dimensões inválidas, não podemos desenhar
+                return;
+            }
+
+            double width = _waveformPolyline.ActualWidth;
+            double height = _waveformPolyline.ActualHeight;
+            double centerY = height / 2;
+            float maxSample = 0;
+            
+            // Encontrar o valor máximo para normalização
+            for (int i = 0; i < samplesRead; i++)
+            {
+                maxSample = Math.Max(maxSample, Math.Abs(_sampleBuffer[i]));
+            }
+            
+            // Fator de escala para evitar clipping e amplificar sinais fracos
+            float scaleFactor = maxSample > 0.01f ? 0.9f / Math.Max(1.0f, maxSample) : 0.9f;
+
+            for (int i = 0; i < samplesRead; i++)
+            {
+                double x = (width / samplesRead) * i;
+                double y = centerY + (_sampleBuffer[i] * scaleFactor * centerY); // Amplificar para visualização
+
+                _points.Add(new Point(x, y));
+            }
+
+            // Atualizar o Polyline com os novos pontos
+            _waveformPolyline.Points.Clear();
+            foreach (var point in _points)
+            {
+                _waveformPolyline.Points.Add(point);
+            }
+            
+            // Log periódico (1 a cada 10 atualizações)
+            if (DateTime.Now.Second % 10 == 0 && DateTime.Now.Millisecond < 100)
+            {
+                System.Diagnostics.Debug.WriteLine($"Forma de onda atualizada: {samplesRead} amostras, Max={maxSample:F3}");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao atualizar forma de onda: {ex.Message}");
             ClearWaveform();
-            return;
-        }
-
-        // Atualizar os pontos da forma de onda
-        _points.Clear();
-
-        // Verificar se o controle tem dimensões válidas
-        if (_waveformPolyline.ActualWidth <= 0 || _waveformPolyline.ActualHeight <= 0)
-        {
-            // Dimensões inválidas, não podemos desenhar
-            return;
-        }
-
-        double width = _waveformPolyline.ActualWidth;
-        double height = _waveformPolyline.ActualHeight;
-        double centerY = height / 2;
-        float maxSample = 0;
-        
-        // Encontrar o valor máximo para normalização
-        for (int i = 0; i < samplesRead; i++)
-        {
-            maxSample = Math.Max(maxSample, Math.Abs(_sampleBuffer[i]));
-        }
-        
-        // Fator de escala para evitar clipping e amplificar sinais fracos
-        float scaleFactor = maxSample > 0.01f ? 0.9f / Math.Max(1.0f, maxSample) : 0.9f;
-
-        for (int i = 0; i < samplesRead; i++)
-        {
-            double x = (width / samplesRead) * i;
-            double y = centerY + (_sampleBuffer[i] * scaleFactor * centerY); // Amplificar para visualização
-
-            _points.Add(new Point(x, y));
-        }
-
-        // Atualizar o Polyline com os novos pontos
-        _waveformPolyline.Points.Clear();
-        foreach (var point in _points)
-        {
-            _waveformPolyline.Points.Add(point);
-        }
-        
-        // Log periódico (1 a cada 10 atualizações)
-        if (DateTime.Now.Second % 10 == 0 && DateTime.Now.Millisecond < 100)
-        {
-            System.Diagnostics.Debug.WriteLine($"Forma de onda atualizada: {samplesRead} amostras, Max={maxSample:F3}");
         }
     }
 
@@ -200,6 +215,17 @@ public class AudioVisualizer : IDisposable
             // Para a visualização se estiver em execução
             Stop();
             
+            // Se temos acesso ao provedor de amostras, marcamos que ele não deve mais ser acessado
+            if (_sampleProvider is ISampleProvider provider && 
+                _waveformPolyline?.Dispatcher?.HasThreadAccess == true)
+            {
+                var reader = new SampleProviderWaveReader(provider);
+                reader.MarkAsDisposed();
+            }
+            
+            // Limpa os pontos da forma de onda para liberar memória
+            _points.Clear();
+            
             System.Diagnostics.Debug.WriteLine("Recursos do visualizador liberados com sucesso");
         }
         catch (Exception ex)
@@ -215,6 +241,8 @@ public class AudioVisualizer : IDisposable
 internal class SampleProviderWaveReader
 {
     private readonly ISampleProvider _sampleProvider;
+    private volatile bool _isDisposed = false;
+    private readonly object _lock = new object();
 
     public SampleProviderWaveReader(ISampleProvider sampleProvider)
     {
@@ -223,14 +251,81 @@ internal class SampleProviderWaveReader
 
     public int Read(float[] buffer, int offset, int count)
     {
+        if (_isDisposed || _sampleProvider == null)
+            return 0;
+
         try
         {
-            return _sampleProvider.Read(buffer, offset, count);
+            lock (_lock)
+            {
+                // Se foi marcado como descartado enquanto aguardava o lock
+                if (_isDisposed || _sampleProvider == null)
+                    return 0;
+
+                // Verificação específica para AudioFileReader
+                if (_sampleProvider is AudioFileReader afr)
+                {
+                    try
+                    {
+                        // Uma verificação preliminar - não executa código real ainda
+                        if (afr == null)
+                            return 0;
+
+                        // Tenta acessar propriedades para ver se o objeto é válido
+                        var waveFormat = afr.WaveFormat;
+                        if (waveFormat == null)
+                            return 0;
+
+                        // Evita acessar a propriedade Position diretamente, que é onde ocorre o erro
+                        // Coloca em um bloco try-catch separado e específico
+                        try
+                        {
+                            long position = -1;
+                            position = afr.Position; // Aqui é onde costuma falhar
+
+                            if (position < 0 || afr.Length <= 0)
+                                return 0;
+                        }
+                        catch
+                        {
+                            // Qualquer erro ao acessar Position indica que o objeto está em estado inválido
+                            _isDisposed = true; // Marca como descartado para evitar futuras tentativas
+                            return 0;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        _isDisposed = true; // Marca como descartado para evitar futuras tentativas
+                        return 0;
+                    }
+                }
+
+                // Se chegou até aqui, tenta ler as amostras
+                return _sampleProvider.Read(buffer, offset, count);
+            }
+        }
+        catch (ObjectDisposedException)
+        {
+            _isDisposed = true;
+            System.Diagnostics.Debug.WriteLine("Objeto descartado ao tentar ler amostras");
+            return 0;
+        }
+        catch (NullReferenceException)
+        {
+            _isDisposed = true;
+            System.Diagnostics.Debug.WriteLine("Referência nula encontrada ao ler amostras");
+            return 0;
         }
         catch (Exception ex)
         {
+            _isDisposed = true;
             System.Diagnostics.Debug.WriteLine($"Erro ao ler amostras: {ex.Message}");
             return 0;
         }
+    }
+
+    public void MarkAsDisposed()
+    {
+        _isDisposed = true;
     }
 }

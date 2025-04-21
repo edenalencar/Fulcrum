@@ -67,6 +67,8 @@ public sealed class AudioManager
     private static readonly Lazy<AudioManager> _instance = new(() => new AudioManager());
     private readonly ConcurrentDictionary<string, Reprodutor> _audioPlayers = new();
     private readonly ConcurrentDictionary<string, float> _volumeStates = new();
+    // Dicionário para rastrear o estado de reprodução individual de cada reprodutor
+    private readonly ConcurrentDictionary<string, PlaybackState> _playerStates = new();
     private const string VOLUME_SETTINGS_KEY = "VolumeSettings";
     private const string EFFECTS_SETTINGS_KEY = "EffectsSettings";
 
@@ -75,6 +77,9 @@ public sealed class AudioManager
     // Armazena configurações de efeitos para salvar/restaurar
     private ConcurrentDictionary<string, EffectSettings> _effectSettings = new();
     
+    // Flag para garantir que todos os reprodutores iniciem com volume zero
+    private bool _forceInitialVolumeZero = true;
+    
     // Estado global de reprodução
     private PlaybackState _globalPlaybackState = PlaybackState.Stopped;
     
@@ -82,13 +87,25 @@ public sealed class AudioManager
     private bool _isMuted = false;
     private readonly ConcurrentDictionary<string, float> _preMuteVolumes = new();
 
+    // Armazena estados de reprodução individuais
+    private readonly ConcurrentDictionary<string, bool> _playbackStates = new();
+
     // Construtor privado para implementar o padrão Singleton
     private AudioManager() 
     {
+        // Inicializar todos os volumes para zero antes de carregar configurações salvas
+        _volumeStates.Clear();
+        
+        // Flag para forçar volume zero na primeira execução é ativada por padrão
+        _forceInitialVolumeZero = true;
+        
         // Carregar configurações salvas de volume na inicialização
         CarregarVolumes();
+        
         // Carregar configurações salvas de efeitos na inicialização
         CarregarEstadoEfeitos();
+        
+        System.Diagnostics.Debug.WriteLine("AudioManager: Inicializado com regra de volume zero");
     }
 
     /// <summary>
@@ -119,30 +136,55 @@ public sealed class AudioManager
     /// <param name="player">Reprodutor a ser adicionado</param>
     public void AddAudioPlayer(string id, Reprodutor player)
     {
-        try
+        if (_audioPlayers.TryGetValue(id, out var existingPlayer))
         {
-            System.Diagnostics.Debug.WriteLine($"Adicionando reprodutor com ID '{id}'");
-            if (!_audioPlayers.ContainsKey(id))
+            existingPlayer.Dispose();
+        }
+
+        _audioPlayers[id] = player;
+        
+        // Inicializa o estado de reprodução como parado
+        _playerStates[id] = PlaybackState.Stopped;
+        
+        // Define o volume inicial como zero para todos os reprodutores
+        player.Reader.Volume = 0f;
+        
+        // Garante que o player não inicie automaticamente
+        if (player.WaveOut != null && player.WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
+        {
+            player.Stop();
+        }
+        
+        System.Diagnostics.Debug.WriteLine($"Reprodutor {id} adicionado com sucesso com volume inicial zero e playback parado");
+        
+        // Se o dicionário de volumes ainda não foi inicializado ou não tem entradas,
+        // forçamos a inicialização com volume zero
+        if (_volumeStates.Count == 0)
+        {
+            _volumeStates[id] = 0f;
+            SalvarVolumes();
+        }
+        // Caso contrário, recuperamos o valor salvo
+        else if (_volumeStates.TryGetValue(id, out var savedVolume))
+        {
+            // Aplicamos o volume salvo apenas se não for a primeira execução
+            if (!_forceInitialVolumeZero)
             {
-                _audioPlayers.TryAdd(id, player);
-                System.Diagnostics.Debug.WriteLine($"Reprodutor com ID '{id}' adicionado com sucesso");
+                player.AlterarVolume(savedVolume);
+                System.Diagnostics.Debug.WriteLine($"Volume restaurado para {id}: {savedVolume}");
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine($"AVISO: Reprodutor com ID '{id}' já existe, substituindo");
-                _audioPlayers[id] = player;
+                // Forçamos o volume para zero na primeira execução
+                _volumeStates[id] = 0f;
+                player.AlterarVolume(0f);
+                System.Diagnostics.Debug.WriteLine($"Forçando volume inicial para zero em {id}");
             }
         }
-        catch (Exception ex)
+        else
         {
-            System.Diagnostics.Debug.WriteLine($"Erro ao adicionar reprodutor '{id}': {ex.Message}");
-            throw;
-        }
-        
-        // Restaura o volume salvo anteriormente, se existir
-        if (_volumeStates.TryGetValue(id, out float savedVolume))
-        {
-            AlterarVolume(id, savedVolume);
+            // Garantimos que o volume inicial seja sempre zero
+            _volumeStates.TryAdd(id, 0f);
         }
         
         // Restaura as configurações de efeitos salvas anteriormente, se existirem
@@ -221,6 +263,27 @@ public sealed class AudioManager
                 // Salva o novo estado do volume
                 _volumeStates[id] = volume;
                 SalvarVolumes();
+                
+                // Inicia a reprodução automaticamente se o volume for maior que zero
+                if (volume > 0.001f && player.WaveOut?.PlaybackState != NAudio.Wave.PlaybackState.Playing)
+                {
+                    player.Play();
+                    _playerStates[id] = PlaybackState.Playing;
+                    _globalPlaybackState = PlaybackState.Playing;
+                    System.Diagnostics.Debug.WriteLine($"Reprodução iniciada automaticamente para '{id}' ao ajustar volume para {volume}");
+                }
+                // Para a reprodução automaticamente se o volume for zero
+                else if (volume <= 0.001f && player.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing)
+                {
+                    player.Pause();
+                    _playerStates[id] = PlaybackState.Paused;
+                    
+                    // Verifica se ainda há algum player tocando
+                    if (!_audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing))
+                    {
+                        _globalPlaybackState = PlaybackState.Paused;
+                    }
+                }
                 
                 System.Diagnostics.Debug.WriteLine($"Volume do reprodutor '{id}' alterado para {volume}");
             }
@@ -304,12 +367,28 @@ public sealed class AudioManager
     /// </summary>
     public void PlayAll()
     {
-        foreach (var player in _audioPlayers.Values)
+        // Reproduzir apenas sons que estavam em estado de reprodução ou que têm volume acima de zero
+        foreach (var playerEntry in _audioPlayers)
         {
-            player.Play();
+            string soundId = playerEntry.Key;
+            Reprodutor player = playerEntry.Value;
+            
+            // Verifica se o reprodutor estava em estado de reprodução ou se tem volume suficiente para tocar
+            if (_playerStates.TryGetValue(soundId, out var state) && 
+                (state == PlaybackState.Playing || 
+                (state == PlaybackState.Stopped && player.Reader.Volume > 0.001f)))
+            {
+                player.Play();
+                _playerStates[soundId] = PlaybackState.Playing;
+            }
         }
-        _globalPlaybackState = PlaybackState.Playing;
-        System.Diagnostics.Debug.WriteLine("Iniciada reprodução de todos os sons");
+        
+        // Atualiza o estado global somente se pelo menos um reprodutor estiver tocando
+        if (_audioPlayers.Any(p => p.Value.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing))
+        {
+            _globalPlaybackState = PlaybackState.Playing;
+            System.Diagnostics.Debug.WriteLine("Iniciada reprodução respeitando estados anteriores dos reprodutores");
+        }
     }
     
     /// <summary>
@@ -317,25 +396,47 @@ public sealed class AudioManager
     /// </summary>
     public void PauseAll()
     {
-        foreach (var player in _audioPlayers.Values)
+        foreach (var playerEntry in _audioPlayers)
         {
-            player.Pause();
+            playerEntry.Value.Pause();
+            _playerStates[playerEntry.Key] = PlaybackState.Paused;
         }
+        
         _globalPlaybackState = PlaybackState.Paused;
         System.Diagnostics.Debug.WriteLine("Pausada reprodução de todos os sons");
     }
     
     /// <summary>
-    /// Para a reprodução de todos os sons
+    /// Reproduz um som específico
     /// </summary>
-    public void StopAll()
+    public void Play(string soundId)
     {
-        foreach (var player in _audioPlayers.Values)
+        if (_audioPlayers.TryGetValue(soundId, out var player))
         {
-            player.Stop();
+            player.Play();
+            _playerStates[soundId] = PlaybackState.Playing;
+            
+            // Atualiza o estado global se pelo menos um player estiver tocando
+            _globalPlaybackState = PlaybackState.Playing;
         }
-        _globalPlaybackState = PlaybackState.Stopped;
-        System.Diagnostics.Debug.WriteLine("Parada reprodução de todos os sons");
+    }
+    
+    /// <summary>
+    /// Pausa um som específico
+    /// </summary>
+    public void Pause(string soundId)
+    {
+        if (_audioPlayers.TryGetValue(soundId, out var player))
+        {
+            player.Pause();
+            _playerStates[soundId] = PlaybackState.Paused;
+            
+            // Verifica se ainda há algum player tocando
+            if (!_audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing))
+            {
+                _globalPlaybackState = PlaybackState.Paused;
+            }
+        }
     }
     
     /// <summary>
@@ -431,6 +532,90 @@ public sealed class AudioManager
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar configurações de volume: {ex.Message}");
         }
+    }
+    
+    /// <summary>
+    /// Inicializa todos os reprodutores com um volume específico
+    /// </summary>
+    /// <param name="initialVolume">Volume inicial para todos os reprodutores (0.0 a 1.0)</param>
+    public void InitializePlayers(double initialVolume)
+    {
+        // Força volume zero na primeira execução
+        float volume = _forceInitialVolumeZero ? 0.0f : (float)Math.Clamp(initialVolume, 0.0, 1.0);
+        
+        // Se os volumes já foram carregados das configurações, mas queremos forçar volume zero
+        if (_volumeStates.Count > 0 && _forceInitialVolumeZero)
+        {
+            System.Diagnostics.Debug.WriteLine("Forçando volume inicial zero para todos os reprodutores...");
+            
+            // Reseta todos os volumes para zero
+            foreach (var pair in _audioPlayers)
+            {
+                // Define o volume
+                pair.Value.AlterarVolume(0.0f);
+                
+                // Garante que o player esteja parado
+                if (pair.Value.WaveOut != null && pair.Value.WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
+                {
+                    pair.Value.Stop();
+                }
+                
+                // Atualiza o dicionário de estados de volume
+                _volumeStates[pair.Key] = 0.0f;
+                
+                // Marca o estado de reprodução como parado
+                _playerStates[pair.Key] = PlaybackState.Stopped;
+            }
+            
+            // Atualiza o estado global
+            _globalPlaybackState = PlaybackState.Stopped;
+            
+            // Salva os novos estados de volume
+            SalvarVolumes();
+            
+            // Desativa o flag para futuras execuções
+            _forceInitialVolumeZero = false;
+            
+            System.Diagnostics.Debug.WriteLine("Todos os reprodutores foram inicializados com volume zero");
+            return;
+        }
+        
+        // Se os volumes já foram carregados das configurações e não queremos forçar volume zero
+        if (_volumeStates.Count > 0 && !_forceInitialVolumeZero)
+        {
+            System.Diagnostics.Debug.WriteLine("Volumes já carregados de configurações anteriores, preservando estado...");
+            return;
+        }
+        
+        // Aplica o volume inicial a todos os reprodutores e interrompe qualquer reprodução
+        foreach (var pair in _audioPlayers)
+        {
+            // Define o volume
+            pair.Value.AlterarVolume(volume);
+            
+            // Garante que o player esteja parado
+            if (pair.Value.WaveOut != null && pair.Value.WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
+            {
+                pair.Value.Stop();
+            }
+            
+            // Atualiza o dicionário de estados de volume
+            _volumeStates[pair.Key] = volume;
+            
+            // Marca o estado de reprodução como parado
+            _playerStates[pair.Key] = PlaybackState.Stopped;
+        }
+        
+        // Atualiza o estado global
+        _globalPlaybackState = PlaybackState.Stopped;
+        
+        // Salva os novos estados de volume
+        SalvarVolumes();
+        
+        // Após a inicialização, desativa o flag para futuras execuções
+        _forceInitialVolumeZero = false;
+        
+        System.Diagnostics.Debug.WriteLine($"Todos os reprodutores inicializados com volume {volume} e reprodução interrompida");
     }
     
     #region Métodos de Equalizador e Efeitos
@@ -750,6 +935,18 @@ public sealed class AudioManager
         }
         _audioPlayers.Clear();
         System.Diagnostics.Debug.WriteLine("AudioManager: todos os recursos liberados");
+    }
+    
+    /// <summary>
+    /// Obtém o estado de reprodução específico por player
+    /// </summary>
+    public bool IsPlayerPlaying(string soundId)
+    {
+        if (_audioPlayers.TryGetValue(soundId, out var player))
+        {
+            return player.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing;
+        }
+        return false;
     }
 }
 

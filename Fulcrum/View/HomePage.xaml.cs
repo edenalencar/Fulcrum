@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Microsoft.UI.Xaml.Shapes;
 using NAudio.Wave;
 using System;
 using Windows.UI;
@@ -17,7 +18,10 @@ namespace Fulcrum.View;
 /// </summary>
 public sealed partial class HomePage : Page
 {
+    private AudioManager _audioManager;
     private bool _isInitialized = false;
+    private bool _isPageActive = false;
+    private bool _isUpdatingSliders = false;
     private DispatcherTimer _sleepTimerDisplayUpdateTimer;
 
     /// <summary>
@@ -27,17 +31,9 @@ public sealed partial class HomePage : Page
     {
         this.InitializeComponent();
         
-        // Se já existirem reprodutores, não inicializa novamente
-        if (AudioManager.Instance.GetQuantidadeReprodutor > 0)
-        {
-            _isInitialized = true;
-        }
-        else
-        {
-            InitializeAudioPlayers();
-            _isInitialized = true;
-        }
-        
+        // Inicializa gerenciador de áudio
+        _audioManager = AudioManager.Instance;
+
         // Inicializar timer de atualização do display
         _sleepTimerDisplayUpdateTimer = new DispatcherTimer();
         _sleepTimerDisplayUpdateTimer.Interval = TimeSpan.FromSeconds(10);
@@ -61,17 +57,44 @@ public sealed partial class HomePage : Page
     /// </summary>
     private void HomePage_Loaded(object sender, RoutedEventArgs e)
     {
+        _isPageActive = true;
+
         // Aplica animações iniciais aos cards
         ApplyEntryAnimations();
         
-        // Configura os visualizadores de áudio
-        ConfigureWaveformVisualizers();
+        if (!_isInitialized)
+        {
+            // Configura os sliders para exibir o valor atual
+            ConfigureSliders();
+            
+            // Inicializa os visualizadores de forma de onda
+            ConfigureWaveformVisualizers();
+            
+            // Verifica se já existem reprodutores antes de inicializar novamente
+            if (AudioManager.Instance.GetQuantidadeReprodutor == 0)
+            {
+                // Só inicializa os reprodutores se não existirem
+                InitializeAudioPlayers();
+                _isInitialized = true;
+            }
+            
+            System.Diagnostics.Debug.WriteLine("HomePage: Primeira inicialização concluída");
+        }
+        else
+        {
+            // Apenas atualiza os sliders com os valores atuais sem alterar os volumes
+            UpdateSlidersWithCurrentVolumes();
+            System.Diagnostics.Debug.WriteLine("HomePage: Restaurando estado anterior");
+        }
+        
+        // Restaura estado dos áudios, garantindo que reprodutores com volume > 0 estejam tocando
+        RestoreAudioStates();
         
         // Sincroniza os valores dos sliders com os valores dos reprodutores
-        if (_isInitialized)
-        {
-            SyncSliderValues();
-        }
+        SyncSliderValues();
+        
+        // Atualiza o estado visual do botão de reprodução principal
+        UpdatePlayButtonState(AudioManager.Instance.IsPlaying);
     }
     
     /// <summary>
@@ -79,9 +102,14 @@ public sealed partial class HomePage : Page
     /// </summary>
     private void HomePage_Unloaded(object sender, RoutedEventArgs e)
     {
+        _isPageActive = false;
+
         // Salva o estado dos volumes antes de navegar para outra página
         AudioManager.Instance.SalvarEstadoVolumes();
         AudioManager.Instance.SalvarEstadoEfeitos();
+
+        // Importante: não parar reprodução quando sair desta página
+        System.Diagnostics.Debug.WriteLine("HomePage: Descarregada, estado de reprodução preservado");
     }
 
     /// <summary>
@@ -188,6 +216,16 @@ public sealed partial class HomePage : Page
             TryAddAudioPlayer(Constantes.Sons.Ventos, () => new ReprodutorVentos());
             TryAddAudioPlayer(Constantes.Sons.Cafeteria, () => new ReprodutorCafeteria());
             
+            // Verifica que todos os reprodutores tenham volume zero inicialmente
+            foreach (var player in AudioManager.Instance.GetListReprodutores())
+            {
+                if (player.Value.Reader.Volume > 0.001f)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Forçando volume zero para o reprodutor {player.Key}");
+                    AudioManager.Instance.AlterarVolume(player.Key, 0.0f);
+                }
+            }
+            
             System.Diagnostics.Debug.WriteLine($"Reprodutores carregados: {AudioManager.Instance.GetQuantidadeReprodutor}");
         }
         catch (Exception ex)
@@ -211,6 +249,73 @@ public sealed partial class HomePage : Page
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao inicializar reprodutor {soundId}: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Configura os sliders para ajuste de volume
+    /// </summary>
+    private void ConfigureSliders()
+    {
+        // Desconectar temporariamente os eventos para evitar alterações indesejadas durante a configuração
+        chuva.ValueChanged -= Slider_ValueChanged;
+        fogueira.ValueChanged -= Slider_ValueChanged;
+        lancha.ValueChanged -= Slider_ValueChanged;
+        ondas.ValueChanged -= Slider_ValueChanged;
+        passaros.ValueChanged -= Slider_ValueChanged;
+        praia.ValueChanged -= Slider_ValueChanged;
+        trem.ValueChanged -= Slider_ValueChanged;
+        ventos.ValueChanged -= Slider_ValueChanged;
+        cafeteria.ValueChanged -= Slider_ValueChanged;
+
+        // Definir valores iniciais para os sliders (todos começam em zero)
+        chuva.Minimum = 0.0;
+        chuva.Maximum = 1.0;
+        chuva.Value = 0.0;
+        
+        fogueira.Minimum = 0.0;
+        fogueira.Maximum = 1.0;
+        fogueira.Value = 0.0;
+        
+        lancha.Minimum = 0.0;
+        lancha.Maximum = 1.0;
+        lancha.Value = 0.0;
+        
+        ondas.Minimum = 0.0;
+        ondas.Maximum = 1.0;
+        ondas.Value = 0.0;
+        
+        passaros.Minimum = 0.0;
+        passaros.Maximum = 1.0;
+        passaros.Value = 0.0;
+        
+        praia.Minimum = 0.0;
+        praia.Maximum = 1.0;
+        praia.Value = 0.0;
+        
+        trem.Minimum = 0.0;
+        trem.Maximum = 1.0;
+        trem.Value = 0.0;
+        
+        ventos.Minimum = 0.0;
+        ventos.Maximum = 1.0;
+        ventos.Value = 0.0;
+        
+        cafeteria.Minimum = 0.0;
+        cafeteria.Maximum = 1.0;
+        cafeteria.Value = 0.0;
+
+        // Reconectar os eventos após configuração
+        chuva.ValueChanged += Slider_ValueChanged;
+        fogueira.ValueChanged += Slider_ValueChanged;
+        lancha.ValueChanged += Slider_ValueChanged;
+        ondas.ValueChanged += Slider_ValueChanged;
+        passaros.ValueChanged += Slider_ValueChanged;
+        praia.ValueChanged += Slider_ValueChanged;
+        trem.ValueChanged += Slider_ValueChanged;
+        ventos.ValueChanged += Slider_ValueChanged;
+        cafeteria.ValueChanged += Slider_ValueChanged;
+        
+        System.Diagnostics.Debug.WriteLine("Sliders configurados com valores iniciais zero");
     }
 
     /// <summary>
@@ -308,6 +413,102 @@ public sealed partial class HomePage : Page
     }
 
     /// <summary>
+    /// Atualiza os sliders com os valores atuais dos reprodutores sem alterar os volumes
+    /// </summary>
+    private void UpdateSlidersWithCurrentVolumes()
+    {
+        // Ativa a flag para indicar que estamos fazendo uma atualização em massa dos sliders
+        _isUpdatingSliders = true;
+        
+        try
+        {
+            // Desconecta temporariamente os eventos de alteração de valor
+            chuva.ValueChanged -= Slider_ValueChanged;
+            fogueira.ValueChanged -= Slider_ValueChanged;
+            lancha.ValueChanged -= Slider_ValueChanged;
+            ondas.ValueChanged -= Slider_ValueChanged;
+            passaros.ValueChanged -= Slider_ValueChanged;
+            praia.ValueChanged -= Slider_ValueChanged;
+            trem.ValueChanged -= Slider_ValueChanged;
+            ventos.ValueChanged -= Slider_ValueChanged;
+            cafeteria.ValueChanged -= Slider_ValueChanged;
+            VolumeSlider.ValueChanged -= Volume_ValueChanged;
+
+            // Resetar o slider principal para zero inicialmente
+            VolumeSlider.Value = 0.0;
+
+            // Atualiza os sliders com os valores atuais dos reprodutores
+            var players = _audioManager.GetListReprodutores();
+
+            if (players.TryGetValue(Constantes.Sons.Chuva, out var chuvaPlayer))
+                chuva.Value = chuvaPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Fogueira, out var fogueiraPlayer))
+                fogueira.Value = fogueiraPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Lancha, out var lanchaPlayer))
+                lancha.Value = lanchaPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Ondas, out var ondasPlayer))
+                ondas.Value = ondasPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Passaros, out var passarosPlayer))
+                passaros.Value = passarosPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Praia, out var praiaPlayer))
+                praia.Value = praiaPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Trem, out var tremPlayer))
+                trem.Value = tremPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Ventos, out var ventosPlayer))
+                ventos.Value = ventosPlayer.Reader.Volume;
+
+            if (players.TryGetValue(Constantes.Sons.Cafeteria, out var cafeteriaPlayer))
+                cafeteria.Value = cafeteriaPlayer.Reader.Volume;
+
+            // Reconecta os eventos de alteração de valor
+            chuva.ValueChanged += Slider_ValueChanged;
+            fogueira.ValueChanged += Slider_ValueChanged;
+            lancha.ValueChanged += Slider_ValueChanged;
+            ondas.ValueChanged += Slider_ValueChanged;
+            passaros.ValueChanged += Slider_ValueChanged;
+            praia.ValueChanged += Slider_ValueChanged;
+            trem.ValueChanged += Slider_ValueChanged;
+            ventos.ValueChanged += Slider_ValueChanged;
+            cafeteria.ValueChanged += Slider_ValueChanged;
+            VolumeSlider.ValueChanged += Volume_ValueChanged;
+            
+            System.Diagnostics.Debug.WriteLine("Sliders atualizados com os valores atuais dos reprodutores");
+        }
+        finally
+        {
+            // Garante que a flag seja desativada mesmo se ocorrer uma exceção
+            _isUpdatingSliders = false;
+        }
+    }
+
+    /// <summary>
+    /// Restaura o estado dos áudios garantindo que reprodutores com volume > 0 estejam tocando
+    /// </summary>
+    private void RestoreAudioStates()
+    {
+        var players = _audioManager.GetListReprodutores();
+        foreach (var player in players)
+        {
+            if (player.Value.Reader.Volume > 0.001f)
+            {
+                // Se o volume for maior que zero, garante que esteja tocando
+                if (player.Value.WaveOut?.PlaybackState != NAudio.Wave.PlaybackState.Playing)
+                {
+                    _audioManager.Play(player.Key);
+                    System.Diagnostics.Debug.WriteLine($"Retomando reprodução de {player.Key} (volume: {player.Value.Reader.Volume})");
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Evento de mudança de valor do controle deslizante (slider)
     /// </summary>
     private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -319,14 +520,111 @@ public sealed partial class HomePage : Page
         
         try
         {
-            // Atualiza o volume do reprodutor correspondente - convertendo explicitamente para float
+            // Obtém o reprodutor correspondente
+            var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
+            if (reprodutor == null) return;
+            
+            // Verifica se o volume era zero antes da mudança
+            bool eraZero = reprodutor.Reader.Volume <= 0.001f;
+            
+            // Atualiza o volume do reprodutor
             AudioManager.Instance.AlterarVolume(soundId, (float)e.NewValue);
+            System.Diagnostics.Debug.WriteLine($"Volume alterado para {soundId}: {e.NewValue:F2}");
+            
+            // Se o volume mudou de zero para maior que zero, garante que a visualização seja iniciada
+            if (eraZero && e.NewValue > 0.001f)
+            {
+                // Forçar configuração e inicialização da visualização
+                ConfigurarEIniciarVisualizacao(soundId);
+                System.Diagnostics.Debug.WriteLine($"Visualização forçada para {soundId} após aumento de volume");
+            }
         }
         catch (Exception ex)
         {
-            // Log de erro ou exibir mensagem para o usuário
             System.Diagnostics.Debug.WriteLine($"Erro ao ajustar volume: {ex.Message}");
         }
+    }
+    
+    /// <summary>
+    /// Configura e inicia a visualização para um som específico
+    /// </summary>
+    private void ConfigurarEIniciarVisualizacao(string soundId)
+    {
+        try
+        {
+            var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
+            if (reprodutor == null) return;
+            
+            // Obtém a referência ao elemento Polyline correspondente
+            var waveformElement = ObterElementoWaveform(soundId);
+            if (waveformElement == null) return;
+            
+            // Configura a visualização com a cor apropriada
+            Color cor = ObterCorParaSom(soundId);
+            
+            // Reconfigura o visualizador
+            if (reprodutor.Visualizer != null)
+            {
+                reprodutor.Visualizer.Stop();
+                reprodutor.Visualizer.Dispose();
+                reprodutor.Visualizer = null;
+            }
+            
+            // Cria novo visualizador
+            reprodutor.ConfigureVisualizer(waveformElement);
+            waveformElement.Stroke = new SolidColorBrush(cor);
+            
+            // Inicia a visualização explicitamente se o volume for maior que zero
+            if (reprodutor.Reader.Volume > 0.001f)
+            {
+                reprodutor.StartVisualization();
+                System.Diagnostics.Debug.WriteLine($"Visualização iniciada para {soundId}");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao configurar visualização: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Obtém o elemento Polyline correspondente ao ID do som
+    /// </summary>
+    private Polyline ObterElementoWaveform(string soundId)
+    {
+        return soundId switch
+        {
+            Constantes.Sons.Chuva => chuvaWaveform,
+            Constantes.Sons.Fogueira => fogueiraWaveform,
+            Constantes.Sons.Lancha => lanchaWaveform,
+            Constantes.Sons.Ondas => ondasWaveform,
+            Constantes.Sons.Passaros => passarosWaveform,
+            Constantes.Sons.Praia => praiaWaveform,
+            Constantes.Sons.Trem => tremWaveform,
+            Constantes.Sons.Ventos => ventosWaveform,
+            Constantes.Sons.Cafeteria => cafeteriaWaveform,
+            _ => null
+        };
+    }
+    
+    /// <summary>
+    /// Obtém a cor associada ao som específico
+    /// </summary>
+    private Color ObterCorParaSom(string soundId)
+    {
+        return soundId switch
+        {
+            Constantes.Sons.Chuva => Colors.DeepSkyBlue,
+            Constantes.Sons.Fogueira => Colors.OrangeRed,
+            Constantes.Sons.Lancha => Colors.MediumPurple,
+            Constantes.Sons.Ondas => Colors.LightSeaGreen,
+            Constantes.Sons.Passaros => Colors.YellowGreen,
+            Constantes.Sons.Praia => Colors.Gold,
+            Constantes.Sons.Trem => Colors.Gray,
+            Constantes.Sons.Ventos => Colors.LightBlue,
+            Constantes.Sons.Cafeteria => Colors.SandyBrown,
+            _ => Colors.Gray
+        };
     }
 
     /// <summary>
@@ -579,13 +877,26 @@ public sealed partial class HomePage : Page
     /// </summary>
     private void Volume_ValueChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
     {
-        if (sender is Microsoft.UI.Xaml.Controls.Slider slider)
+        // Verifica se devemos ignorar o evento durante a inicialização da página
+        if (!_isPageActive || _isUpdatingSliders)
+            return;
+
+        try
         {
-            // Ajusta o volume para todos os reprodutores
+            // Ajusta o volume para todos os reprodutores que já têm volume maior que zero
             foreach (var reprodutor in AudioManager.Instance.GetListReprodutores())
             {
-                AudioManager.Instance.AlterarVolume(reprodutor.Key, (float)slider.Value);
+                // Altera apenas o volume para os players que já estão tocando ou têm volume > 0
+                if (reprodutor.Value.Reader.Volume > 0.001f)
+                {
+                    AudioManager.Instance.AlterarVolume(reprodutor.Key, (float)e.NewValue);
+                    System.Diagnostics.Debug.WriteLine($"Ajustando volume de {reprodutor.Key} para {e.NewValue} via controle principal");
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao ajustar volume principal: {ex.Message}");
         }
     }
 

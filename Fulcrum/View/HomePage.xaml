@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="Fulcrum.View.HomePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,600 +5,421 @@
     xmlns:local="using:Fulcrum.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:animations="using:CommunityToolkit.WinUI.UI.Animations"
-    mc:Ignorable="d"
-    Background="{ThemeResource AppBackgroundBrush}">
+    mc:Ignorable="d">
 
     <Page.Resources>
-        <!-- Estilo para os cartões de som -->
-        <Style x:Key="SoundCardStyle" TargetType="Grid">
-            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
-            <Setter Property="Padding" Value="16"/>
-            <Setter Property="Margin" Value="8"/>
-            <Setter Property="animations:Implicit.ShowAnimations">
-                <Setter.Value>
-                    <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.3"/>
-                        <animations:ScaleAnimation From="0.9" To="1" Duration="0:0:0.3"/>
-                    </animations:ImplicitAnimationSet>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        
-        <!-- Estilo para os títulos dos cartões -->
-        <Style x:Key="CardTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Margin" Value="0,0,0,8"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
-        </Style>
-        
-        <!-- Estilo para os controles deslizantes -->
-        <Style x:Key="VolumeSliderStyle" TargetType="Slider">
-            <Setter Property="Margin" Value="0,16,0,0"/>
-            <Setter Property="Minimum" Value="0"/>
-            <Setter Property="Maximum" Value="1"/>
-            <Setter Property="StepFrequency" Value="0.01"/>
-            <Setter Property="TickFrequency" Value="0.1"/>
-            <Setter Property="TickPlacement" Value="Outside"/>
-            <Setter Property="IsThumbToolTipEnabled" Value="True"/>
-            <Setter Property="ThumbToolTipValueConverter">
-                <Setter.Value>
-                    <local:VolumePercentageConverter/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Foreground" Value="{ThemeResource SystemAccentColor}"/>
-        </Style>
+        <ResourceDictionary>
+            <!-- Estilos para os controles deslizantes de volume -->
+            <Style x:Key="SoundSliderStyle" TargetType="Slider">
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="1" />
+                <Setter Property="StepFrequency" Value="0.01" />
+                <Setter Property="Width" Value="120" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="8,0" />
+            </Style>
 
-        <!-- Estilo para os visualizadores de onda -->
-        <Style x:Key="WaveformStyle" TargetType="Polyline">
-            <Setter Property="Stroke" Value="{ThemeResource SystemAccentColor}"/>
-            <Setter Property="StrokeThickness" Value="1.5"/>
-            <Setter Property="StrokeLineJoin" Value="Round"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="0,8,0,8"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-        
-        <!-- Estilo para o botão de cancelar timer -->
-        <Style x:Key="TimerCancelButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="4"/>
-            <Setter Property="Width" Value="28"/>
-            <Setter Property="Height" Value="28"/>
-            <Setter Property="CornerRadius" Value="14"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Opacity" Value="0.8"/>
-            <Setter Property="animations:Implicit.ShowAnimations">
-                <Setter.Value>
-                    <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.2"/>
-                        <animations:ScaleAnimation From="0.8" To="1" Duration="0:0:0.2"/>
-                    </animations:ImplicitAnimationSet>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="animations:Implicit.HideAnimations">
-                <Setter.Value>
-                    <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation From="1" To="0" Duration="0:0:0.2"/>
-                        <animations:ScaleAnimation From="1" To="0.8" Duration="0:0:0.2"/>
-                    </animations:ImplicitAnimationSet>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <!-- Estilo para os cards de som -->
+            <Style x:Key="SoundCardStyle" TargetType="Grid">
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                <Setter Property="animations:Implicit.Animations">
+                    <Setter.Value>
+                        <animations:ImplicitAnimationSet>
+                            <animations:OpacityAnimation Duration="0:0:0.3" />
+                            <animations:ScaleAnimation Duration="0:0:0.3" />
+                            <animations:TranslationAnimation Duration="0:0:0.3" />
+                        </animations:ImplicitAnimationSet>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <!-- Card para um som com controles -->
-        <DataTemplate x:Key="SoundCardTemplate">
-            <Border Style="{StaticResource CardBorderStyle}">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    
-                    <!-- Título e ícone -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                        <FontIcon Glyph="{Binding Glyph}" 
-                                    FontFamily="Segoe Fluent Icons" 
-                                    Foreground="{ThemeResource TextSecondaryBrush}"
-                                    FontSize="16"
-                                    Margin="0,0,8,0"/>
-                        <TextBlock Text="{Binding Title}" 
-                                    Style="{StaticResource CardTitleStyle}"/>
-                    </StackPanel>
-                    
-                    <!-- Visualizador de forma de onda -->
-                    <Border Grid.Row="1" 
-                            Style="{StaticResource WaveformBorderStyle}">
-                        <Polyline x:Name="polyWaveform"
-                                Style="{StaticResource WaveformStyle}"
-                                Points="{Binding WaveformPoints}"/>
-                    </Border>
-                    
-                    <!-- Slider de volume -->
-                    <Slider Grid.Row="2" 
-                            Style="{StaticResource VolumeSliderStyle}"
-                            Value="{Binding Volume, Mode=TwoWay}"
-                            ValueChanged="Volume_ValueChanged"/>
+            <!-- Estilo para os ícones de som -->
+            <Style x:Key="SoundIconStyle" TargetType="Image">
+                <Setter Property="Width" Value="40" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="Margin" Value="12" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
 
-                    <!-- Botões de controle -->
-                    <Grid Grid.Row="3" Margin="0,4,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        
-                        <!-- Botão de reprodução -->
-                        <Button x:Name="btnPlay"
-                                Style="{StaticResource DefaultButtonStyle}"
-                                Click="PlayButton_Click"
-                                ToolTipService.ToolTip="Reproduzir/Pausar">
-                            <FontIcon Glyph="&#xE768;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Border>
-        </DataTemplate>
+            <!-- Estilo para os títulos dos cards -->
+            <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Margin" Value="0,0,0,4" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+            <!-- Estilo para os botões de equalização -->
+            <Style x:Key="EqualizerButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="FontFamily" Value="Segoe Fluent Icons" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Width" Value="36" />
+                <Setter Property="Height" Value="36" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="4,0,0,0" />
+                <Setter Property="ToolTipService.ToolTip" Value="Equalizar" />
+            </Style>
+
+            <!-- Efeito de sombra - removendo o AttachedCardShadow que estava causando erro -->
+            <Style x:Key="CardShadowStyle" TargetType="Grid">
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            </Style>
+
+            <!-- Estilo para os visualizadores de ondas de áudio -->
+            <Style x:Key="WaveformStyle" TargetType="Polyline">
+                <Setter Property="Stroke" Value="{ThemeResource SystemAccentColor}" />
+                <Setter Property="StrokeThickness" Value="1.5" />
+                <Setter Property="Opacity" Value="0.8" />
+                <Setter Property="StrokeLineJoin" Value="Round" />
+                <Setter Property="StrokeStartLineCap" Value="Round" />
+                <Setter Property="StrokeEndLineCap" Value="Round" />
+                <Setter Property="Height" Value="30" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="4,0" />
+            </Style>
+            
+            <!-- Estilo para o botão principal de reprodução -->
+            <Style x:Key="MainPlayButtonStyle" TargetType="Button">
+                <Setter Property="FontFamily" Value="Segoe Fluent Icons" />
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="Width" Value="48" />
+                <Setter Property="Height" Value="48" />
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="Background" Value="{ThemeResource SystemAccentColor}" />
+                <Setter Property="Foreground" Value="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+            
+            <!-- Estilo para o controle deslizante de volume principal -->
+            <Style x:Key="MainVolumeSliderStyle" TargetType="Slider">
+                <Setter Property="Minimum" Value="0" />
+                <Setter Property="Maximum" Value="1" />
+                <Setter Property="StepFrequency" Value="0.01" />
+                <Setter Property="Width" Value="200" />
+                <Setter Property="Margin" Value="16,0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+            <!-- Adicionando ThemeShadow para simular os efeitos de sombra -->
+            <ThemeShadow x:Key="SharedShadow" />
+        </ResourceDictionary>
     </Page.Resources>
 
-    <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto">
-        <StackPanel x:Name="rootPanel" Orientation="Vertical" Spacing="16" MaxWidth="800" HorizontalAlignment="Center">
-            <TextBlock Text="Sons Ambientes" 
-                       Style="{StaticResource TitleTextBlockStyle}" 
-                       Margin="0,0,0,20" 
-                       HorizontalAlignment="Center"/>
-            
-            <!-- Timer de Sono -->
-            <Grid Margin="0,0,0,24" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,16">
+    <ScrollViewer Padding="24,16,24,24">
+        <StackPanel Spacing="16">
+            <!-- Painel superior com controles principais usando ThemeShadow -->
+            <Grid Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                  CornerRadius="12" 
+                  Padding="16" 
+                  BorderThickness="1"
+                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                  Style="{StaticResource CardShadowStyle}"
+                  Translation="0,0,24"
+                  Shadow="{StaticResource SharedShadow}">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="SetSleepTimerButton" 
-                        Grid.Column="0"
-                        Click="SetSleepTimer_Click"
-                        HorizontalAlignment="Left"
-                        Style="{StaticResource DefaultButtonStyle}">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xE916;" FontFamily="Segoe MDL2 Assets"/>
-                        <TextBlock Text="Definir Timer" FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Button>
+                <!-- Controles de reprodução e volume principal -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE767;" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                    <Button x:Name="PlayButton" Click="PlayButton_Click" Style="{StaticResource MainPlayButtonStyle}">
+                        <FontIcon x:Name="PlayPauseIcon" Glyph="&#xE768;"/>
+                    </Button>
+                </StackPanel>
 
-                <StackPanel x:Name="timerContainer" 
-                            Grid.Column="1"
-                            Orientation="Horizontal" 
-                            Visibility="Collapsed" 
-                            Spacing="8"
-                            Background="{ThemeResource SystemAccentColorLight1}"
-                            CornerRadius="16"
-                            Padding="10,4,4,4"
-                            VerticalAlignment="Center">
-                    <FontIcon Glyph="&#xE916;" FontFamily="Segoe MDL2 Assets" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
-                    <TextBlock x:Name="timerDisplay" 
-                               Text="00:00" 
-                               FontWeight="SemiBold" 
-                               VerticalAlignment="Center"
-                               Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
-                    <Button x:Name="cancelTimerButton" 
-                            Style="{StaticResource TimerCancelButtonStyle}"
-                            Click="CancelTimer_Click">
-                        <FontIcon Glyph="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="12"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <FontIcon Glyph="&#xE992;" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                    <Slider x:Name="VolumeSlider" Style="{StaticResource MainVolumeSliderStyle}" 
+                            ValueChanged="Volume_ValueChanged"
+                            Value="0.0" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
+                    <FontIcon Glyph="&#xE994;" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
+                    <Button x:Name="SetSleepTimerButton" Click="SetSleepTimer_Click"
+                            ToolTipService.ToolTip="Definir timer para parar automaticamente">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE916;" Margin="0,0,8,0"/>
+                            <TextBlock Text="Definir Timer"/>
+                        </StackPanel>
                     </Button>
                 </StackPanel>
             </Grid>
 
-            <controls:UniformGrid Columns="3" Rows="0" ColumnSpacing="16" RowSpacing="16">
-                <!-- Cartão de Som - Chuva -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+            <!-- Área de exibição do timer -->
+            <Grid x:Name="timerContainer" Visibility="Collapsed" 
+                  Background="{ThemeResource InfoBarInformationalSeverityIconBackground}" 
+                  CornerRadius="8" Padding="16,8" 
+                  BorderThickness="1"
+                  BorderBrush="{ThemeResource InfoBarInformationalSeverityIconBackground}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <FontIcon Grid.Column="0" Glyph="&#xE916;" FontSize="16" Margin="0,0,12,0" Foreground="White"/>
+                <TextBlock Grid.Column="1" x:Name="timerDisplay" Text="00:00:00" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <Button Grid.Column="2" x:Name="cancelTimerButton" Content="Cancelar" Click="CancelTimer_Click"
+                        Background="Transparent" Foreground="White" BorderThickness="0"/>
+            </Grid>
+
+            <!-- Grade de cards de sons -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Card de Chuva sem ThemeShadow -->
+                <Grid Grid.Column="0" Grid.Row="0" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Chuva" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/chuva.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="chuvaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="chuva" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=chuva, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="chuva"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/chuva.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Chuva" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="chuva" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="chuvaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#6CB4EE"/>
+                    
+                    <Slider x:Name="chuva" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" 
+                            UIElement.CanBeScrollAnchor="True" />
                 </Grid>
-                
-                <!-- Cartão de Som - Fogueira -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Fogueira sem ThemeShadow -->
+                <Grid Grid.Column="1" Grid.Row="0" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Fogueira" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/fogueira.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="fogueiraWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="fogueira" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=fogueira, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="fogueira"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/fogueira.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Fogueira" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="fogueira" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="fogueiraWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#FF6347"/>
+                    
+                    <Slider x:Name="fogueira" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-                
-                <!-- Cartão de Som - Ondas -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Lancha sem ThemeShadow -->
+                <Grid Grid.Column="2" Grid.Row="0" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Ondas" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/ondas.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="ondasWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="ondas" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=ondas, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="ondas"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/lancha.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Lancha" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="lancha" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="lanchaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#B19CD9"/>
+                    
+                    <Slider x:Name="lancha" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-                
-                <!-- Cartão de Som - Pássaros -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Ondas sem ThemeShadow -->
+                <Grid Grid.Column="0" Grid.Row="1" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Pássaros" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/passaros.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="passarosWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="passaros" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=passaros, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="passaros"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/ondas.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Ondas" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="ondas" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="ondasWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#20B2AA"/>
+                    
+                    <Slider x:Name="ondas" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-                
-                <!-- Cartão de Som - Praia -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Pássaros sem ThemeShadow -->
+                <Grid Grid.Column="1" Grid.Row="1" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Praia" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/praia.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="praiaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="praia" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=praia, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="praia"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/passaros.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Pássaros" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="passaros" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="passarosWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#9ACD32"/>
+                    
+                    <Slider x:Name="passaros" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-                
-                <!-- Cartão de Som - Trem -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Praia sem ThemeShadow -->
+                <Grid Grid.Column="2" Grid.Row="1" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Trem" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/trem.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="tremWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="trem" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=trem, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="trem"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/praia.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Praia" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="praia" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="praiaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#FFD700"/>
+                    
+                    <Slider x:Name="praia" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-                
-                <!-- Cartão de Som - Ventos -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Trem sem ThemeShadow -->
+                <Grid Grid.Column="0" Grid.Row="2" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Ventos" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/vento.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="ventosWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="ventos" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=ventos, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="ventos"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/trem.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Trem" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="trem" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="tremWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#A9A9A9"/>
+                    
+                    <Slider x:Name="trem" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-                
-                <!-- Cartão de Som - Cafeteria -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Ventos sem ThemeShadow -->
+                <Grid Grid.Column="1" Grid.Row="2" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Cafeteria" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/cafeteria.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="cafeteriaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="cafeteria" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=cafeteria, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="cafeteria"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/vento.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Ventos" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="ventos" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="ventosWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#ADD8E6"/>
+                    
+                    <Slider x:Name="ventos" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-                
-                <!-- Cartão de Som - Lancha -->
-                <Grid Style="{StaticResource SoundCardStyle}">
+
+                <!-- Card de Cafeteria sem ThemeShadow -->
+                <Grid Grid.Column="2" Grid.Row="2" Style="{StaticResource SoundCardStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
-                    <TextBlock Text="Lancha" Style="{StaticResource CardTitleStyle}"/>
-                    
-                    <Image Grid.Row="1" Source="/Assets/Images/lancha.png" Width="140" Height="140" 
-                           HorizontalAlignment="Center" Margin="0,8"/>
-                    
-                    <Polyline x:Name="lanchaWaveform" Grid.Row="2" Style="{StaticResource WaveformStyle}"/>
-                    
-                    <Slider x:Name="lancha" Grid.Row="3" Style="{StaticResource VolumeSliderStyle}"
-                            ValueChanged="Slider_ValueChanged"/>
-                            
-                    <!-- Controles adicionais -->
-                    <Grid Grid.Row="4" Margin="0,8,0,0">
+
+                    <Grid Grid.Row="0" Padding="12,12,12,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <!-- Percentual de volume -->
-                        <TextBlock Text="{Binding Value, ElementName=lancha, Converter={StaticResource VolumePercentageConverter}}" 
-                                   Style="{StaticResource VolumeTextStyle}"/>
-                        
-                        <!-- Botão de equalização/efeitos -->
-                        <Button Grid.Column="1" 
-                                Click="BtnEqualizer_Click"
-                                Tag="lancha"
-                                Style="{StaticResource EqualizerButtonStyle}"
-                                ToolTipService.ToolTip="Equalização e efeitos">
-                            <FontIcon Glyph="&#xE9E9;" FontFamily="Segoe MDL2 Assets"/>
-                        </Button>
+                        <Image Grid.Column="0" Source="/Assets/Images/cafeteria.png" Style="{StaticResource SoundIconStyle}"/>
+                        <TextBlock Grid.Column="1" Text="Cafeteria" Style="{StaticResource CardTitleStyle}"/>
+                        <Button Grid.Column="2" Tag="cafeteria" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" IsHitTestVisible="True">&#xE9E9;</Button>
                     </Grid>
+
+                    <Polyline x:Name="cafeteriaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#F4A460"/>
+                    
+                    <Slider x:Name="cafeteria" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
+                            Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"/>
                 </Grid>
-            </controls:UniformGrid>
-            
-            <!-- Botões de controle -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,24,0,12" Spacing="16">
-                <Button x:Name="PlayButton" 
-                        Click="Play_Click" 
-                        Style="{StaticResource AccentButtonStyle}"
-                        Padding="16,8">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xE768;" FontFamily="Segoe MDL2 Assets"/>
-                        <TextBlock Text="Reproduzir Todos" FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Button>
-                
-                <Button x:Name="PauseButton"
-                        Click="Pause_Click"
-                        Padding="16,8">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xE769;" FontFamily="Segoe MDL2 Assets"/>
-                        <TextBlock Text="Pausar Todos" FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Button>
-            </StackPanel>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </Page>

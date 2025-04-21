@@ -20,6 +20,8 @@ using Microsoft.UI;
 using WinRT.Interop;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Storage; // Adicionado para o ApplicationDataContainer
+using Fulcrum.Bu; // Adicionado para acessar o AudioManager
+using Fulcrum.Util; // Adicionado para acessar a classe Constantes
 
 namespace Fulcrum;
 
@@ -28,6 +30,9 @@ namespace Fulcrum;
 /// </summary>
 public sealed partial class MainWindow : Window
 {
+    // Armazena o frame de conteúdo atual
+    private Frame ContentFrame { get; set; }
+
     private AppWindow? _appWindow;
     private AppHotKeyManager _hotKeyManager;
     private IntPtr _windowHandle;
@@ -48,6 +53,9 @@ public sealed partial class MainWindow : Window
 
     // Armazenamento local para as configurações
     private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
+    
+    // Flag para controlar a inicialização dos reprodutores de áudio
+    private bool _audioInitialized = false;
 
     /// <summary>
     /// Inicializa uma nova instância da classe MainWindow
@@ -55,11 +63,28 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         this.InitializeComponent();
-        this.Title = "Fulcrum - Sons Ambientes";
 
-        // Configura a barra de título personalizada
+        // Configuração da janela
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
+        Title = "Fulcrum - Sons Ambientes";
+
+        // Define a altura e largura inicial da janela
+        var displayArea = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Primary);
+        var recommendedSize = displayArea.WorkArea;
+        
+        // Define uma altura maior para evitar barra de rolagem na aba início
+        AppWindow.Resize(new Windows.Graphics.SizeInt32 
+        { 
+            Width = (int)(recommendedSize.Width * 0.85), 
+            Height = (int)(recommendedSize.Height * 0.90) 
+        });
+
+        // Centraliza a janela
+        AppWindow.Move(new Windows.Graphics.PointInt32(
+            (recommendedSize.Width - AppWindow.Size.Width) / 2,
+            (recommendedSize.Height - AppWindow.Size.Height) / 2
+        ));
 
         // Obtém o handle da janela para o gerenciamento de teclas de atalho
         _windowHandle = WindowNative.GetWindowHandle(this);
@@ -81,21 +106,36 @@ public sealed partial class MainWindow : Window
 
         if (_appWindow != null)
         {
-            // Configura o tamanho inicial da janela
-            _appWindow.Resize(new Windows.Graphics.SizeInt32(1000, 700));
-
             // Tratamento para quando o aplicativo for fechado
             _appWindow.Closing += AppWindow_Closing;
         }
 
-        // Registra manipuladores de evento após a inicialização
+        // Registra manipuladores de eventos
         this.Activated += MainWindow_Activated;
+        navigationView.SelectionChanged += NavigationView_SelectionChanged;
 
-        // Configura a navegação inicial
-        ConfigureNavigation();
+        // Navegação inicial
+        ContentFrame = contentFrame;
+        navigationView.SelectedItem = navigationView.MenuItems[0];
 
         // Aplica o tema escolhido pelo usuário
         AplicarTema();
+
+        // Inicializa todos os reprodutores de áudio com volume 0.0
+        InitializeAudioPlayers();
+    }
+    
+    /// <summary>
+    /// Inicializa os reprodutores de áudio apenas uma vez
+    /// </summary>
+    private void InitializeAudioPlayers()
+    {
+        if (!_audioInitialized)
+        {
+            AudioManager.Instance.InitializePlayers(0.0);
+            _audioInitialized = true;
+            System.Diagnostics.Debug.WriteLine("Reprodutores de áudio inicializados com volume zero");
+        }
     }
 
     /// <summary>
@@ -122,6 +162,12 @@ public sealed partial class MainWindow : Window
         _hotKeyManager?.Dispose();
         HotKeyService.Instance.Dispose();
         
+        // Salva o estado dos volumes antes de fechar
+        AudioManager.Instance.SalvarEstadoVolumes();
+        
+        // Libera recursos do AudioManager
+        AudioManager.Instance.Dispose();
+        
         // Libera recursos do serviço de notificações
         NotificationService.Instance.Dispose();
     }
@@ -147,18 +193,29 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private void AplicarTema()
     {
-        // Obtém o tema das configurações
-        var tema = _localSettings.Values["TemaAppSelecionado"] as string ?? "Default";
-
-        // Define o tema da aplicação
-        if (Content is FrameworkElement rootElement)
+        try
         {
-            rootElement.RequestedTheme = tema switch
+            // Obtém o tema das configurações
+            var tema = _localSettings.Values[Constantes.Tema.TemaAppSelecionado] as string ?? "Default";
+            System.Diagnostics.Debug.WriteLine($"Aplicando tema: {tema}");
+
+            // Define o tema da aplicação
+            if (Content is FrameworkElement rootElement)
             {
-                "Light" => ElementTheme.Light,
-                "Dark" => ElementTheme.Dark,
-                _ => ElementTheme.Default
-            };
+                ElementTheme elementTheme = tema switch
+                {
+                    Constantes.Tema.Light => ElementTheme.Light,
+                    Constantes.Tema.Dark => ElementTheme.Dark,
+                    _ => ElementTheme.Default
+                };
+                
+                rootElement.RequestedTheme = elementTheme;
+                System.Diagnostics.Debug.WriteLine($"Tema aplicado com sucesso: {elementTheme}");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao aplicar tema: {ex.Message}");
         }
     }
 
@@ -176,10 +233,15 @@ public sealed partial class MainWindow : Window
     /// </summary>
     private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        // Salva o estado atual dos volumes antes de navegar para outra página
+        AudioManager.Instance.SalvarEstadoVolumes();
+        
+        Type targetPage = null;
+        
         if (args.IsSettingsSelected)
         {
             // Navegar para a página de configurações
-            contentFrame.Navigate(typeof(View.SettingsPage));
+            targetPage = typeof(View.SettingsPage);
         }
         else if (args.SelectedItemContainer != null)
         {
@@ -188,18 +250,25 @@ public sealed partial class MainWindow : Window
             switch (navItemTag)
             {
                 case "home":
-                    contentFrame.Navigate(typeof(View.HomePage));
+                    targetPage = typeof(View.HomePage);
                     break;
                 case "perfis":
-                    contentFrame.Navigate(typeof(View.PerfisPage));
+                    targetPage = typeof(View.PerfisPage);
                     break;
                 case "settings":
-                    contentFrame.Navigate(typeof(View.SettingsPage));
+                    targetPage = typeof(View.SettingsPage);
                     break;
                 case "sobre":
-                    contentFrame.Navigate(typeof(View.AboutPage));
+                    targetPage = typeof(View.AboutPage);
                     break;
             }
+        }
+        
+        // Navega para a página selecionada usando SuppressNavigationTransitionInfo
+        // para evitar que o áudio seja reinicializado durante a transição
+        if (targetPage != null && contentFrame.CurrentSourcePageType != targetPage)
+        {
+            contentFrame.Navigate(targetPage, null, new SuppressNavigationTransitionInfo());
         }
     }
 }

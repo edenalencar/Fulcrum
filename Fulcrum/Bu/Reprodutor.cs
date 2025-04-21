@@ -12,7 +12,7 @@ public abstract class Reprodutor : IDisposable
     public WaveOutEvent WaveOut { get; protected set; } = null!;
     public AudioFileReader Reader { get; protected set; } = null!;
     public DelayFadeOutSampleProvider FadeOutProvider { get; protected set; } = null!;
-    public AudioVisualizer Visualizer { get; protected set; } = null!;
+    public AudioVisualizer Visualizer { get; set; } = null!;
     
     // Novos componentes para equalização e efeitos
     public EqualizadorAudio Equalizer { get; protected set; } = null!;
@@ -29,6 +29,12 @@ public abstract class Reprodutor : IDisposable
     // Flag para controlar se os efeitos e equalização estão ativos
     private bool _equalizerEnabled = false;
     private bool _effectsEnabled = false;
+
+    // Flag para controlar se o áudio deve ser repetido automaticamente
+    private bool _shouldLoopPlayback = false;
+    
+    // Número do dispositivo de saída (-1 para dispositivo padrão)
+    protected int DeviceOut { get; set; } = -1;
     
     /// <summary>
     /// Inicializa um novo reprodutor de som
@@ -45,15 +51,15 @@ public abstract class Reprodutor : IDisposable
             Reader = new AudioFileReader(fullPath);
             System.Diagnostics.Debug.WriteLine($"Formato do áudio: {Reader.WaveFormat}, Length: {Reader.Length} bytes");
             
-            // Define o volume inicial para evitar ruídos
-            Reader.Volume = initialVolume > 0.001f ? initialVolume : 0.0f;
+            // Garante que o volume inicial seja exatamente zero
+            Reader.Volume = 0.0f;
             
             // Abordagem simplificada de inicialização - conecta diretamente ao reader
             WaveOut = new WaveOutEvent();
             WaveOut.DeviceNumber = -1; // Usar o dispositivo padrão
             WaveOut.DesiredLatency = 100; // Valor em milissegundos que pode ajudar com a reprodução
             WaveOut.Init(Reader);
-            System.Diagnostics.Debug.WriteLine("WaveOut inicializado diretamente com o Reader");
+            System.Diagnostics.Debug.WriteLine("WaveOut inicializado diretamente com o Reader com volume zero");
             
             // Inicializa o equalizador com configurações padrão separadamente
             Equalizer = new EqualizadorAudio(Reader, _defaultBands);
@@ -64,25 +70,26 @@ public abstract class Reprodutor : IDisposable
             // Configura o FadeOutProvider para usar com visualização
             FadeOutProvider = new DelayFadeOutSampleProvider(Reader);
             
-            // Verifica se deve iniciar a reprodução ou não com base no volume
-            if (initialVolume > 0.001f)
-            {
-                WaveOut.Play();
-                System.Diagnostics.Debug.WriteLine($"Reprodução iniciada com volume {initialVolume}");
-            }
-            else
-            {
-                // NÃO inicia reprodução se volume for zero
-                WaveOut.Stop();
-            }
+            // Garante que o reprodutor NÃO inicie automaticamente, independente do volume
+            WaveOut.Stop();
+            System.Diagnostics.Debug.WriteLine($"Inicialização completa. Reprodutor parado com volume 0.0");
+            
+            // Ativa a reprodução em loop
+            _shouldLoopPlayback = true;
             
             // Configura o evento de reposicionamento
             WaveOut.PlaybackStopped += (s, e) =>
             {
                 try
                 {
-                    // Só reinicia a reprodução se o volume não for zero
-                    if (Reader.Volume > 0.001f)
+                    // Verifica se os objetos ainda são válidos (podem ser nulos durante o encerramento)
+                    if (Reader == null || WaveOut == null || WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
+                    {
+                        return; // Sai se os objetos foram descartados ou o player já está parado
+                    }
+                    
+                    // Só reinicia a reprodução se o volume não for zero e se já estivesse em reprodução
+                    if (Reader.Volume > 0.001f && _shouldLoopPlayback)
                     {
                         Reader.Position = 0; // Reinicia o áudio do início
                         WaveOut.Play();      // Começa a tocar novamente
@@ -95,7 +102,7 @@ public abstract class Reprodutor : IDisposable
                 }
             };
             
-            System.Diagnostics.Debug.WriteLine($"Reprodutor inicializado com sucesso. Volume: {initialVolume}");
+            System.Diagnostics.Debug.WriteLine($"Reprodutor inicializado com sucesso. Volume: {Reader.Volume}");
         }
         catch (Exception ex)
         {
@@ -135,7 +142,23 @@ public abstract class Reprodutor : IDisposable
     /// </summary>
     public void StartVisualization()
     {
-        Visualizer?.Start();
+        try
+        {
+            // Verifica se já existe um visualizador configurado
+            if (Visualizer != null)
+            {
+                Visualizer.Start();
+                System.Diagnostics.Debug.WriteLine("Visualização de onda iniciada com sucesso");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Visualizador não está configurado, não é possível iniciar visualização");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao iniciar visualização: {ex.Message}");
+        }
     }
     
     /// <summary>
@@ -191,24 +214,17 @@ public abstract class Reprodutor : IDisposable
         
         System.Diagnostics.Debug.WriteLine($"Volume alterado para: {newVolume}, Estado atual: {WaveOut.PlaybackState}");
         
-        // Automáticamente pausa a reprodução se o volume for zero
-        if (newVolume <= 0.001f && WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Playing)
+        // Automáticamente inicia a reprodução se o volume for maior que zero e o áudio estiver parado
+        if (newVolume > 0.001f && WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
         {
-            System.Diagnostics.Debug.WriteLine("Volume zero - pausando reprodução");
-            Pause();
+            Play();
+            System.Diagnostics.Debug.WriteLine($"Reprodução iniciada automaticamente ao ajustar volume para {newVolume}");
         }
-        // Inicia reprodução se estiver parado e volume for acima de zero
-        else if (newVolume > 0.001f)
+        // Automáticamente pausa a reprodução se o volume for zero
+        else if (newVolume <= 0.001f && WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Playing)
         {
-            // Verifica se a reprodução não está ativa
-            if (WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Playing)
-            {
-                System.Diagnostics.Debug.WriteLine($"Iniciando reprodução com volume {newVolume}");
-                // Reinicia a posição para garantir a reprodução desde o início
-                Reader.Position = 0;
-                WaveOut.Play();
-                StartVisualization();
-            }
+            Pause();
+            System.Diagnostics.Debug.WriteLine($"Reprodução pausada automaticamente ao ajustar volume para zero");
         }
     }
     
@@ -427,6 +443,35 @@ public abstract class Reprodutor : IDisposable
     {
         EffectsManager.FlangerRate = rate;
         EffectsManager.FlangerDepth = depth;
+    }
+    
+    /// <summary>
+    /// Configura o player de áudio
+    /// </summary>
+    private void SetupPlayer()
+    {
+        try
+        {
+            // Criar um novo WaveOut device para reproduzir o áudio
+            WaveOut = new WaveOutEvent();
+            WaveOut.DeviceNumber = DeviceOut;
+            
+            // Anexar o WaveOut ao Reader para iniciar a saída de áudio
+            WaveOut.Init(Reader);
+            
+            // Configura o WaveOut para NÃO iniciar automaticamente
+            if (WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
+            {
+                WaveOut.Stop();
+            }
+            
+            System.Diagnostics.Debug.WriteLine($"Player configurado com volume inicial {Reader.Volume} e em estado parado");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao configurar o player: {ex.Message}");
+            throw;
+        }
     }
     
     /// <summary>

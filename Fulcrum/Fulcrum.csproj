@@ -21,12 +21,14 @@
     <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
     <!-- Explicitamente desabilitar compilação para ARM64 -->
     <EnableARMSupport>false</EnableARMSupport>
+    <!-- Remover a compilação para ARM64 de todas as configurações -->
+    <SupportedArchitectures>x86;x64</SupportedArchitectures>
     <!-- Configuração para evitar o erro do XamlCompiler -->
     <MSBuildWarningsAsMessages>XC0022</MSBuildWarningsAsMessages>
     <!-- Configuração personalizada para garantir que as DLLs nativas sejam copiadas corretamente -->
     <GenerateLibraryLayout>true</GenerateLibraryLayout>
     <XamlDebuggingInformation>True</XamlDebuggingInformation>
-    <!-- Adicionar propriedade para resolver problemas de compilação ARM64 -->
+    <!-- Adicionar propriedade para ignorar warnings relacionados a ARM64 -->
     <NoWarn>$(NoWarn);MSB3277</NoWarn>
     <!-- Configuração adicional para resolver erro WMC1006 -->
     <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
@@ -34,11 +36,11 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
-  <!-- Melhorada a estratégia de limpeza de ARM64 -->
-  <Target Name="CleanARM64Files" BeforeTargets="BeforeBuild">
-    <RemoveDir Directories="$(MSBuildProjectDirectory)\obj\ARM64" />
-    <Message Text="Diretório ARM64 removido com sucesso" Importance="high" />
-  </Target>
+  <!-- Adicionar configuração específica para prevenir build ARM64 -->
+  <PropertyGroup Condition="'$(Platform)'=='ARM64'">
+    <SkipCompilerExecution>true</SkipCompilerExecution>
+    <SkipXamlPreprocessor>true</SkipXamlPreprocessor>
+  </PropertyGroup>
 
   <ItemGroup>
     <Content Remove="Assets\7_122761.png" />
