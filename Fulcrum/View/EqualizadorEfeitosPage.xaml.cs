@@ -586,6 +586,102 @@ public sealed partial class EqualizadorEfeitosPage : Page
         MostrarFeedbackSucesso("Efeitos resetados para os valores padrão.");
     }
 
+    /// <summary>
+    /// Manipula o evento de clique no botão de teste de diagnóstico do equalizador
+    /// </summary>
+    private void BtnTestarEqualizer_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isInitializing) return;
+        
+        // Verifica se há um ID de som atual válido
+        if (string.IsNullOrEmpty(_currentSoundId))
+        {
+            MostrarFeedbackErro("Nenhum som selecionado para testar equalização");
+            return;
+        }
+        
+        // Garante que o equalizador esteja ativado
+        if (!equalizerSwitch.IsOn)
+        {
+            equalizerSwitch.IsOn = true;
+            // O evento Toggled já vai cuidar de atualizar a UI e ativar o equalizador
+        }
+        
+        try
+        {
+            // Obtém o reprodutor para o som atual
+            var reprodutor = AudioManager.Instance.GetReprodutorPorId(_currentSoundId);
+            if (reprodutor == null || reprodutor.Equalizer == null)
+            {
+                MostrarFeedbackErro("Reprodutor ou equalizador não disponível");
+                return;
+            }
+            
+            // Primeiro, garante que o equalizador esteja ativo (além do switch da UI)
+            reprodutor.EqualizerEnabled = true;
+            
+            // Aplicando configuração de teste extrema (usando método da classe EqualizadorAudio)
+            reprodutor.Equalizer.ApplyTestConfiguration();
+            
+            // Atualiza os sliders e textos na UI
+            _isInitializing = true;
+            sliderBaixa.Value = -12.0;  // Redução drástica dos graves
+            sliderMedia.Value = 0.0;    // Médios neutros
+            sliderAlta.Value = 12.0;    // Aumento drástico dos agudos
+            
+            txtBaixaValor.Text = $"{sliderBaixa.Value:F1} dB";
+            txtMediaValor.Text = $"{sliderMedia.Value:F1} dB";
+            txtAltaValor.Text = $"{sliderAlta.Value:F1} dB";
+            _isInitializing = false;
+            
+            // Se o reprodutor não estiver tocando e tiver volume, inicia a reprodução
+            if (reprodutor.WaveOut?.PlaybackState != NAudio.Wave.PlaybackState.Playing && 
+                reprodutor.Reader.Volume > 0.001f)
+            {
+                reprodutor.Play();
+                System.Diagnostics.Debug.WriteLine("[TEST EQ] Iniciando reprodução para testar o equalizador");
+            }
+            
+            // Mostra feedback
+            MostrarFeedbackSucesso("Configuração de teste aplicada: Graves=-12dB, Médios=0dB, Agudos=+12dB");
+            
+            // Também mostra uma dica mais visível em um TeachingTip, se disponível
+            var teachtip = new Microsoft.UI.Xaml.Controls.TeachingTip
+            {
+                Title = "Teste de Equalização",
+                Subtitle = "Você deve notar uma diferença significativa no som",
+                Content = new TextBlock 
+                { 
+                    Text = "Graves foram reduzidos e agudos amplificados para criar uma diferença audível. " +
+                           "Se você não percebe diferença no som, o equalizador pode não estar funcionando corretamente.",
+                    TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
+                },
+                ActionButtonContent = "Entendi",
+                CloseButtonContent = "Fechar",
+                PreferredPlacement = Microsoft.UI.Xaml.Controls.TeachingTipPlacementMode.Bottom,
+                IsLightDismissEnabled = true
+            };
+            
+            teachtip.ActionButtonClick += (s, args) => teachtip.IsOpen = false;
+            teachtip.CloseButtonClick += (s, args) => teachtip.IsOpen = false;
+            
+            // Adiciona o TeachingTip ao visual tree
+            var panel = (StackPanel)((Button)sender).Parent;
+            panel.Children.Add(teachtip);
+            
+            // Abre o TeachingTip
+            teachtip.IsOpen = true;
+            
+            // Log de diagnóstico
+            System.Diagnostics.Debug.WriteLine($"[TEST EQ] Aplicada configuração de teste ao equalizador para {_currentSoundId}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[TEST EQ] Erro ao aplicar configuração de teste: {ex.Message}");
+            MostrarFeedbackErro($"Erro ao aplicar configuração de teste: {ex.Message}");
+        }
+    }
+
     #endregion
 
     #region Utilitários

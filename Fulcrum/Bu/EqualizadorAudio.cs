@@ -60,6 +60,13 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
     // Buffer temporário para processamento
     private float[] _sampleBuffer;
     
+    // Flag para depuração
+    private bool _debugMode = true;
+    
+    // Contador de amostras processadas
+    private long _totalSamplesProcessed = 0;
+    private readonly long _sampleReportInterval = 44100 * 5; // Reportar a cada 5 segundos de áudio
+    
     /// <summary>
     /// Inicializa um novo equalizador de áudio
     /// </summary>
@@ -76,10 +83,13 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         for (int i = 0; i < _bands.Length; i++)
         {
             _filters[i] = BiQuadFilter.PeakingEQ(WaveFormat.SampleRate, _bands[i].Frequency, _bands[i].Bandwidth, GainToAmplitude(_bands[i].Gain));
+            System.Diagnostics.Debug.WriteLine($"[EQ] Inicializado filtro para banda {i}: Freq={_bands[i].Frequency}Hz, Gain={_bands[i].Gain}dB -> Amplitude={GainToAmplitude(_bands[i].Gain):F3}");
         }
         
         // Inicializa o buffer de processamento
         _sampleBuffer = new float[4096];
+        
+        System.Diagnostics.Debug.WriteLine($"[EQ] Equalizador inicializado com {_bands.Length} bandas, formato: {WaveFormat}");
     }
     
     /// <summary>
@@ -92,11 +102,12 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         WaveFormat = source.WaveFormat;
         
         // Cria bandas padrão (baixa, média e alta frequência)
+        // Utilizando valores de Q (bandwidth) mais precisos para cada faixa
         _bands = new EqualizerBand[]
         {
-            new EqualizerBand(100, 1.0f, 0, "Baixa"),
-            new EqualizerBand(1000, 1.0f, 0, "Média"),
-            new EqualizerBand(8000, 1.0f, 0, "Alta")
+            new EqualizerBand(100, 0.8f, 0, "Baixa"),    // Banda mais estreita para graves
+            new EqualizerBand(1000, 1.2f, 0, "Média"),   // Banda média para frequências médias
+            new EqualizerBand(8000, 1.5f, 0, "Alta")     // Banda mais larga para agudos
         };
         
         // Inicializa os filtros
@@ -104,10 +115,13 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         for (int i = 0; i < _bands.Length; i++)
         {
             _filters[i] = BiQuadFilter.PeakingEQ(WaveFormat.SampleRate, _bands[i].Frequency, _bands[i].Bandwidth, GainToAmplitude(_bands[i].Gain));
+            System.Diagnostics.Debug.WriteLine($"[EQ] Inicializado filtro para banda {i}: Freq={_bands[i].Frequency}Hz, Q={_bands[i].Bandwidth}, Gain={_bands[i].Gain}dB -> Amplitude={GainToAmplitude(_bands[i].Gain):F3}");
         }
         
         // Inicializa o buffer de processamento
         _sampleBuffer = new float[4096];
+        
+        System.Diagnostics.Debug.WriteLine($"[EQ] Equalizador inicializado com bandas padrão, formato: {WaveFormat}");
     }
     
     /// <summary>
@@ -120,9 +134,9 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         WaveFormat = new WaveFormat(44100, 1);
         _bands = new EqualizerBand[]
         {
-            new EqualizerBand(100, 1.0f, 0, "Baixa"),
-            new EqualizerBand(1000, 1.0f, 0, "Média"),
-            new EqualizerBand(8000, 1.0f, 0, "Alta")
+            new EqualizerBand(100, 0.8f, 0, "Baixa"),    // Banda mais estreita para graves
+            new EqualizerBand(1000, 1.2f, 0, "Média"),   // Banda média para frequências médias
+            new EqualizerBand(8000, 1.5f, 0, "Alta")     // Banda mais larga para agudos
         };
         
         _filters = new BiQuadFilter[_bands.Length];
@@ -132,6 +146,8 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         }
         
         _sampleBuffer = new float[4096];
+        
+        System.Diagnostics.Debug.WriteLine("[EQ] Equalizador inicializado sem fonte de áudio (construtor padrão)");
     }
 
     /// <summary>
@@ -153,7 +169,16 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         if (bandIndex >= 0 && bandIndex < _bands.Length)
         {
             var band = _bands[bandIndex];
-            _filters[bandIndex] = BiQuadFilter.PeakingEQ(WaveFormat.SampleRate, band.Frequency, band.Bandwidth, GainToAmplitude(band.Gain));
+            float amplitude = GainToAmplitude(band.Gain);
+            _filters[bandIndex] = BiQuadFilter.PeakingEQ(WaveFormat.SampleRate, band.Frequency, band.Bandwidth, amplitude);
+            
+            System.Diagnostics.Debug.WriteLine($"[EQ] Banda {bandIndex} ({band.Name}) atualizada: Freq={band.Frequency}Hz, Gain={band.Gain}dB -> Amplitude={amplitude:F3}");
+            
+            // Verifica se o ganho é significativo para logs diagnósticos
+            if (Math.Abs(band.Gain) > 10)
+            {
+                System.Diagnostics.Debug.WriteLine($"[EQ] ATENÇÃO: Banda {bandIndex} configurada com ganho extremo ({band.Gain}dB)");
+            }
         }
     }
     
@@ -162,6 +187,7 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
     /// </summary>
     public void UpdateAllBands()
     {
+        System.Diagnostics.Debug.WriteLine("[EQ] Atualizando todas as bandas do equalizador");
         for (int i = 0; i < _bands.Length; i++)
         {
             UpdateBand(i);
@@ -186,26 +212,104 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
     /// <param name="count">Número de amostras a processar</param>
     public void ProcessInPlace(float[] buffer, int offset, int count)
     {
-        // Copia as amostras para o buffer temporário
-        if (_sampleBuffer.Length < count)
+        try
         {
-            _sampleBuffer = new float[count];
-        }
-        Array.Copy(buffer, offset, _sampleBuffer, 0, count);
-        
-        // Aplica os filtros em série
-        for (int band = 0; band < _filters.Length; band++)
-        {
-            for (int i = 0; i < count; i++)
+            // Verifica se há valores extremos no buffer para diagnóstico
+            if (_debugMode)
             {
-                buffer[offset + i] = _filters[band].Process(_sampleBuffer[i]);
+                float maxInput = 0;
+                for (int i = 0; i < count; i++)
+                {
+                    maxInput = Math.Max(maxInput, Math.Abs(buffer[offset + i]));
+                }
+                
+                if (_totalSamplesProcessed % _sampleReportInterval == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[EQ] Processando {count} amostras - Valor máximo na entrada: {maxInput:F3}");
+                }
             }
             
-            // Se não for a última banda, copia para o buffer temporário para o próximo filtro
-            if (band < _filters.Length - 1)
+            // Redimensiona o buffer temporário se necessário
+            if (_sampleBuffer.Length < count)
             {
-                Array.Copy(buffer, offset, _sampleBuffer, 0, count);
+                _sampleBuffer = new float[count];
+                System.Diagnostics.Debug.WriteLine($"[EQ] Buffer temporário redimensionado para {count} amostras");
             }
+            
+            // Preserva o áudio original
+            Array.Copy(buffer, offset, _sampleBuffer, 0, count);
+            
+            // Conta quantas bandas estão ativas para ajustar o processamento
+            int activeBands = 0;
+            for (int i = 0; i < _bands.Length; i++)
+            {
+                if (Math.Abs(_bands[i].Gain) >= 0.1f)
+                {
+                    activeBands++;
+                }
+            }
+            
+            // Se nenhuma banda está ativa, mantenha o áudio original
+            if (activeBands == 0)
+            {
+                return; // Mantém o buffer original intacto
+            }
+            
+            // ABORDAGEM COMPLETAMENTE NOVA: Filtro em série para evitar interferências
+            // Cada filtro processa o resultado do anterior, começando com o áudio original
+            
+            // Aplicando os filtros em sequência (processamento em série)
+            for (int band = 0; band < _filters.Length; band++)
+            {
+                // Pula bandas com ganho zero ou muito próximo de zero
+                if (Math.Abs(_bands[band].Gain) < 0.1f)
+                    continue;
+                
+                // Processamento de banda para cada amostra
+                float gain = _bands[band].Gain;
+                BiQuadFilter filter = _filters[band];
+                
+                // Processa as amostras uma a uma
+                for (int i = 0; i < count; i++)
+                {
+                    // Aplica o filtro ao sinal atual, já potencialmente modificado por outros filtros
+                    buffer[offset + i] = filter.Process(buffer[offset + i]);
+                }
+                
+                if (_debugMode && _totalSamplesProcessed % _sampleReportInterval == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[EQ] Banda {band} ({_bands[band].Name}) aplicada com ganho {gain}dB");
+                }
+            }
+            
+            // Logs de diagnóstico para valores extremos na saída
+            if (_debugMode)
+            {
+                float maxOutput = 0;
+                for (int i = 0; i < count; i++)
+                {
+                    maxOutput = Math.Max(maxOutput, Math.Abs(buffer[offset + i]));
+                }
+                
+                if (_totalSamplesProcessed % _sampleReportInterval == 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[EQ] Valor máximo na saída: {maxOutput:F3}");
+                    
+                    // Imprime o estado atual das bandas
+                    for (int i = 0; i < _bands.Length; i++)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[EQ] Banda {i} ({_bands[i].Name}): Gain={_bands[i].Gain:F1}dB");
+                    }
+                }
+                
+                _totalSamplesProcessed += count;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[EQ] ERRO durante processamento: {ex.Message}");
+            // Em caso de erro, preserva o áudio original
+            Array.Copy(_sampleBuffer, 0, buffer, offset, count);
         }
     }
     
@@ -220,7 +324,33 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         
         if (samplesRead > 0)
         {
-            ProcessInPlace(buffer, offset, samplesRead);
+            // Verifica se há bandas com ganho diferente de zero
+            bool hasActiveEQ = false;
+            for (int i = 0; i < _bands.Length; i++)
+            {
+                if (Math.Abs(_bands[i].Gain) >= 0.1f)
+                {
+                    hasActiveEQ = true;
+                    break;
+                }
+            }
+            
+            // Só processa se alguma banda estiver com ganho
+            if (hasActiveEQ)
+            {
+                try
+                {
+                    ProcessInPlace(buffer, offset, samplesRead);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[EQ] ERRO ao processar áudio: {ex.Message}");
+                }
+            }
+            else if (_totalSamplesProcessed % _sampleReportInterval == 0 && _debugMode)
+            {
+                System.Diagnostics.Debug.WriteLine("[EQ] Equalizador está ativo mas todas as bandas têm ganho próximo de zero - sem processamento");
+            }
         }
         
         return samplesRead;
@@ -236,6 +366,31 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
             _bands[i].Gain = 0;
             UpdateBand(i);
         }
+        System.Diagnostics.Debug.WriteLine("[EQ] Todas as bandas do equalizador resetadas para 0dB");
+    }
+    
+    /// <summary>
+    /// Define se o modo de depuração está ativo
+    /// </summary>
+    public bool DebugMode
+    {
+        get => _debugMode;
+        set => _debugMode = value;
+    }
+    
+    /// <summary>
+    /// Aplica uma configuração de teste para diagnosticar se o equalizador está funcionando
+    /// </summary>
+    public void ApplyTestConfiguration()
+    {
+        // Define ganhos extremos para facilitar a verificação auditiva
+        _bands[0].Gain = -12.0f; // Reduz graves drasticamente
+        _bands[1].Gain = 0.0f;   // Mantém médios neutros
+        _bands[2].Gain = 12.0f;  // Aumenta agudos drasticamente
+        
+        UpdateAllBands();
+        
+        System.Diagnostics.Debug.WriteLine("[EQ] Configuração de teste aplicada: Graves=-12dB, Médios=0dB, Agudos=+12dB");
     }
     
     /// <summary>
@@ -246,11 +401,11 @@ public class EqualizadorAudio : ISampleProvider, IDisposable
         try
         {
             // Libera recursos do equalizador, se houver algum específico
-            System.Diagnostics.Debug.WriteLine("Recursos do equalizador liberados com sucesso");
+            System.Diagnostics.Debug.WriteLine("[EQ] Recursos do equalizador liberados com sucesso");
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Erro ao liberar recursos do equalizador: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"[EQ] Erro ao liberar recursos do equalizador: {ex.Message}");
         }
     }
 }

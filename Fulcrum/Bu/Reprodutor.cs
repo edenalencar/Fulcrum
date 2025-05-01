@@ -36,6 +36,9 @@ public abstract class Reprodutor : IDisposable
     // Número do dispositivo de saída (-1 para dispositivo padrão)
     protected int DeviceOut { get; set; } = -1;
     
+    // Fonte atual de áudio ativa na cadeia de processamento
+    private ISampleProvider _activeSource = null!;
+    
     /// <summary>
     /// Inicializa um novo reprodutor de som
     /// </summary>
@@ -54,12 +57,8 @@ public abstract class Reprodutor : IDisposable
             // Garante que o volume inicial seja exatamente zero
             Reader.Volume = 0.0f;
             
-            // Abordagem simplificada de inicialização - conecta diretamente ao reader
-            WaveOut = new WaveOutEvent();
-            WaveOut.DeviceNumber = -1; // Usar o dispositivo padrão
-            WaveOut.DesiredLatency = 100; // Valor em milissegundos que pode ajudar com a reprodução
-            WaveOut.Init(Reader);
-            System.Diagnostics.Debug.WriteLine("WaveOut inicializado diretamente com o Reader com volume zero");
+            // Mantém a referência para a fonte ativa na cadeia de processamento
+            _activeSource = Reader;
             
             // Inicializa o equalizador com configurações padrão separadamente
             Equalizer = new EqualizadorAudio(Reader, _defaultBands);
@@ -69,6 +68,13 @@ public abstract class Reprodutor : IDisposable
             
             // Configura o FadeOutProvider para usar com visualização
             FadeOutProvider = new DelayFadeOutSampleProvider(Reader);
+            
+            // Abordagem simplificada de inicialização - conecta diretamente ao reader
+            WaveOut = new WaveOutEvent();
+            WaveOut.DeviceNumber = -1; // Usar o dispositivo padrão
+            WaveOut.DesiredLatency = 100; // Valor em milissegundos que pode ajudar com a reprodução
+            WaveOut.Init(Reader);
+            System.Diagnostics.Debug.WriteLine("WaveOut inicializado diretamente com o Reader com volume zero");
             
             // Garante que o reprodutor NÃO inicie automaticamente, independente do volume
             WaveOut.Stop();
@@ -340,15 +346,31 @@ public abstract class Reprodutor : IDisposable
         get => _equalizerEnabled;
         set
         {
+            bool oldValue = _equalizerEnabled;
             _equalizerEnabled = value;
-            if (!value)
+            
+            System.Diagnostics.Debug.WriteLine($"[EQUALIZER] Estado alterado: {oldValue} -> {value}");
+            
+            if (oldValue != value)
             {
-                // Resetar todas as bandas para ganho 0
-                foreach (var band in Equalizer.Bands)
+                if (!value)
                 {
-                    band.Gain = 0;
+                    // Resetar todas as bandas para ganho 0
+                    System.Diagnostics.Debug.WriteLine("[EQUALIZER] Resetando bandas para ganho 0");
+                    foreach (var band in Equalizer.Bands)
+                    {
+                        band.Gain = 0;
+                    }
                 }
+                
+                // Garantir que a atualização seja aplicada mesmo se o valor não mudar
                 Equalizer.UpdateAllBands();
+                
+                // Reconectar a cadeia de processamento de áudio
+                UpdateProcessingChain();
+                
+                // Verificar se o efeito está adicionado à cadeia
+                System.Diagnostics.Debug.WriteLine($"[EQUALIZER] Cadeia de processamento atualizada. Equalizador ativo: {_equalizerEnabled}");
             }
         }
     }
@@ -361,12 +383,128 @@ public abstract class Reprodutor : IDisposable
         get => _effectsEnabled;
         set
         {
+            bool oldValue = _effectsEnabled;
             _effectsEnabled = value;
-            if (!value)
+            
+            System.Diagnostics.Debug.WriteLine($"[EFFECTS] Estado alterado: {oldValue} -> {value}");
+            
+            if (oldValue != value)
             {
-                // Desativar efeitos
-                EffectsManager.TipoEfeito = TipoEfeito.Nenhum;
+                if (!value)
+                {
+                    // Desativar efeitos
+                    EffectsManager.TipoEfeito = TipoEfeito.Nenhum;
+                }
+                
+                // Reconectar a cadeia de processamento de áudio
+                UpdateProcessingChain();
+                
+                System.Diagnostics.Debug.WriteLine($"[EFFECTS] Cadeia de processamento atualizada. Efeitos ativos: {_effectsEnabled}");
             }
+        }
+    }
+    
+    /// <summary>
+    /// Atualiza a cadeia de processamento de áudio
+    /// </summary>
+    private void UpdateProcessingChain()
+    {
+        try
+        {
+            // Pausar temporariamente a reprodução se estiver ativa
+            bool wasPlaying = WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing;
+            if (wasPlaying)
+            {
+                WaveOut.Pause();
+            }
+            
+            // Salvar a posição atual
+            long currentPosition = 0;
+            if (Reader != null)
+            {
+                currentPosition = Reader.Position;
+            }
+            
+            // Definir a fonte base
+            ISampleProvider processingChain = Reader;
+            
+            // Aplica o equalizador se estiver ativo
+            if (_equalizerEnabled && Equalizer != null)
+            {
+                // Reconecta o equalizador à cadeia
+                Equalizer = new EqualizadorAudio(processingChain, Equalizer.Bands);
+                processingChain = Equalizer;
+                System.Diagnostics.Debug.WriteLine("[AUDIO CHAIN] Equalizador adicionado à cadeia de processamento");
+            }
+            
+            // Aplica os efeitos se estiverem ativos
+            if (_effectsEnabled && EffectsManager != null)
+            {
+                // Reconecta o gerenciador de efeitos à cadeia
+                EffectsManager = new GerenciadorEfeitos(processingChain);
+                processingChain = EffectsManager;
+                System.Diagnostics.Debug.WriteLine("[AUDIO CHAIN] Efeitos adicionados à cadeia de processamento");
+            }
+            
+            // Atualiza o FadeOutProvider para usar a cadeia final
+            FadeOutProvider = new DelayFadeOutSampleProvider(processingChain);
+            processingChain = FadeOutProvider;
+            
+            // Atualiza a referência à fonte ativa
+            _activeSource = processingChain;
+            
+            // Reinicializa o WaveOut com a nova cadeia de processamento
+            WaveOut?.Stop();
+            WaveOut?.Dispose();
+            
+            // Cria um novo WaveOut e inicializa com a cadeia de processamento
+            WaveOut = new WaveOutEvent();
+            WaveOut.DeviceNumber = DeviceOut;
+            WaveOut.DesiredLatency = 100;
+            
+            // Reconecta o evento de PlaybackStopped
+            WaveOut.PlaybackStopped += (s, e) =>
+            {
+                try
+                {
+                    if (Reader == null || WaveOut == null || WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
+                    {
+                        return;
+                    }
+                    
+                    if (Reader.Volume > 0.001f && _shouldLoopPlayback)
+                    {
+                        Reader.Position = 0;
+                        WaveOut.Play();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Erro ao reiniciar após parada: {ex.Message}");
+                }
+            };
+            
+            // Inicializa o WaveOut com a cadeia final
+            WaveOut.Init(processingChain);
+            
+            // Restaura a posição
+            if (Reader != null && currentPosition < Reader.Length)
+            {
+                Reader.Position = currentPosition;
+            }
+            
+            // Continua a reprodução se estivesse tocando
+            if (wasPlaying)
+            {
+                WaveOut.Play();
+            }
+            
+            System.Diagnostics.Debug.WriteLine("[AUDIO CHAIN] Cadeia de processamento reconstruída com sucesso");
+            System.Diagnostics.Debug.WriteLine($"[AUDIO CHAIN] Equalizador ativo: {_equalizerEnabled}, Efeitos ativos: {_effectsEnabled}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[AUDIO CHAIN] Erro ao atualizar cadeia de processamento: {ex.Message}");
         }
     }
     
@@ -379,8 +517,27 @@ public abstract class Reprodutor : IDisposable
     {
         if (bandIndex >= 0 && bandIndex < Equalizer.Bands.Length)
         {
+            System.Diagnostics.Debug.WriteLine($"[EQUALIZER] Ajustando banda {bandIndex} para ganho {gain}dB");
             Equalizer.Bands[bandIndex].Gain = gain;
             Equalizer.UpdateBand(bandIndex);
+            
+            // Tenta aplicar um teste de diagnóstico com um sinal extremo
+            if (Math.Abs(gain) > 10)
+            {
+                System.Diagnostics.Debug.WriteLine($"[EQUALIZER] Teste de diagnóstico: ganho extremo ({gain}dB) detectado na banda {bandIndex}");
+            }
+            
+            // Força a atualização da cadeia se o equalizador estiver ativo
+            if (_equalizerEnabled)
+            {
+                System.Diagnostics.Debug.WriteLine("[EQUALIZER] Forçando atualização da cadeia de processamento após alteração de banda");
+                // Atualiza a cadeia de processamento para aplicar as alterações imediatamente
+                UpdateProcessingChain();
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine($"[EQUALIZER] ERRO: Tentativa de ajustar banda inválida: {bandIndex}");
         }
     }
     

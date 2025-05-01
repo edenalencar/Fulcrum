@@ -137,9 +137,18 @@
                             </Grid>
                             
                             <!-- Botão para resetar equalização -->
-                            <Button Content="Resetar Equalização" Click="BtnResetEqualizer_Click" 
-                                    HorizontalAlignment="Center"
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
+                                <Button Content="Resetar Equalização" Click="BtnResetEqualizer_Click" 
                                     FontWeight="SemiBold"/>
+                                    
+                                <!-- Novo botão de diagnóstico para testar o equalizador -->
+                                <Button x:Name="btnTestarEqualizer" Content="Teste de Diagnóstico" 
+                                        Click="BtnTestarEqualizer_Click"
+                                        Foreground="White"
+                                        Background="{ThemeResource SystemAccentColorDark1}"
+                                        ToolTipService.ToolTip="Aplica uma configuração de teste extrema para verificar se o equalizador está funcionando"
+                                        FontWeight="SemiBold"/>
+                            </StackPanel>
                         </StackPanel>
                     </Grid>
                 </Expander>
