@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Shapes;
+using Microsoft.UI.Xaml;
 using NAudio.Wave;
 using System;
 
@@ -38,6 +39,10 @@ public abstract class Reprodutor : IDisposable
     
     // Fonte atual de áudio ativa na cadeia de processamento
     private ISampleProvider _activeSource = null!;
+    
+    // Timer para debounce das alterações de equalização
+    private DispatcherTimer _equalizerUpdateTimer;
+    private bool _pendingEqualizerUpdate = false;
     
     /// <summary>
     /// Inicializa um novo reprodutor de som
@@ -109,6 +114,18 @@ public abstract class Reprodutor : IDisposable
             };
             
             System.Diagnostics.Debug.WriteLine($"Reprodutor inicializado com sucesso. Volume: {Reader.Volume}");
+            
+            // Inicializa o timer de debounce para atualizações do equalizador
+            _equalizerUpdateTimer = new DispatcherTimer();
+            _equalizerUpdateTimer.Interval = TimeSpan.FromMilliseconds(250); // Atualiza a cada 250ms durante deslizamento
+            _equalizerUpdateTimer.Tick += (s, e) => {
+                if (_pendingEqualizerUpdate)
+                {
+                    UpdateProcessingChain();
+                    _pendingEqualizerUpdate = false;
+                    System.Diagnostics.Debug.WriteLine("[EQUALIZER] Debounce timer executado: cadeia de áudio atualizada");
+                }
+            };
         }
         catch (Exception ex)
         {
@@ -413,16 +430,19 @@ public abstract class Reprodutor : IDisposable
         {
             // Pausar temporariamente a reprodução se estiver ativa
             bool wasPlaying = WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing;
-            if (wasPlaying)
-            {
-                WaveOut.Pause();
-            }
+            NAudio.Wave.PlaybackState originalState = WaveOut?.PlaybackState ?? NAudio.Wave.PlaybackState.Stopped;
             
             // Salvar a posição atual
             long currentPosition = 0;
             if (Reader != null)
             {
                 currentPosition = Reader.Position;
+            }
+            
+            // Usar uma abordagem mais suave - pausa temporariamente sem parar completamente
+            if (wasPlaying)
+            {
+                WaveOut.Pause();
             }
             
             // Definir a fonte base
@@ -454,13 +474,14 @@ public abstract class Reprodutor : IDisposable
             _activeSource = processingChain;
             
             // Reinicializa o WaveOut com a nova cadeia de processamento
+            // Preserva a instância atual para uma transição mais suave
             WaveOut?.Stop();
             WaveOut?.Dispose();
             
             // Cria um novo WaveOut e inicializa com a cadeia de processamento
             WaveOut = new WaveOutEvent();
             WaveOut.DeviceNumber = DeviceOut;
-            WaveOut.DesiredLatency = 100;
+            WaveOut.DesiredLatency = 75; // Reduzido para 75ms para menor latência
             
             // Reconecta o evento de PlaybackStopped
             WaveOut.PlaybackStopped += (s, e) =>
@@ -530,9 +551,12 @@ public abstract class Reprodutor : IDisposable
             // Força a atualização da cadeia se o equalizador estiver ativo
             if (_equalizerEnabled)
             {
-                System.Diagnostics.Debug.WriteLine("[EQUALIZER] Forçando atualização da cadeia de processamento após alteração de banda");
-                // Atualiza a cadeia de processamento para aplicar as alterações imediatamente
-                UpdateProcessingChain();
+                System.Diagnostics.Debug.WriteLine("[EQUALIZER] Agendando atualização da cadeia de processamento");
+                _pendingEqualizerUpdate = true;
+                
+                // Reinicia o timer para que ele espere mais tempo antes de processar
+                _equalizerUpdateTimer.Stop();
+                _equalizerUpdateTimer.Start();
             }
         }
         else

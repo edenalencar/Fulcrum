@@ -17,6 +17,12 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
     private readonly EchoSampleProvider _echoProvider;
     private readonly FlangerSampleProvider _flangerProvider;
     
+    // Flag para controlar se cada efeito está ativo
+    private bool _reverbEnabled = false;
+    private bool _pitchEnabled = false;
+    private bool _echoEnabled = false;
+    private bool _flangerEnabled = false;
+    
     // Configurações para os efeitos
     private float _reverbMix = 0.3f;
     private float _reverbTime = 1.0f;
@@ -55,11 +61,16 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
         // Aplica as configurações iniciais aos provedores
         _reverbProvider.ReverbMix = _reverbMix;
         _reverbProvider.ReverbTime = _reverbTime;
+        _reverbProvider.IsEnabled = false; // Garante que o efeito começa desativado
+        
         _pitchProvider.PitchFactor = _pitchFactor;
         _echoProvider.Delay = _echoDelay;
         _echoProvider.Mix = _echoMix;
         _flangerProvider.Rate = _flangerRate;
         _flangerProvider.Depth = _flangerDepth;
+        
+        // Log para diagnóstico
+        System.Diagnostics.Debug.WriteLine("[EFFECTS] Gerenciador de efeitos inicializado com todos os efeitos desativados");
     }
 
     /// <summary>
@@ -77,8 +88,18 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
         {
             if (_tipoEfeito != value)
             {
+                TipoEfeito oldValue = _tipoEfeito;
                 _tipoEfeito = value;
+                
+                // Se estiver mudando para outro efeito, limpa qualquer resíduo do efeito anterior
+                if (oldValue == TipoEfeito.Reverb && value != TipoEfeito.Reverb)
+                {
+                    _reverbProvider.IsEnabled = false;
+                    _reverbProvider.LimparBuffer();
+                }
+                
                 AtualizarConfiguracaoEfeitos();
+                System.Diagnostics.Debug.WriteLine($"[EFFECTS] Tipo de efeito alterado: {oldValue} -> {value}");
             }
         }
     }
@@ -89,10 +110,13 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
         get => _reverbMix;
         set
         {
+            float oldValue = _reverbMix;
             _reverbMix = Math.Clamp(value, 0f, 1f);
+            
             if (_tipoEfeito == TipoEfeito.Reverb)
             {
                 _reverbProvider.ReverbMix = _reverbMix;
+                System.Diagnostics.Debug.WriteLine($"[REVERB] Mix alterado: {oldValue} -> {_reverbMix}");
             }
         }
     }
@@ -102,10 +126,13 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
         get => _reverbTime;
         set
         {
+            float oldValue = _reverbTime;
             _reverbTime = Math.Clamp(value, 0.1f, 10f);
+            
             if (_tipoEfeito == TipoEfeito.Reverb)
             {
                 _reverbProvider.ReverbTime = _reverbTime;
+                System.Diagnostics.Debug.WriteLine($"[REVERB] DecayTime alterado: {oldValue} -> {_reverbTime}");
             }
         }
     }
@@ -184,6 +211,12 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
     private void AtualizarConfiguracaoEfeitos()
     {
         // Desativa todos os efeitos primeiro
+        _reverbEnabled = false;
+        _pitchEnabled = false;
+        _echoEnabled = false;
+        _flangerEnabled = false;
+        
+        // Desativa explicitamente todos os provedores de efeitos
         _reverbProvider.IsEnabled = false;
         _pitchProvider.IsEnabled = false;
         _echoProvider.IsEnabled = false;
@@ -193,26 +226,38 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
         switch (_tipoEfeito)
         {
             case TipoEfeito.Reverb:
-                _reverbProvider.IsEnabled = true;
+                _reverbEnabled = true;
                 _reverbProvider.ReverbMix = _reverbMix;
                 _reverbProvider.ReverbTime = _reverbTime;
+                _reverbProvider.IsEnabled = true; // Ativa explicitamente o efeito
+                
+                // Log para diagnóstico
+                System.Diagnostics.Debug.WriteLine($"[REVERB] Efeito ativado com Mix={_reverbMix}, Time={_reverbTime}");
                 break;
                 
             case TipoEfeito.Pitch:
+                _pitchEnabled = true;
                 _pitchProvider.IsEnabled = true;
                 _pitchProvider.PitchFactor = _pitchFactor;
                 break;
                 
             case TipoEfeito.Echo:
+                _echoEnabled = true;
                 _echoProvider.IsEnabled = true;
                 _echoProvider.Delay = _echoDelay;
                 _echoProvider.Mix = _echoMix;
                 break;
                 
             case TipoEfeito.Flanger:
+                _flangerEnabled = true;
                 _flangerProvider.IsEnabled = true;
                 _flangerProvider.Rate = _flangerRate;
                 _flangerProvider.Depth = _flangerDepth;
+                break;
+            
+            case TipoEfeito.Nenhum:
+                // Garante que nenhum efeito está aplicado
+                System.Diagnostics.Debug.WriteLine("[EFFECTS] Todos os efeitos desativados");
                 break;
         }
     }
@@ -222,31 +267,46 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
     /// </summary>
     public int Read(float[] buffer, int offset, int count)
     {
-        int samplesRead = _source.Read(buffer, offset, count);
+        int samplesRead;
         
-        if (samplesRead > 0)
+        // Em vez de ler e processar, passa diretamente para o provedor de efeito ativo
+        switch (_tipoEfeito)
         {
-            // Aplica o efeito correspondente
-            switch (_tipoEfeito)
-            {
-                case TipoEfeito.Reverb:
-                    _reverbProvider.ProcessInPlace(buffer, offset, samplesRead);
-                    break;
-                    
-                case TipoEfeito.Pitch:
-                    _pitchProvider.ProcessInPlace(buffer, offset, samplesRead);
-                    break;
-                    
-                case TipoEfeito.Echo:
-                    _echoProvider.ProcessInPlace(buffer, offset, samplesRead);
-                    break;
-                    
-                case TipoEfeito.Flanger:
-                    _flangerProvider.ProcessSamples(buffer, offset, samplesRead);
-                    break;
-            }
+            case TipoEfeito.Reverb:
+                if (_reverbEnabled)
+                {
+                    samplesRead = _reverbProvider.Read(buffer, offset, count);
+                    return samplesRead;
+                }
+                break;
+                
+            case TipoEfeito.Pitch:
+                if (_pitchEnabled)
+                {
+                    samplesRead = _pitchProvider.Read(buffer, offset, count);
+                    return samplesRead;
+                }
+                break;
+                
+            case TipoEfeito.Echo:
+                if (_echoEnabled)
+                {
+                    samplesRead = _echoProvider.Read(buffer, offset, count);
+                    return samplesRead;
+                }
+                break;
+                
+            case TipoEfeito.Flanger:
+                if (_flangerEnabled)
+                {
+                    samplesRead = _flangerProvider.Read(buffer, offset, count);
+                    return samplesRead;
+                }
+                break;
         }
         
+        // Se nenhum efeito estiver ativo, lê diretamente da fonte
+        samplesRead = _source.Read(buffer, offset, count);
         return samplesRead;
     }
 
@@ -257,7 +317,15 @@ public class GerenciadorEfeitos : ISampleProvider, IDisposable
     {
         try
         {
-            // Libera recursos específicos dos efeitos, se houver
+            // Desativa todos os efeitos antes de liberar recursos
+            _reverbProvider.IsEnabled = false;
+            _pitchProvider.IsEnabled = false;
+            _echoProvider.IsEnabled = false;
+            _flangerProvider.IsEnabled = false;
+            
+            // Garante que nenhum resíduo permaneça no buffer de reverberação
+            _reverbProvider.LimparBuffer();
+            
             System.Diagnostics.Debug.WriteLine("Recursos do gerenciador de efeitos liberados com sucesso");
         }
         catch (Exception ex)
