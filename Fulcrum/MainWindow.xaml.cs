@@ -113,6 +113,9 @@ public sealed partial class MainWindow : Window
         // Registra manipuladores de eventos
         this.Activated += MainWindow_Activated;
         navigationView.SelectionChanged += NavigationView_SelectionChanged;
+        
+        // Adicionar evento para mudanças de tamanho
+        this.SizeChanged += MainWindow_SizeChanged;
 
         // Navegação inicial
         ContentFrame = contentFrame;
@@ -121,8 +124,14 @@ public sealed partial class MainWindow : Window
         // Aplica o tema escolhido pelo usuário
         AplicarTema();
 
+        // Ajustar NavigationView para o tamanho atual da janela
+        AdjustNavigationViewForWindowSize();
+
         // Inicializa todos os reprodutores de áudio com volume 0.0
         InitializeAudioPlayers();
+        
+        // Restaurar estado do painel de navegação
+        RestoreNavigationViewState();
     }
     
     /// <summary>
@@ -164,6 +173,9 @@ public sealed partial class MainWindow : Window
         
         // Salva o estado dos volumes antes de fechar
         AudioManager.Instance.SalvarEstadoVolumes();
+        
+        // Salva o estado do painel de navegação antes de fechar
+        SaveNavigationViewState();
         
         // Libera recursos do AudioManager
         AudioManager.Instance.Dispose();
@@ -270,5 +282,109 @@ public sealed partial class MainWindow : Window
         {
             contentFrame.Navigate(targetPage, null, new SuppressNavigationTransitionInfo());
         }
+    }
+
+    /// <summary>
+    /// Ajusta o NavigationView com base no tamanho atual da janela
+    /// </summary>
+    private void AdjustNavigationViewForWindowSize()
+    {
+        double windowWidth = this.Bounds.Width;
+        double windowHeight = this.Bounds.Height;
+        
+        if (windowWidth < 640)
+        {
+            // Em telas muito estreitas, use o modo mínimo
+            navigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.LeftMinimal;
+            System.Diagnostics.Debug.WriteLine($"NavigationView ajustado para modo mínimo (largura: {windowWidth})");
+        }
+        else if (windowWidth < 900)
+        {
+            // Em telas médias, use o modo compacto
+            navigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.LeftCompact;
+            System.Diagnostics.Debug.WriteLine($"NavigationView ajustado para modo compacto (largura: {windowWidth})");
+        }
+        else
+        {
+            // Em telas largas, use o modo expandido
+            navigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left;
+            
+            // Verifica se a orientação é paisagem com tela grande para decidir se abre o painel
+            bool isLandscape = windowWidth > windowHeight;
+            if (isLandscape && windowWidth > 1200)
+            {
+                navigationView.IsPaneOpen = true;
+                System.Diagnostics.Debug.WriteLine($"NavigationView ajustado para modo expandido com painel aberto (largura: {windowWidth})");
+            }
+            else
+            {
+                // Em landscape com tela menor ou em portrait, deixa o painel fechado por padrão
+                // mas permite que as configurações salvas definam o estado
+                System.Diagnostics.Debug.WriteLine($"NavigationView ajustado para modo expandido (largura: {windowWidth})");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Salva o estado do NavigationView
+    /// </summary>
+    private void SaveNavigationViewState()
+    {
+        try
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["NavigationViewIsPaneOpen"] = navigationView.IsPaneOpen;
+            localSettings.Values["NavigationViewPaneDisplayMode"] = (int)navigationView.PaneDisplayMode;
+            System.Diagnostics.Debug.WriteLine($"Estado do NavigationView salvo: IsPaneOpen={navigationView.IsPaneOpen}, DisplayMode={navigationView.PaneDisplayMode}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao salvar estado do NavigationView: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Restaura o estado do NavigationView
+    /// </summary>
+    private void RestoreNavigationViewState()
+    {
+        try
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            
+            // Restaura o modo de exibição se estiver salvo
+            if (localSettings.Values.TryGetValue("NavigationViewPaneDisplayMode", out var displayMode))
+            {
+                var savedMode = (NavigationViewPaneDisplayMode)(int)displayMode;
+                // Só restauramos o modo de exibição se for compatível com o tamanho atual da tela
+                if ((savedMode == NavigationViewPaneDisplayMode.Left && this.Bounds.Width >= 900) ||
+                    (savedMode == NavigationViewPaneDisplayMode.LeftCompact && this.Bounds.Width >= 640))
+                {
+                    navigationView.PaneDisplayMode = savedMode;
+                    System.Diagnostics.Debug.WriteLine($"Modo de exibição do NavigationView restaurado: {savedMode}");
+                }
+            }
+            
+            // Restaura o estado de abertura do painel (apenas no modo esquerdo)
+            if (navigationView.PaneDisplayMode == NavigationViewPaneDisplayMode.Left &&
+                localSettings.Values.TryGetValue("NavigationViewIsPaneOpen", out var isPaneOpen))
+            {
+                navigationView.IsPaneOpen = (bool)isPaneOpen;
+                System.Diagnostics.Debug.WriteLine($"Estado de abertura do NavigationView restaurado: {navigationView.IsPaneOpen}");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao restaurar estado do NavigationView: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Manipula o evento de mudança de tamanho da janela
+    /// </summary>
+    private void MainWindow_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+    {
+        AdjustNavigationViewForWindowSize();
+        System.Diagnostics.Debug.WriteLine($"Janela redimensionada para {args.Size.Width}x{args.Size.Height}");
     }
 }
