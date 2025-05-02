@@ -32,7 +32,7 @@ public abstract class Reprodutor : IDisposable
     private bool _effectsEnabled = false;
 
     // Flag para controlar se o áudio deve ser repetido automaticamente
-    private bool _shouldLoopPlayback = false;
+    private bool _shouldLoopPlayback = true; // Alterado para true por padrão
     
     // Número do dispositivo de saída (-1 para dispositivo padrão)
     protected int DeviceOut { get; set; } = -1;
@@ -89,29 +89,7 @@ public abstract class Reprodutor : IDisposable
             _shouldLoopPlayback = true;
             
             // Configura o evento de reposicionamento
-            WaveOut.PlaybackStopped += (s, e) =>
-            {
-                try
-                {
-                    // Verifica se os objetos ainda são válidos (podem ser nulos durante o encerramento)
-                    if (Reader == null || WaveOut == null || WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
-                    {
-                        return; // Sai se os objetos foram descartados ou o player já está parado
-                    }
-                    
-                    // Só reinicia a reprodução se o volume não for zero e se já estivesse em reprodução
-                    if (Reader.Volume > 0.001f && _shouldLoopPlayback)
-                    {
-                        Reader.Position = 0; // Reinicia o áudio do início
-                        WaveOut.Play();      // Começa a tocar novamente
-                        System.Diagnostics.Debug.WriteLine("Reiniciando reprodução após parada");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Erro ao reiniciar após parada: {ex.Message}");
-                }
-            };
+            WaveOut.PlaybackStopped += OnPlaybackStopped;
             
             System.Diagnostics.Debug.WriteLine($"Reprodutor inicializado com sucesso. Volume: {Reader.Volume}");
             
@@ -132,6 +110,33 @@ public abstract class Reprodutor : IDisposable
             System.Diagnostics.Debug.WriteLine($"ERRO na inicialização do reprodutor: {ex.Message}");
             System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             throw; // Re-lança a exceção para tratamento superior
+        }
+    }
+    
+    /// <summary>
+    /// Manipulador do evento PlaybackStopped para implementar o loop
+    /// </summary>
+    private void OnPlaybackStopped(object sender, StoppedEventArgs e)
+    {
+        try
+        {
+            // Verifica se os objetos ainda são válidos
+            if (Reader == null || WaveOut == null)
+            {
+                return;
+            }
+            
+            // Se o áudio foi apenas parado e não pausado, reinicia do início
+            if (_shouldLoopPlayback && Reader.Volume > 0.001f)
+            {
+                System.Diagnostics.Debug.WriteLine("Loop: Reiniciando áudio do início");
+                Reader.Position = 0; // Reinicia o áudio do início
+                WaveOut.Play();      // Começa a tocar novamente
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao processar loop de áudio: {ex.Message}");
         }
     }
     
@@ -483,27 +488,8 @@ public abstract class Reprodutor : IDisposable
             WaveOut.DeviceNumber = DeviceOut;
             WaveOut.DesiredLatency = 75; // Reduzido para 75ms para menor latência
             
-            // Reconecta o evento de PlaybackStopped
-            WaveOut.PlaybackStopped += (s, e) =>
-            {
-                try
-                {
-                    if (Reader == null || WaveOut == null || WaveOut.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
-                    {
-                        return;
-                    }
-                    
-                    if (Reader.Volume > 0.001f && _shouldLoopPlayback)
-                    {
-                        Reader.Position = 0;
-                        WaveOut.Play();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Erro ao reiniciar após parada: {ex.Message}");
-                }
-            };
+            // Reconecta o evento de PlaybackStopped - Removendo a definição inline
+            WaveOut.PlaybackStopped += OnPlaybackStopped;
             
             // Inicializa o WaveOut com a cadeia final
             WaveOut.Init(processingChain);
@@ -652,6 +638,19 @@ public abstract class Reprodutor : IDisposable
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao configurar o player: {ex.Message}");
             throw;
+        }
+    }
+    
+    /// <summary>
+    /// Controla se o áudio deve ser reproduzido em loop
+    /// </summary>
+    public bool LoopPlayback
+    {
+        get => _shouldLoopPlayback;
+        set 
+        { 
+            _shouldLoopPlayback = value;
+            System.Diagnostics.Debug.WriteLine($"Reprodução em loop {(_shouldLoopPlayback ? "ativada" : "desativada")}");
         }
     }
     
