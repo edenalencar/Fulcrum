@@ -248,7 +248,7 @@ public sealed partial class MainWindow : Window
         // Salva o estado atual dos volumes antes de navegar para outra página
         AudioManager.Instance.SalvarEstadoVolumes();
         
-        Type targetPage = null;
+        Type? targetPage = null;
         
         if (args.IsSettingsSelected)
         {

@@ -137,55 +137,6 @@
                     <TextBlock Text="Ctrl + Alt + M" Grid.Row="4" Grid.Column="1"/>
                 </Grid>
             </Grid>
-            
-            <!-- Sobre o aplicativo -->
-            <Grid Style="{StaticResource SettingsCardStyle}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                
-                <TextBlock Text="Sobre o Fulcrum" 
-                           Style="{StaticResource SectionTitleStyle}"/>
-                           
-                <TextBlock Grid.Row="1" 
-                           Text="Fulcrum é um aplicativo de sons ambientes para ajudar na concentração, meditação e relaxamento. Escolha entre diversos sons da natureza e ambiente para criar o clima perfeito."
-                           Style="{StaticResource SectionDescriptionStyle}"/>
-                           
-                <TextBlock Grid.Row="2" 
-                           Text="Versão 2.0.0"
-                           FontWeight="SemiBold"
-                           Margin="0,0,0,8"/>
-                           
-                <TextBlock Grid.Row="3" 
-                           x:Name="txtDireitos"
-                           Text="© 2025 Éden Alencar. Todos os direitos reservados."
-                           Style="{StaticResource CaptionTextBlockStyle}"
-                           Foreground="{ThemeResource TextSecondaryBrush}"/>
-            </Grid>
-            
-            <!-- Feedback -->
-            <Grid Style="{StaticResource SettingsCardStyle}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                
-                <TextBlock Text="Feedback" 
-                           Style="{StaticResource SectionTitleStyle}"/>
-                           
-                <TextBlock Grid.Row="1" 
-                           Text="Seu feedback é importante para melhorarmos o aplicativo. Envie sugestões ou relate problemas."
-                           Style="{StaticResource SectionDescriptionStyle}"/>
-                           
-                <HyperlinkButton Grid.Row="2"
-                                 Content="Enviar Feedback"
-                                 Click="Feedback_Click"
-                                 Margin="0,8,0,0"/>
-            </Grid>
         </StackPanel>
     </ScrollViewer>
 </Page>

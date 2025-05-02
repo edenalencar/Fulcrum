@@ -41,7 +41,7 @@ public abstract class Reprodutor : IDisposable
     private ISampleProvider _activeSource = null!;
     
     // Timer para debounce das alterações de equalização
-    private DispatcherTimer _equalizerUpdateTimer;
+    private DispatcherTimer _equalizerUpdateTimer = null!;
     private bool _pendingEqualizerUpdate = false;
     
     /// <summary>
@@ -116,7 +116,7 @@ public abstract class Reprodutor : IDisposable
     /// <summary>
     /// Manipulador do evento PlaybackStopped para implementar o loop
     /// </summary>
-    private void OnPlaybackStopped(object sender, StoppedEventArgs e)
+    private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
     {
         try
         {
@@ -445,13 +445,13 @@ public abstract class Reprodutor : IDisposable
             }
             
             // Usar uma abordagem mais suave - pausa temporariamente sem parar completamente
-            if (wasPlaying)
+            if (wasPlaying && WaveOut != null)
             {
                 WaveOut.Pause();
             }
             
             // Definir a fonte base
-            ISampleProvider processingChain = Reader;
+            ISampleProvider processingChain = Reader ?? throw new InvalidOperationException("Reader não pode ser nulo neste ponto");
             
             // Aplica o equalizador se estiver ativo
             if (_equalizerEnabled && Equalizer != null)

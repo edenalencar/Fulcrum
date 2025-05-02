@@ -243,7 +243,7 @@ internal class SampleProviderWaveReader
     private readonly ISampleProvider _sampleProvider;
     private volatile bool _isDisposed = false;
     private readonly object _lock = new object();
-    private WeakReference<AudioFileReader> _cachedAudioFileReader = null;
+    private WeakReference<AudioFileReader>? _cachedAudioFileReader = null;
 
     public SampleProviderWaveReader(ISampleProvider sampleProvider)
     {
@@ -278,7 +278,7 @@ internal class SampleProviderWaveReader
                     try
                     {
                         // Checar a referência do AudioFileReader
-                        AudioFileReader audioReader = null;
+                        AudioFileReader? audioReader = null;
                         
                         // Tentativa 1: Obter do cache WeakReference
                         if (_cachedAudioFileReader != null)

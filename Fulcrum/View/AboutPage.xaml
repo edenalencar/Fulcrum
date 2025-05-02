@@ -101,6 +101,13 @@
                             Entrar em contato com o desenvolvedor
                         </Button>
                     </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                        <FontIcon Glyph="&#xE734;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <Button x:Name="BtnRateApp" Click="BtnRateApp_Click" Padding="8,4" CornerRadius="4">
+                            Avaliar na Microsoft Store
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
             
@@ -125,7 +132,7 @@
             </Grid>
             
             <!-- Direitos autorais -->
-            <TextBlock Text="© 2024 Éden Alencar. Todos os direitos reservados." 
+            <TextBlock Text="© 2025 Éden Alencar. Todos os direitos reservados." 
                        Style="{StaticResource CaptionTextBlockStyle}" 
                        HorizontalAlignment="Center" Margin="0,20,0,0" Opacity="0.6"/>
         </StackPanel>

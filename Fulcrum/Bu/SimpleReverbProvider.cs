@@ -20,20 +20,20 @@ public class SimpleReverbProvider : ISampleProvider
     private const int NUM_ALLPASSES = 2;  // Número de filtros allpass
     
     // Linhas de atraso para filtros comb
-    private float[][] _combBuffers;
-    private int[] _combLengths;
-    private int[] _combPositions;
-    private float[] _combFeedback;
+    private float[][] _combBuffers = null!;
+    private int[] _combLengths = null!;
+    private int[] _combPositions = null!;
+    private float[] _combFeedback = null!;
     
     // Filtros passa-baixa para cada filtro comb
-    private float[] _lpfValues;          // Estado atual do filtro
-    private float[] _lpfCoeffs;          // Coeficientes por filtro
+    private float[] _lpfValues = null!;          // Estado atual do filtro
+    private float[] _lpfCoeffs = null!;          // Coeficientes por filtro
     private const float LP_BASE = 0.5f;   // Coeficiente base do filtro passa-baixa
     
     // Linhas de atraso para filtros allpass
-    private float[][] _allpassBuffers;
-    private int[] _allpassLengths;
-    private int[] _allpassPositions;
+    private float[][] _allpassBuffers = null!;
+    private int[] _allpassLengths = null!;
+    private int[] _allpassPositions = null!;
     private float _allpassFeedback = 0.5f;
     
     // Filtro de engenharia para redução de ruído
@@ -42,7 +42,7 @@ public class SimpleReverbProvider : ISampleProvider
     
     // Pré-atraso para criar sensação de espaço
     private int _preDelayLength;
-    private float[] _preDelayBuffer;
+    private float[] _preDelayBuffer = null!;
     private int _preDelayPos;
     
     // Coeficientes de damping (amortecimento) para controle de altas frequências

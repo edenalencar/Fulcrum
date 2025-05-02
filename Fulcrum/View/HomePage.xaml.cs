@@ -567,7 +567,7 @@ public sealed partial class HomePage : Page
             {
                 reprodutor.Visualizer.Stop();
                 reprodutor.Visualizer.Dispose();
-                reprodutor.Visualizer = null;
+                reprodutor.Visualizer = null!; // Usando null! para indicar que será inicializado antes do uso
             }
             
             // Cria novo visualizador
@@ -590,7 +590,7 @@ public sealed partial class HomePage : Page
     /// <summary>
     /// Obtém o elemento Polyline correspondente ao ID do som
     /// </summary>
-    private Polyline ObterElementoWaveform(string soundId)
+    private Polyline? ObterElementoWaveform(string soundId)
     {
         return soundId switch
         {
@@ -968,9 +968,13 @@ public sealed partial class HomePage : Page
                 playButton.Content = isPlaying ? "Pausar" : "Reproduzir";
             }
             // Se estiver usando FontIcon
-            else if (playButton.Content is FontIcon fontIcon)
+            else if (playButton.Content is FontIcon)
             {
-                fontIcon.Glyph = isPlaying ? "\uE769" : "\uE768"; // Unicode para Pause/Play no Segoe MDL2 Assets
+                var fontIcon = playButton.Content as FontIcon;
+                if (fontIcon != null)
+                {
+                    fontIcon.Glyph = isPlaying ? "\uE769" : "\uE768"; // Unicode para Pause/Play no Segoe Fluent Icons
+                }
             }
         }
     }

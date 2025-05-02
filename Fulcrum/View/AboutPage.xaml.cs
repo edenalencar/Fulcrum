@@ -57,6 +57,15 @@ public sealed partial class AboutPage : Page
     }
 
     /// <summary>
+    /// Manipulador do evento de clique no botão para avaliar na Microsoft Store
+    /// </summary>
+    private async void BtnRateApp_Click(object sender, RoutedEventArgs e)
+    {
+        // Abre a página do aplicativo na Microsoft Store para avaliação
+        await Launcher.LaunchUriAsync(new Uri("ms-windows-store://review/?ProductId=9NBLGGH5XXXX"));
+    }
+
+    /// <summary>
     /// Obtém a versão do aplicativo
     /// </summary>
     private string GetAppVersion()

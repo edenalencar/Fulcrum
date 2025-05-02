@@ -80,9 +80,6 @@ public sealed class AudioManager
     // Flag para garantir que todos os reprodutores iniciem com volume zero
     private bool _forceInitialVolumeZero = true;
     
-    // Estado global de reprodução
-    private PlaybackState _globalPlaybackState = PlaybackState.Stopped;
-    
     // Flag para controle de mudo global
     private bool _isMuted = false;
     private readonly ConcurrentDictionary<string, float> _preMuteVolumes = new();
@@ -268,7 +265,6 @@ public sealed class AudioManager
                 {
                     player.Play();
                     _playerStates[id] = PlaybackState.Playing;
-                    _globalPlaybackState = PlaybackState.Playing;
                     System.Diagnostics.Debug.WriteLine($"Reprodução iniciada automaticamente para '{id}' ao ajustar volume para {volume}");
                 }
                 // Para a reprodução automaticamente se o volume for zero
@@ -280,11 +276,9 @@ public sealed class AudioManager
                     // Verifica se ainda há algum player tocando
                     if (!_audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing))
                     {
-                        _globalPlaybackState = PlaybackState.Paused;
+                        System.Diagnostics.Debug.WriteLine($"Volume do reprodutor '{id}' alterado para {volume}");
                     }
                 }
-                
-                System.Diagnostics.Debug.WriteLine($"Volume do reprodutor '{id}' alterado para {volume}");
             }
             else
             {
@@ -382,12 +376,7 @@ public sealed class AudioManager
             }
         }
         
-        // Atualiza o estado global somente se pelo menos um reprodutor estiver tocando
-        if (_audioPlayers.Any(p => p.Value.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing))
-        {
-            _globalPlaybackState = PlaybackState.Playing;
-            System.Diagnostics.Debug.WriteLine("Iniciada reprodução respeitando estados anteriores dos reprodutores");
-        }
+        System.Diagnostics.Debug.WriteLine("Iniciada reprodução respeitando estados anteriores dos reprodutores");
     }
     
     /// <summary>
@@ -401,7 +390,6 @@ public sealed class AudioManager
             _playerStates[playerEntry.Key] = PlaybackState.Paused;
         }
         
-        _globalPlaybackState = PlaybackState.Paused;
         System.Diagnostics.Debug.WriteLine("Pausada reprodução de todos os sons");
     }
     
@@ -414,9 +402,6 @@ public sealed class AudioManager
         {
             player.Play();
             _playerStates[soundId] = PlaybackState.Playing;
-            
-            // Atualiza o estado global se pelo menos um player estiver tocando
-            _globalPlaybackState = PlaybackState.Playing;
         }
     }
     
@@ -429,12 +414,6 @@ public sealed class AudioManager
         {
             player.Pause();
             _playerStates[soundId] = PlaybackState.Paused;
-            
-            // Verifica se ainda há algum player tocando
-            if (!_audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing))
-            {
-                _globalPlaybackState = PlaybackState.Paused;
-            }
         }
     }
     
@@ -587,9 +566,6 @@ public sealed class AudioManager
                 _playerStates[pair.Key] = PlaybackState.Stopped;
             }
             
-            // Atualiza o estado global
-            _globalPlaybackState = PlaybackState.Stopped;
-            
             // Salva os novos estados de volume
             SalvarVolumes();
             
@@ -625,9 +601,6 @@ public sealed class AudioManager
             // Marca o estado de reprodução como parado
             _playerStates[pair.Key] = PlaybackState.Stopped;
         }
-        
-        // Atualiza o estado global
-        _globalPlaybackState = PlaybackState.Stopped;
         
         // Salva os novos estados de volume
         SalvarVolumes();

@@ -44,12 +44,12 @@ public class ReverbSampleProvider : ISampleProvider
     private float _width;
     
     // Filtros comb
-    private CombFilter[] _combLeft;
-    private CombFilter[] _combRight;
+    private CombFilter[] _combLeft = null!;
+    private CombFilter[] _combRight = null!;
     
     // Filtros allpass
-    private AllpassFilter[] _allpassLeft;
-    private AllpassFilter[] _allpassRight;
+    private AllpassFilter[] _allpassLeft = null!;
+    private AllpassFilter[] _allpassRight = null!;
     
     // Tempos de atraso para canais esquerdo e direito (valores primos para maior densidade)
     private readonly int[] _combTuningsL = { 1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617 };
@@ -60,7 +60,7 @@ public class ReverbSampleProvider : ISampleProvider
     // Controle dinâmico
     private bool _isFrozen = false;
     private float _currentMix = 0.0f;
-    private float _mixInc = 0.01f;   // Suavização da mudança de mix
+    // Campo _mixInc removido pois não estava sendo usado
     private float _roomSizeStore;
     private float _dampStore;
     

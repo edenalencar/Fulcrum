@@ -49,8 +49,8 @@ public sealed partial class SettingsPage : Page
     /// </summary>
     private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
     {
-        // Define o texto de copyright
-        txtDireitos.Text = "© 2024 Éden Alencar. Todos os direitos reservados.";
+        // O conteúdo desse método foi removido, pois o elemento txtDireitos
+        // não existe mais após a remoção do card "Sobre o Fulcrum"
     }
 
     /// <summary>
@@ -165,17 +165,5 @@ public sealed partial class SettingsPage : Page
             await System.Threading.Tasks.Task.Delay(4000);
             atalhosMensagemInfo.IsOpen = false;
         });
-    }
-
-    /// <summary>
-    /// Abre o cliente de email para enviar feedback
-    /// </summary>
-    private async void Feedback_Click(object sender, RoutedEventArgs e)
-    {
-        // Define o endereço de email para envio do feedback
-        var emailUri = new Uri("mailto:feedback@fulcrum.app?subject=Feedback%20do%20Aplicativo%20Fulcrum");
-        
-        // Abre o cliente de email padrão
-        await Launcher.LaunchUriAsync(emailUri);
     }
 }

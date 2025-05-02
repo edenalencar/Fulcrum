@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using System.IO;
 using Windows.Storage;
 using Microsoft.UI.Dispatching;
+using System.Threading.Tasks;
 
 namespace Fulcrum.Bu.Services
 {
@@ -173,13 +174,13 @@ namespace Fulcrum.Bu.Services
         /// <summary>
         /// Limpa todas as notificações do aplicativo
         /// </summary>
-        public void ClearAllNotifications()
+        public async Task ClearAllNotifications()
         {
             if (!_initialized) return;
 
             try
             {
-                AppNotificationManager.Default.RemoveAllAsync();
+                await AppNotificationManager.Default.RemoveAllAsync();
                 System.Diagnostics.Debug.WriteLine("Todas as notificações foram removidas");
             }
             catch (Exception ex)
