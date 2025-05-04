@@ -10,131 +10,748 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <!-- Estilo para os cartões informativos -->
-        <Style x:Key="InfoCardStyle" TargetType="Grid">
+        <!-- Gradiente aprimorado para o cabeçalho com efeito mais profundo -->
+        <LinearGradientBrush x:Key="HeaderGradientBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{ThemeResource SystemAccentColorDark3}" Offset="0.0"/>
+            <GradientStop Color="{ThemeResource SystemAccentColorDark2}" Offset="0.4"/>
+            <GradientStop Color="{ThemeResource SystemAccentColorDark1}" Offset="0.7"/>
+            <GradientStop Color="{ThemeResource SystemAccentColor}" Offset="1.0"/>
+        </LinearGradientBrush>
+        
+        <!-- Gradiente alternativo para elementos destacados -->
+        <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{ThemeResource SystemAccentColor}" Offset="0.0"/>
+            <GradientStop Color="{ThemeResource SystemAccentColorLight1}" Offset="1.0"/>
+        </LinearGradientBrush>
+
+        <!-- Efeito de vidro (Glassmorphism) para cartões premium - removendo propriedades não suportadas -->
+        <Style x:Key="GlassmorphismCardStyle" TargetType="Border">
             <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
-            <Setter Property="CornerRadius" Value="12"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
-            <Setter Property="Padding" Value="20"/>
-            <Setter Property="Margin" Value="0,8"/>
+            <Setter Property="CornerRadius" Value="24"/>
+            <Setter Property="Padding" Value="48"/>
+            <Setter Property="Margin" Value="0,24,0,0"/>
+            <!-- Animações aprimoradas -->
             <Setter Property="animations:Implicit.ShowAnimations">
                 <Setter.Value>
                     <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.4"/>
-                        <animations:TranslationAnimation From="0,20,0" To="0,0,0" Duration="0:0:0.4"/>
+                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.6" Delay="0:0:0.05"/>
+                        <animations:TranslationAnimation From="0,40,0" To="0,0,0" Duration="0:0:0.8" Delay="0:0:0.05"/>
+                        <animations:ScaleAnimation From="0.95,0.95,1" To="1,1,1" Duration="0:0:0.7" Delay="0:0:0.1"/>
                     </animations:ImplicitAnimationSet>
                 </Setter.Value>
             </Setter>
         </Style>
         
-        <!-- Estilo para títulos de seção -->
-        <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="Margin" Value="0,0,0,12"/>
+        <!-- Estilo para cartões flutuantes - usando abordagem compatível com WinUI 3 -->
+        <Style x:Key="FloatingCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Padding" Value="32"/>
+            <Setter Property="Margin" Value="0,16,0,0"/>
+            <!-- Removendo a propriedade Translation que causava o erro -->
+            <!-- Animações sutis -->
+            <Setter Property="animations:Implicit.ShowAnimations">
+                <Setter.Value>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.5" Delay="0:0:0.1"/>
+                        <animations:ScaleAnimation From="0.96,0.96,1" To="1,1,1" Duration="0:0:0.6" Delay="0:0:0.1"/>
+                    </animations:ImplicitAnimationSet>
+                </Setter.Value>
+            </Setter>
         </Style>
         
-        <!-- Estilo para links -->
-        <Style x:Key="HyperlinkButtonStyle" TargetType="HyperlinkButton">
-            <Setter Property="Margin" Value="0,4"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
+        <!-- Estilo para títulos de seção modernos -->
+        <Style x:Key="ModernSectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Margin" Value="0,0,0,28"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemAccentColor}"/>
+            <Setter Property="animations:Implicit.ShowAnimations">
+                <Setter.Value>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.4"/>
+                        <animations:TranslationAnimation From="-20,0,0" To="0,0,0" Duration="0:0:0.5"/>
+                    </animations:ImplicitAnimationSet>
+                </Setter.Value>
+            </Setter>
         </Style>
+        
+        <!-- Estilo para botões de ação avançados -->
+        <Style x:Key="PremiumButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource ControlFillColorSecondaryBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="28,16"/>
+            <Setter Property="CornerRadius" Value="28"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal"/>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleX"
+                                                           To="1.03" Duration="0:0:0.3" EasingFunction="{StaticResource CircleEase}"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleY"
+                                                           To="1.03" Duration="0:0:0.3" EasingFunction="{StaticResource CircleEase}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" 
+                                                                         Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlFillColorTertiaryBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimation Storyboard.TargetName="ContentPresenterTransform"
+                                                           Storyboard.TargetProperty="Y"
+                                                           To="-2" Duration="0:0:0.3" EasingFunction="{StaticResource CircleEase}"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleX"
+                                                           To="0.97" Duration="0:0:0.15" EasingFunction="{StaticResource CircleEase}"/>
+                                            <DoubleAnimation Storyboard.TargetName="ScaleTransform" 
+                                                           Storyboard.TargetProperty="ScaleY"
+                                                           To="0.97" Duration="0:0:0.15" EasingFunction="{StaticResource CircleEase}"/>
+                                            <DoubleAnimation Storyboard.TargetName="ContentPresenterTransform"
+                                                           Storyboard.TargetProperty="Y"
+                                                           To="1" Duration="0:0:0.15" EasingFunction="{StaticResource CircleEase}"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter"
+                                            Background="{TemplateBinding Background}" 
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            Padding="{TemplateBinding Padding}"
+                                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                            AutomationProperties.AccessibilityView="Raw"
+                                            CornerRadius="{TemplateBinding CornerRadius}">
+                                <ContentPresenter.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform x:Name="ScaleTransform" ScaleX="1" ScaleY="1" />
+                                        <TranslateTransform x:Name="ContentPresenterTransform" X="0" Y="0" />
+                                    </TransformGroup>
+                                </ContentPresenter.RenderTransform>
+                                <ContentPresenter.Shadow>
+                                    <ThemeShadow />
+                                </ContentPresenter.Shadow>
+                            </ContentPresenter>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Estilo para cartões de tecnologia aprimorado - removendo animações hover não suportadas -->
+        <Style x:Key="FeatureCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource SolidBackgroundFillColorBaseBrush}"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ControlStrokeColorSecondaryBrush}"/>
+            <Setter Property="Padding" Value="28,24"/>
+            <Setter Property="animations:Implicit.ShowAnimations">
+                <Setter.Value>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.4" Delay="0:0:0.1"/>
+                        <animations:ScaleAnimation From="0.9,0.9,1" To="1,1,1" Duration="0:0:0.5" Delay="0:0:0.1"/>
+                    </animations:ImplicitAnimationSet>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Estilo para destaque tecnológico - removendo propriedades não suportadas -->
+        <Style x:Key="TechHighlightStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="24,20"/>
+            <Setter Property="animations:Implicit.ShowAnimations">
+                <Setter.Value>
+                    <animations:ImplicitAnimationSet>
+                        <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.5" Delay="0:0:0.2"/>
+                        <animations:ScaleAnimation From="0.95,0.95,1" To="1,1,1" Duration="0:0:0.6" Delay="0:0:0.2"/>
+                    </animations:ImplicitAnimationSet>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Easing Functions para animações mais suaves -->
+        <CircleEase x:Key="CircleEase" EasingMode="EaseOut"/>
+        <QuinticEase x:Key="QuinticEase" EasingMode="EaseOut"/>
+        
+        <!-- Adicionando animação de FadeIn para uso direto -->
+        <animations:ImplicitAnimationSet x:Key="FadeInAnimation">
+            <animations:OpacityAnimation From="0" To="1" Duration="0:0:0.5"/>
+        </animations:ImplicitAnimationSet>
     </Page.Resources>
 
-    <ScrollViewer Padding="24" VerticalScrollBarVisibility="Auto">
-        <StackPanel MaxWidth="800" HorizontalAlignment="Center">
-            <!-- Cabeçalho da página -->
-            <StackPanel Margin="0,0,0,20" HorizontalAlignment="Center">
-                <Image Source="/Assets/StoreLogo.png" Width="80" Height="80" Margin="0,0,0,16"/>
-                <TextBlock Text="Fulcrum" Style="{StaticResource TitleTextBlockStyle}" 
-                           FontSize="28" FontWeight="SemiBold" HorizontalAlignment="Center"/>
-                <TextBlock x:Name="txtVersion" Text="Versão 1.0.0.0" 
-                           Style="{StaticResource CaptionTextBlockStyle}" 
-                           HorizontalAlignment="Center" Opacity="0.7" Margin="0,4,0,0"/>
-            </StackPanel>
+    <ScrollViewer Padding="0" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             
-            <!-- Descrição do aplicativo -->
-            <Grid Style="{StaticResource InfoCardStyle}">
-                <StackPanel>
-                    <TextBlock Text="Sobre o Aplicativo" Style="{StaticResource SectionTitleStyle}"/>
-                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,12">
-                        <Run>Fulcrum é um aplicativo de sons ambientes projetado para melhorar sua concentração, relaxamento e produtividade.</Run>
-                        <LineBreak/><LineBreak/>
-                        <Run>Combine diferentes sons da natureza e ambientes para criar a atmosfera perfeita para trabalhar, estudar, meditar ou dormir.</Run>
-                    </TextBlock>
-                    
-                    <TextBlock Text="Principais recursos:" FontWeight="SemiBold" Margin="0,8,0,4"/>
-                    <ListView IsItemClickEnabled="False" SelectionMode="None" Padding="0" Margin="0,0,0,8">
-                        <ListViewItem Padding="0,2">• Misturador de sons ambiente para criar combinações perfeitas</ListViewItem>
-                        <ListViewItem Padding="0,2">• Temporizadores e controles de sono</ListViewItem>
-                        <ListViewItem Padding="0,2">• Visualizações de ondas de áudio</ListViewItem>
-                        <ListViewItem Padding="0,2">• Perfis personalizados de som</ListViewItem>
-                        <ListViewItem Padding="0,2">• Interface moderna e intuitiva</ListViewItem>
-                    </ListView>
-                </StackPanel>
+            <!-- Cabeçalho elegante com elementos visuais modernos -->
+            <Grid Grid.Row="0" Height="480">
+                <!-- Fundo com gradiente aprimorado -->
+                <Grid Background="{StaticResource HeaderGradientBrush}">
+                    <!-- Camada com padrões de som estilizados -->
+                    <Canvas>
+                        <!-- Animação de ondas sonoras -->
+                        <Path Fill="White" Opacity="0.03" Data="M0,260 C80,220 160,300 240,260 C320,220 400,300 480,260 C560,220 640,300 720,260 C800,220 880,300 960,260 L960,480 L0,480 Z"/>
+                        <Path Fill="White" Opacity="0.05" Data="M0,300 C70,250 140,340 210,300 C280,260 350,340 420,300 C490,260 560,340 630,300 C700,260 770,340 840,300 C910,260 980,340 1050,300 L1050,480 L0,480 Z"/>
+                        
+                        <!-- Ondas sonoras como linhas estilizadas -->
+                        <Path Stroke="White" StrokeThickness="2" Opacity="0.1" StrokeDashArray="1,3" 
+                              Data="M -100,220 Q 20,170 140,220 Q 260,270 380,220 Q 500,170 620,220 Q 740,270 860,220 Q 980,170 1100,220" Canvas.Top="40"/>
+                        <Path Stroke="White" StrokeThickness="1.5" Opacity="0.07" StrokeDashArray="5,2" 
+                              Data="M -120,250 Q 30,180 180,250 Q 330,320 480,250 Q 630,180 780,250 Q 930,320 1080,250" Canvas.Top="20"/>
+                        <Path Stroke="White" StrokeThickness="1" Opacity="0.05" StrokeDashArray="2,2" 
+                              Data="M -80,280 Q 50,200 180,280 Q 310,360 440,280 Q 570,200 700,280 Q 830,360 960,280" Canvas.Top="10"/>
+                        
+                        <!-- Elementos decorativos animados -->
+                        <Ellipse Fill="White" Opacity="0.2" Width="10" Height="10" Canvas.Left="120" Canvas.Top="140">
+                            <Ellipse.RenderTransform>
+                                <TranslateTransform x:Name="Particle1" Y="0"/>
+                            </Ellipse.RenderTransform>
+                            <Ellipse.Triggers>
+                                <EventTrigger>
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetName="Particle1" Storyboard.TargetProperty="Y"
+                                                             From="0" To="20" Duration="0:0:3" EasingFunction="{StaticResource CircleEase}"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Ellipse.Triggers>
+                        </Ellipse>
+                        
+                        <Ellipse Fill="White" Opacity="0.15" Width="18" Height="18" Canvas.Left="540" Canvas.Top="200">
+                            <Ellipse.RenderTransform>
+                                <TranslateTransform x:Name="Particle2" Y="0"/>
+                            </Ellipse.RenderTransform>
+                            <Ellipse.Triggers>
+                                <EventTrigger>
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetName="Particle2" Storyboard.TargetProperty="Y"
+                                                             From="0" To="-25" Duration="0:0:4" EasingFunction="{StaticResource CircleEase}"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Ellipse.Triggers>
+                        </Ellipse>
+                        
+                        <Ellipse Fill="White" Opacity="0.1" Width="15" Height="15" Canvas.Left="300" Canvas.Top="100">
+                            <Ellipse.RenderTransform>
+                                <TranslateTransform x:Name="Particle3" Y="0"/>
+                            </Ellipse.RenderTransform>
+                            <Ellipse.Triggers>
+                                <EventTrigger>
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetName="Particle3" Storyboard.TargetProperty="Y"
+                                                             From="0" To="15" Duration="0:0:5" EasingFunction="{StaticResource CircleEase}"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Ellipse.Triggers>
+                        </Ellipse>
+                        
+                        <Ellipse Fill="White" Opacity="0.08" Width="24" Height="24" Canvas.Left="720" Canvas.Top="120">
+                            <Ellipse.RenderTransform>
+                                <TranslateTransform x:Name="Particle4" Y="0"/>
+                            </Ellipse.RenderTransform>
+                            <Ellipse.Triggers>
+                                <EventTrigger>
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                            <DoubleAnimation Storyboard.TargetName="Particle4" Storyboard.TargetProperty="Y"
+                                                             From="0" To="-18" Duration="0:0:3.5" EasingFunction="{StaticResource CircleEase}"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Ellipse.Triggers>
+                        </Ellipse>
+                    </Canvas>
+                                
+                    <!-- Conteúdo do cabeçalho com animação aprimorada -->
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,50,0,0">
+                        <!-- Logo com efeito de pulsação -->
+                        <Grid>
+                            <Ellipse Width="180" Height="180" Fill="{ThemeResource SystemAccentColorLight1}" Opacity="0.15"
+                                   Margin="0,0,0,5">
+                                <Ellipse.RenderTransform>
+                                    <ScaleTransform x:Name="LogoBackgroundPulse" ScaleX="1" ScaleY="1"/>
+                                </Ellipse.RenderTransform>
+                                <Ellipse.Triggers>
+                                    <EventTrigger>
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                <DoubleAnimation Storyboard.TargetName="LogoBackgroundPulse" 
+                                                               Storyboard.TargetProperty="ScaleX"
+                                                               From="1" To="1.07" Duration="0:0:3" EasingFunction="{StaticResource QuinticEase}"/>
+                                                <DoubleAnimation Storyboard.TargetName="LogoBackgroundPulse" 
+                                                               Storyboard.TargetProperty="ScaleY"
+                                                               From="1" To="1.07" Duration="0:0:3" EasingFunction="{StaticResource QuinticEase}"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Ellipse.Triggers>
+                            </Ellipse>
+                            <Image Source="/Assets/StoreLogo.png" Width="150" Height="150" Margin="0,0,0,5"/>
+                        </Grid>
+                        
+                        <!-- Título principal com animação de fade-in -->
+                        <TextBlock Text="Fulcrum" Style="{StaticResource TitleTextBlockStyle}" 
+                                   FontSize="54" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="White"
+                                   animations:Implicit.ShowAnimations="{StaticResource FadeInAnimation}"/>
+                        
+                        <!-- Informação da versão -->
+                        <TextBlock x:Name="txtVersion" Text="Versão 1.0.0.0" 
+                                 Style="{StaticResource CaptionTextBlockStyle}" 
+                                 HorizontalAlignment="Center" Foreground="White" Opacity="0.8" Margin="0,8,0,0"/>
+                        
+                        <!-- Descrição elegante -->
+                        <TextBlock Text="Sons Ambiente para Foco e Harmonia" 
+                                 Style="{StaticResource BodyTextBlockStyle}" 
+                                 HorizontalAlignment="Center" Foreground="White" Opacity="0.9" Margin="0,20,0,0"
+                                 FontSize="18" CharacterSpacing="20"/>
+                        
+                        <!-- Indicador de scroll -->
+                        <Grid Margin="0,50,0,0" HorizontalAlignment="Center">
+                            <FontIcon Glyph="&#xE972;" FontSize="24" Foreground="White" Opacity="0.6">
+                                <FontIcon.RenderTransform>
+                                    <TranslateTransform x:Name="ScrollIndicator" Y="0"/>
+                                </FontIcon.RenderTransform>
+                                <FontIcon.Triggers>
+                                    <EventTrigger>
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                                <DoubleAnimation Storyboard.TargetName="ScrollIndicator" 
+                                                               Storyboard.TargetProperty="Y"
+                                                               From="0" To="10" Duration="0:0:1.5" EasingFunction="{StaticResource CircleEase}"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </FontIcon.Triggers>
+                            </FontIcon>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
             </Grid>
             
-            <!-- Links e recursos -->
-            <Grid Style="{StaticResource InfoCardStyle}">
-                <StackPanel>
-                    <TextBlock Text="Links e Recursos" Style="{StaticResource SectionTitleStyle}"/>
+            <!-- Conteúdo principal com layout aprimorado -->
+            <Grid Grid.Row="1">
+                <StackPanel MaxWidth="900" HorizontalAlignment="Center" Margin="24,0,24,80">
+                    <!-- Descrição do aplicativo com efeito simplificado -->
+                    <Border Style="{StaticResource GlassmorphismCardStyle}" Margin="0,-80,0,24" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Opacity="0.95">
+                        <!-- Usando ThemeShadow para criar efeito de elevação em vez de Vector3 -->
+                        <Border.Shadow>
+                            <ThemeShadow />
+                        </Border.Shadow>
+                        <Grid>
+                            <Border CornerRadius="24" Margin="-1" Opacity="0.05" 
+                                    Background="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                            
+                            <StackPanel>
+                                <TextBlock Text="Sobre o Fulcrum" Style="{StaticResource ModernSectionTitleStyle}" Margin="0,4,0,32"/>
+                                
+                                <TextBlock TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,40" LineHeight="28" FontSize="15">
+                                    <Run>O Fulcrum é um aplicativo premium de reprodução de sons ambientes meticulosamente projetado para transformar sua experiência de foco, relaxamento e produtividade. Desenvolvido com precisão para proporcionar uma atmosfera verdadeiramente imersiva, o Fulcrum permite que você transcenda o ruído cotidiano e encontre seu equilíbrio sonoro perfeito.</Run>
+                                    <LineBreak/><LineBreak/>
+                                    <Run>Combinando sons ambientes de alta fidelidade com uma interface elegante e minimalista, o Fulcrum eleva sua experiência sonora a um novo patamar. É a ferramenta ideal para quem busca criar o ambiente acústico perfeito para trabalhar com maior concentração, estudar com foco intenso, meditar profundamente ou simplesmente relaxar completamente.</Run>
+                                </TextBlock>
+                                
+                                <!-- Recursos principais em grid de destaque -->
+                                <TextBlock Text="Recursos Premium" FontWeight="SemiBold" FontSize="22" Margin="0,8,0,24"/>
+                                
+                                <!-- Substituindo o ItemsControl por um Grid explícito para melhorar a visibilidade -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Item 1 - Mixer -->
+                                    <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource FeatureCardStyle}" Margin="0,0,8,16">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE767;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Mixador de Sons Profissional" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Combine e personalize diferentes sons ambientes para criar sua atmosfera sonora ideal com controle preciso." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Item 2 - Timer -->
+                                    <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource FeatureCardStyle}" Margin="8,0,0,16">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE823;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Timer Inteligente" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Configure temporizadores personalizados que suavemente diminuem o volume até parar, perfeito para adormecer ou sessões focadas." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Item 3 - Visualização -->
+                                    <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource FeatureCardStyle}" Margin="0,0,8,16">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE90F;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Visualização de Ondas Avançada" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Experimente uma representação visual dinâmica dos padrões sonoros, criando uma conexão audiovisual perfeita." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Item 4 - Perfis -->
+                                    <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource FeatureCardStyle}" Margin="8,0,0,16">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE7EE;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Perfis Personalizados Inteligentes" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Salve e carregue múltiplas configurações personalizadas para diferentes momentos do seu dia, com sincronização na nuvem." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Item 5 - Equalização -->
+                                    <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource FeatureCardStyle}" Margin="0,0,8,16">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE8D2;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Equalização Profissional" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Ajuste a experiência sonora com equalizadores personalizados e efeitos avançados como reverberação e espacialização." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Item 6 - Design -->
+                                    <Border Grid.Column="1" Grid.Row="2" Style="{StaticResource FeatureCardStyle}" Margin="8,0,0,16">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE790;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Design Fluido Adaptativo" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Desfrute de uma interface elegante que se adapta perfeitamente aos temas claro e escuro, com transições suaves e animações sutis." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Item 7 - DSP Avançado -->
+                                    <Border Grid.Column="0" Grid.Row="3" Style="{StaticResource FeatureCardStyle}" Margin="0,0,8,0">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE7F0;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Processamento DSP Avançado" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Algoritmos de processamento digital de sinais (DSP) proporcionam efeitos como Freeverb, Flanger e Pitch Shifting com qualidade profissional." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                    
+                                    <!-- Item 8 - Masterização -->
+                                    <Border Grid.Column="1" Grid.Row="3" Style="{StaticResource FeatureCardStyle}" Margin="8,0,0,0">
+                                        <Grid>
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,16,12">
+                                                <TextBlock Text="&#xE94E;" FontFamily="Segoe Fluent Icons" FontSize="24" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Border>
+                                            <StackPanel Margin="68,0,0,0">
+                                                <TextBlock Text="Masterização de Áudio" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                                <TextBlock Text="Sistema de normalização e limpeza de áudio que remove artefatos e ruídos, preservando a qualidade sonora mesmo em configurações extremas." 
+                                                         Opacity="0.7" FontSize="13" TextWrapping="Wrap" LineHeight="20"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
                     
-                    <StackPanel Orientation="Horizontal" Margin="0,4">
-                        <FontIcon Glyph="&#xE946;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                        <Button x:Name="BtnSourceCode" Click="BtnSourceCode_Click" Padding="8,4" CornerRadius="4">
-                            Ver código-fonte no GitHub
-                        </Button>
-                    </StackPanel>
+                    <!-- Links e recursos com design moderno -->
+                    <Border Style="{StaticResource FloatingCardStyle}" Margin="0,24,0,0">
+                        <!-- Substituindo o Vector3 por um ThemeShadow para dar efeito de elevação -->
+                        <Border.Shadow>
+                            <ThemeShadow />
+                        </Border.Shadow>
+                        <Grid>
+                            <Border CornerRadius="20" Margin="-1" Opacity="0.05" 
+                                    Background="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                            
+                            <StackPanel>
+                                <TextBlock Text="Comunidade e Suporte" Style="{StaticResource ModernSectionTitleStyle}"/>
+                                
+                                <StackPanel Spacing="16" Margin="0,16,0,0">
+                                    <Button x:Name="BtnSourceCode" Style="{StaticResource PremiumButtonStyle}"
+                                            Click="BtnSourceCode_Click" AutomationProperties.Name="Ver código no GitHub">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <Border Grid.Column="0" Background="{ThemeResource AccentGradientBrush}" Width="48" Height="48" CornerRadius="24">
+                                                <FontIcon Glyph="&#xE946;" FontSize="20" Foreground="White"/>
+                                            </Border>
+                                            
+                                            <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Código no GitHub" FontWeight="SemiBold" FontSize="15"/>
+                                                <TextBlock Text="Explore o código-fonte e contribua com o projeto" Opacity="0.7" FontSize="13" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                            
+                                            <FontIcon Grid.Column="2" Glyph="&#xE974;" FontSize="14" Opacity="0.6" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Button>
+                                    
+                                    <Button x:Name="BtnReportIssue" Style="{StaticResource PremiumButtonStyle}"
+                                            Click="BtnReportIssue_Click" AutomationProperties.Name="Relatar problema no GitHub">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <Border Grid.Column="0" Background="{ThemeResource AccentGradientBrush}" Width="48" Height="48" CornerRadius="24">
+                                                <FontIcon Glyph="&#xE716;" FontSize="20" Foreground="White"/>
+                                            </Border>
+                                            
+                                            <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Relatar Problema" FontWeight="SemiBold" FontSize="15"/>
+                                                <TextBlock Text="Ajude-nos a melhorar o Fulcrum compartilhando sua experiência" Opacity="0.7" FontSize="13" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                            
+                                            <FontIcon Grid.Column="2" Glyph="&#xE974;" FontSize="14" Opacity="0.6" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Button>
+                                    
+                                    <Button x:Name="BtnContactDeveloper" Style="{StaticResource PremiumButtonStyle}"
+                                            Click="BtnContactDeveloper_Click" AutomationProperties.Name="Entre em contato com o suporte">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <Border Grid.Column="0" Background="{ThemeResource AccentGradientBrush}" Width="48" Height="48" CornerRadius="24">
+                                                <FontIcon Glyph="&#xE8BD;" FontSize="20" Foreground="White"/>
+                                            </Border>
+                                            
+                                            <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Fale Conosco" FontWeight="SemiBold" FontSize="15"/>
+                                                <TextBlock Text="Entre em contato com nossa equipe de suporte dedicada" Opacity="0.7" FontSize="13" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                            
+                                            <FontIcon Grid.Column="2" Glyph="&#xE974;" FontSize="14" Opacity="0.6" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Button>
+                                    
+                                    <Button x:Name="BtnRateApp" Style="{StaticResource PremiumButtonStyle}"
+                                            Click="BtnRateApp_Click" AutomationProperties.Name="Avaliar na Microsoft Store">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <Border Grid.Column="0" Background="{ThemeResource AccentGradientBrush}" Width="48" Height="48" CornerRadius="24">
+                                                <FontIcon Glyph="&#xE734;" FontSize="20" Foreground="White"/>
+                                            </Border>
+                                            
+                                            <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock Text="Avaliar na Microsoft Store" FontWeight="SemiBold" FontSize="15"/>
+                                                <TextBlock Text="Compartilhe sua experiência e ajude outros usuários a descobrir o Fulcrum" Opacity="0.7" FontSize="13" Margin="0,4,0,0"/>
+                                            </StackPanel>
+                                            
+                                            <FontIcon Grid.Column="2" Glyph="&#xE974;" FontSize="14" Opacity="0.6" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
                     
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                        <FontIcon Glyph="&#xE716;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                        <Button x:Name="BtnReportIssue" Click="BtnReportIssue_Click" Padding="8,4" CornerRadius="4">
-                            Relatar um problema
-                        </Button>
-                    </StackPanel>
+                    <!-- Informações técnicas com visuais aprimorados -->
+                    <Border Style="{StaticResource FloatingCardStyle}" Margin="0,24,0,0">
+                        <Border.Shadow>
+                            <ThemeShadow />
+                        </Border.Shadow>
+                        <Grid>
+                            <Border CornerRadius="20" Margin="-1" Opacity="0.05" 
+                                    Background="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+                            
+                            <StackPanel>
+                                <TextBlock Text="Tecnologias Avançadas" Style="{StaticResource ModernSectionTitleStyle}"/>
+                                <TextBlock TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,32" LineHeight="24" FontSize="15">
+                                    <Run>O Fulcrum integra as mais avançadas tecnologias de desenvolvimento para Windows, proporcionando uma experiência excepcional com desempenho otimizado, interfaces fluidas e qualidade de áudio profissional.</Run>
+                                </TextBlock>
+                                
+                                <!-- Substituindo o ItemsControl por Grid explícito para garantir visualização -->
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <!-- Windows App SDK -->
+                                    <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource TechHighlightStyle}" 
+                                           Background="{ThemeResource SystemAccentColorLight3}" 
+                                           Margin="0,0,8,16" MinHeight="180">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight2}" Opacity="0.3"/>
+                                                <TextBlock Text="&#xE950;" FontFamily="Segoe Fluent Icons" FontSize="38" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Grid>
+                                            <TextBlock Text="Windows App SDK" FontWeight="SemiBold" FontSize="18" Foreground="{ThemeResource SystemAccentColorDark1}" Margin="0,12,0,8"/>
+                                            <TextBlock Text="Interface moderna e nativa com controles Fluent Design e animações suaves para experiência premium. Suporte nativo a temas claro e escuro com adaptação perfeita a todas as telas." 
+                                                     Opacity="0.9" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- .NET 8 -->
+                                    <Border Grid.Column="1" Grid.Row="0" Style="{StaticResource TechHighlightStyle}" 
+                                           Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                           BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}" 
+                                           Margin="8,0,0,16" MinHeight="180">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight3}" Opacity="0.2"/>
+                                                <TextBlock Text="&#xE7BA;" FontFamily="Segoe Fluent Icons" FontSize="38" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Grid>
+                                            <TextBlock Text=".NET 8 e C# Moderno" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,8"/>
+                                            <TextBlock Text="Arquitetura sofisticada com padrões Singleton para gerenciamento de áudio, carregamento assíncrono de recursos, e multithreading otimizado para reprodução sem interrupções." 
+                                                     Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- NAudio -->
+                                    <Border Grid.Column="0" Grid.Row="1" Style="{StaticResource TechHighlightStyle}" 
+                                           Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                           BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}" 
+                                           Margin="0,0,8,0" MinHeight="180">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight3}" Opacity="0.2"/>
+                                                <TextBlock Text="&#xEF3C;" FontFamily="Segoe Fluent Icons" FontSize="38" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Grid>
+                                            <TextBlock Text="Processamento de Áudio" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,8"/>
+                                            <TextBlock Text="Algoritmos profissionais de processamento digital de sinais (DSP) implementados com NAudio, incluindo Freeverb, equalizador de 3 bandas, normalização adaptativa e otimizações de baixa latência." 
+                                                     Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- Arquitetura Avançada -->
+                                    <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource TechHighlightStyle}" 
+                                           Background="{ThemeResource SystemAccentColorLight3}" 
+                                           Margin="8,0,0,0" MinHeight="180">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight2}" Opacity="0.3"/>
+                                                <TextBlock Text="&#xE952;" FontFamily="Segoe Fluent Icons" FontSize="38" 
+                                                         HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                            </Grid>
+                                            <TextBlock Text="Arquitetura Avançada" FontWeight="SemiBold" FontSize="18" Foreground="{ThemeResource SystemAccentColorDark1}" Margin="0,12,0,8"/>
+                                            <TextBlock Text="Sistema de perfis inteligentes, gerenciamento de estado com serialização JSON, persistência automática de configurações, e transições suaves entre diferentes configurações de áudio." 
+                                                     Opacity="0.9" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
                     
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                        <FontIcon Glyph="&#xE8BD;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                        <Button x:Name="BtnContactDeveloper" Click="BtnContactDeveloper_Click" Padding="8,4" CornerRadius="4">
-                            Entrar em contato com o desenvolvedor
-                        </Button>
-                    </StackPanel>
-                    
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                        <FontIcon Glyph="&#xE734;" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
-                        <Button x:Name="BtnRateApp" Click="BtnRateApp_Click" Padding="8,4" CornerRadius="4">
-                            Avaliar na Microsoft Store
-                        </Button>
-                    </StackPanel>
+                    <!-- Rodapé elegante -->
+                    <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" 
+                           CornerRadius="36" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" 
+                           Padding="32,18" Margin="0,60,0,0" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <FontIcon Glyph="&#xE946;" FontSize="18" Opacity="0.7" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="txtDireitos" Text="© 2025 Éden Alencar" Style="{StaticResource CaptionTextBlockStyle}" 
+                                      FontSize="13" VerticalAlignment="Center" Opacity="0.8"/>
+                            <TextBlock Text="•" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" Opacity="0.6"/>
+                            <TextBlock Text="Todos os direitos reservados" Style="{StaticResource CaptionTextBlockStyle}" 
+                                      FontSize="13" VerticalAlignment="Center" Opacity="0.8"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </Grid>
-            
-            <!-- Informações técnicas -->
-            <Grid Style="{StaticResource InfoCardStyle}">
-                <StackPanel>
-                    <TextBlock Text="Informações Técnicas" Style="{StaticResource SectionTitleStyle}"/>
-                    <StackPanel Margin="0,0,0,8">
-                        <TextBlock TextWrapping="Wrap">
-                            <Run>Fulcrum é desenvolvido usando WinUI 3 e .NET 8, oferecendo uma experiência moderna e nativa do Windows.</Run>
-                            <LineBreak/><LineBreak/>
-                            <Run>Tecnologias utilizadas:</Run>
-                        </TextBlock>
-                        <ListView IsItemClickEnabled="False" SelectionMode="None" Padding="0" Margin="0,4,0,0">
-                            <ListViewItem Padding="0,2">• Windows App SDK / WinUI 3</ListViewItem>
-                            <ListViewItem Padding="0,2">• .NET 8</ListViewItem>
-                            <ListViewItem Padding="0,2">• Windows Community Toolkit</ListViewItem>
-                            <ListViewItem Padding="0,2">• Project ReunionNet</ListViewItem>
-                        </ListView>
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
-            
-            <!-- Direitos autorais -->
-            <TextBlock Text="© 2025 Éden Alencar. Todos os direitos reservados." 
-                       Style="{StaticResource CaptionTextBlockStyle}" 
-                       HorizontalAlignment="Center" Margin="0,20,0,0" Opacity="0.6"/>
-        </StackPanel>
+        </Grid>
     </ScrollViewer>
 </Page>

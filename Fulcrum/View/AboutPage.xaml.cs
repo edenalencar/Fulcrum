@@ -43,8 +43,8 @@ public sealed partial class AboutPage : Page
     /// </summary>
     private async void BtnContactDeveloper_Click(object sender, RoutedEventArgs e)
     {
-        // Abre o cliente de email padrão
-        await Launcher.LaunchUriAsync(new Uri("mailto:edenalencar@outlook.com?subject=Feedback%20sobre%20Fulcrum"));
+        // Abre o cliente de email padrão com o endereço de contato oficial
+        await Launcher.LaunchUriAsync(new Uri("mailto:contact@fulcrumappofficial.com?subject=Feedback%20sobre%20Fulcrum"));
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ public sealed partial class AboutPage : Page
     private async void BtnRateApp_Click(object sender, RoutedEventArgs e)
     {
         // Abre a página do aplicativo na Microsoft Store para avaliação
-        await Launcher.LaunchUriAsync(new Uri("ms-windows-store://review/?ProductId=9NBLGGH5XXXX"));
+        await Launcher.LaunchUriAsync(new Uri("https://apps.microsoft.com/detail/9PNHBQJWWK3J?hl=pt-br&gl=BR&ocid=pdpshare"));
     }
 
     /// <summary>
