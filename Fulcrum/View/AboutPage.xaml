@@ -30,8 +30,8 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
             <Setter Property="CornerRadius" Value="24"/>
-            <Setter Property="Padding" Value="48"/>
-            <Setter Property="Margin" Value="0,24,0,0"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Margin" Value="12,24,12,0"/>
             <!-- Animações aprimoradas -->
             <Setter Property="animations:Implicit.ShowAnimations">
                 <Setter.Value>
@@ -50,8 +50,8 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
             <Setter Property="CornerRadius" Value="20"/>
-            <Setter Property="Padding" Value="32"/>
-            <Setter Property="Margin" Value="0,16,0,0"/>
+            <Setter Property="Padding" Value="24"/>
+            <Setter Property="Margin" Value="12,20,12,0"/>
             <!-- Removendo a propriedade Translation que causava o erro -->
             <!-- Animações sutis -->
             <Setter Property="animations:Implicit.ShowAnimations">
@@ -67,8 +67,8 @@
         <!-- Estilo para títulos de seção modernos -->
         <Style x:Key="ModernSectionTitleStyle" TargetType="TextBlock">
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="24"/>
-            <Setter Property="Margin" Value="0,0,0,28"/>
+            <Setter Property="FontSize" Value="26"/>
+            <Setter Property="Margin" Value="0,12,0,40"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemAccentColor}"/>
             <Setter Property="animations:Implicit.ShowAnimations">
                 <Setter.Value>
@@ -175,7 +175,7 @@
         <!-- Estilo para destaque tecnológico - removendo propriedades não suportadas -->
         <Style x:Key="TechHighlightStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="16"/>
-            <Setter Property="Padding" Value="24,20"/>
+            <Setter Property="Padding" Value="40,36"/>
             <Setter Property="animations:Implicit.ShowAnimations">
                 <Setter.Value>
                     <animations:ImplicitAnimationSet>
@@ -367,19 +367,19 @@
                                     Background="{ThemeResource SystemControlForegroundBaseHighBrush}" />
                             
                             <StackPanel>
-                                <TextBlock Text="Sobre o Fulcrum" Style="{StaticResource ModernSectionTitleStyle}" Margin="0,4,0,32"/>
+                                <TextBlock Text="Sobre o Fulcrum" Style="{StaticResource ModernSectionTitleStyle}" Margin="15,4,15,32"/>
                                 
-                                <TextBlock TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,40" LineHeight="28" FontSize="15">
+                                <TextBlock TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Margin="15,0,15,40" LineHeight="26" FontSize="15">
                                     <Run>O Fulcrum é um aplicativo premium de reprodução de sons ambientes meticulosamente projetado para transformar sua experiência de foco, relaxamento e produtividade. Desenvolvido com precisão para proporcionar uma atmosfera verdadeiramente imersiva, o Fulcrum permite que você transcenda o ruído cotidiano e encontre seu equilíbrio sonoro perfeito.</Run>
                                     <LineBreak/><LineBreak/>
                                     <Run>Combinando sons ambientes de alta fidelidade com uma interface elegante e minimalista, o Fulcrum eleva sua experiência sonora a um novo patamar. É a ferramenta ideal para quem busca criar o ambiente acústico perfeito para trabalhar com maior concentração, estudar com foco intenso, meditar profundamente ou simplesmente relaxar completamente.</Run>
                                 </TextBlock>
                                 
                                 <!-- Recursos principais em grid de destaque -->
-                                <TextBlock Text="Recursos Premium" FontWeight="SemiBold" FontSize="22" Margin="0,8,0,24"/>
+                                <TextBlock Text="Recursos Premium" FontWeight="SemiBold" FontSize="22" Margin="15,8,15,24"/>
                                 
                                 <!-- Substituindo o ItemsControl por um Grid explícito para melhorar a visibilidade -->
-                                <Grid Margin="0,0,0,12">
+                                <Grid Margin="15,0,15,12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
@@ -542,7 +542,7 @@
                                     Background="{ThemeResource SystemControlForegroundBaseHighBrush}" />
                             
                             <StackPanel>
-                                <TextBlock Text="Comunidade e Suporte" Style="{StaticResource ModernSectionTitleStyle}"/>
+                                <TextBlock Text="Comunidade e Suporte" Style="{StaticResource ModernSectionTitleStyle}" Margin="15,12,15,40"/>
                                 
                                 <StackPanel Spacing="16" Margin="0,16,0,0">
                                     <Button x:Name="BtnSourceCode" Style="{StaticResource PremiumButtonStyle}"
@@ -647,13 +647,13 @@
                                     Background="{ThemeResource SystemControlForegroundBaseHighBrush}" />
                             
                             <StackPanel>
-                                <TextBlock Text="Tecnologias Avançadas" Style="{StaticResource ModernSectionTitleStyle}"/>
-                                <TextBlock TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Margin="0,0,0,32" LineHeight="24" FontSize="15">
+                                <TextBlock Text="Tecnologias Avançadas" Style="{StaticResource ModernSectionTitleStyle}" Margin="15,8,15,28"/>
+                                <TextBlock TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}" Margin="15,0,15,40" LineHeight="26" FontSize="15">
                                     <Run>O Fulcrum integra as mais avançadas tecnologias de desenvolvimento para Windows, proporcionando uma experiência excepcional com desempenho otimizado, interfaces fluidas e qualidade de áudio profissional.</Run>
                                 </TextBlock>
                                 
                                 <!-- Substituindo o ItemsControl por Grid explícito para garantir visualização -->
-                                <Grid Margin="0,0,0,12">
+                                <Grid Margin="15,0,15,20">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
@@ -665,18 +665,19 @@
                                     
                                     <!-- Windows App SDK -->
                                     <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource TechHighlightStyle}" 
-                                           Background="{ThemeResource SystemAccentColorLight3}" 
-                                           Margin="0,0,8,16" MinHeight="180">
+                                           Background="{ThemeResource LayerFillColorDefaultBrush}" 
+                                           BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+                                           Margin="0,0,12,20" MinHeight="200" Padding="28,30">
                                         <StackPanel>
                                             <Grid>
-                                                <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight2}" Opacity="0.3"/>
-                                                <TextBlock Text="&#xE950;" FontFamily="Segoe Fluent Icons" FontSize="38" 
+                                                <Ellipse Width="80" Height="80" Fill="{ThemeResource SystemAccentColorLight3}" Opacity="0.2"/>
+                                                <TextBlock Text="&#xE950;" FontFamily="Segoe Fluent Icons" FontSize="42" 
                                                          HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                                         Foreground="{ThemeResource SystemAccentColor}"/>
                                             </Grid>
-                                            <TextBlock Text="Windows App SDK" FontWeight="SemiBold" FontSize="18" Foreground="{ThemeResource SystemAccentColorDark1}" Margin="0,12,0,8"/>
+                                            <TextBlock Text="Windows App SDK" FontWeight="SemiBold" FontSize="20" Foreground="{ThemeResource SystemBaseHighColor}" Margin="0,16,0,14"/>
                                             <TextBlock Text="Interface moderna e nativa com controles Fluent Design e animações suaves para experiência premium. Suporte nativo a temas claro e escuro com adaptação perfeita a todas as telas." 
-                                                     Opacity="0.9" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
+                                                     Opacity="0.7" TextWrapping="Wrap" Margin="0,12,0,0" LineHeight="24"/>
                                         </StackPanel>
                                     </Border>
                                     
@@ -686,13 +687,13 @@
                                            BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}" 
                                            Margin="8,0,0,16" MinHeight="180">
                                         <StackPanel>
-                                            <Grid>
+                                            <Grid HorizontalAlignment="Center">
                                                 <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight3}" Opacity="0.2"/>
                                                 <TextBlock Text="&#xE7BA;" FontFamily="Segoe Fluent Icons" FontSize="38" 
                                                          HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                                         Margin="0" Foreground="{ThemeResource SystemAccentColor}"/>
                                             </Grid>
-                                            <TextBlock Text=".NET 8 e C# Moderno" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,8"/>
+                                            <TextBlock Text=".NET 8 e C# Moderno" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,8" Foreground="{ThemeResource SystemBaseHighColor}"/>
                                             <TextBlock Text="Arquitetura sofisticada com padrões Singleton para gerenciamento de áudio, carregamento assíncrono de recursos, e multithreading otimizado para reprodução sem interrupções." 
                                                      Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
                                         </StackPanel>
@@ -704,13 +705,13 @@
                                            BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}" 
                                            Margin="0,0,8,0" MinHeight="180">
                                         <StackPanel>
-                                            <Grid>
+                                            <Grid HorizontalAlignment="Center">
                                                 <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight3}" Opacity="0.2"/>
                                                 <TextBlock Text="&#xEF3C;" FontFamily="Segoe Fluent Icons" FontSize="38" 
                                                          HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                                         Margin="0" Foreground="{ThemeResource SystemAccentColor}"/>
                                             </Grid>
-                                            <TextBlock Text="Processamento de Áudio" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,8"/>
+                                            <TextBlock Text="Processamento de Áudio" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,8" Foreground="{ThemeResource SystemBaseHighColor}"/>
                                             <TextBlock Text="Algoritmos profissionais de processamento digital de sinais (DSP) implementados com NAudio, incluindo Freeverb, equalizador de 3 bandas, normalização adaptativa e otimizações de baixa latência." 
                                                      Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
                                         </StackPanel>
@@ -718,18 +719,19 @@
                                     
                                     <!-- Arquitetura Avançada -->
                                     <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource TechHighlightStyle}" 
-                                           Background="{ThemeResource SystemAccentColorLight3}" 
+                                           Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                           BorderThickness="1" BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
                                            Margin="8,0,0,0" MinHeight="180">
                                         <StackPanel>
-                                            <Grid>
-                                                <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight2}" Opacity="0.3"/>
+                                            <Grid HorizontalAlignment="Center">
+                                                <Ellipse Width="70" Height="70" Fill="{ThemeResource SystemAccentColorLight3}" Opacity="0.2"/>
                                                 <TextBlock Text="&#xE952;" FontFamily="Segoe Fluent Icons" FontSize="38" 
                                                          HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                         Margin="0,0,0,20" Foreground="{ThemeResource SystemAccentColor}"/>
+                                                         Margin="0" Foreground="{ThemeResource SystemAccentColor}"/>
                                             </Grid>
-                                            <TextBlock Text="Arquitetura Avançada" FontWeight="SemiBold" FontSize="18" Foreground="{ThemeResource SystemAccentColorDark1}" Margin="0,12,0,8"/>
+                                            <TextBlock Text="Arquitetura Avançada" FontWeight="SemiBold" FontSize="18" Foreground="{ThemeResource SystemBaseHighColor}" Margin="0,12,0,8"/>
                                             <TextBlock Text="Sistema de perfis inteligentes, gerenciamento de estado com serialização JSON, persistência automática de configurações, e transições suaves entre diferentes configurações de áudio." 
-                                                     Opacity="0.9" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
+                                                     Opacity="0.7" TextWrapping="Wrap" Margin="0,8,0,0" LineHeight="20"/>
                                         </StackPanel>
                                     </Border>
                                 </Grid>
