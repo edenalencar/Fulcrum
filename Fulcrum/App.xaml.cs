@@ -125,6 +125,64 @@ public partial class App : Application
     }
 
     /// <summary>
+    /// Aplica as configurações salvas de tamanho de fonte
+    /// </summary>
+    private void AplicarConfiguracoesFonte()
+    {
+        try
+        {
+            var localSettings = ApplicationData.Current.LocalSettings;
+            var tamanhoFonte = localSettings.Values[Constantes.Config.TamanhoFonte] as string ?? "Médio";
+            
+            // Determina o fator de escala com base no tamanho salvo
+            double fatorEscala = tamanhoFonte switch
+            {
+                "Pequeno" => 0.85,
+                "Grande" => 1.2,
+                "Extra Grande" => 1.5,
+                _ => 1.0 // Médio (padrão)
+            };
+            
+            // Aplica o tamanho de fonte aos recursos globais
+            if (Window?.Content is FrameworkElement rootElement)
+            {
+                var resources = rootElement.Resources;
+                
+                // Verifica se as chaves já existem, caso não, cria-as com valores padrão
+                if (!resources.ContainsKey("TextControlThemeFontSize"))
+                    resources.Add("TextControlThemeFontSize", 14.0);
+                if (!resources.ContainsKey("BodyTextBlockFontSize"))
+                    resources.Add("BodyTextBlockFontSize", 14.0);
+                if (!resources.ContainsKey("SubtitleTextBlockFontSize"))
+                    resources.Add("SubtitleTextBlockFontSize", 18.0);
+                if (!resources.ContainsKey("TitleTextBlockFontSize"))
+                    resources.Add("TitleTextBlockFontSize", 24.0);
+                if (!resources.ContainsKey("TitleLargeTextBlockFontSize"))
+                    resources.Add("TitleLargeTextBlockFontSize", 28.0);
+                if (!resources.ContainsKey("HeaderTextBlockFontSize"))
+                    resources.Add("HeaderTextBlockFontSize", 46.0);
+                
+                // Agora atualiza os tamanhos com o fator de escala
+                resources["TextControlThemeFontSize"] = 14 * fatorEscala;
+                resources["BodyTextBlockFontSize"] = 14 * fatorEscala;
+                resources["SubtitleTextBlockFontSize"] = 18 * fatorEscala;
+                resources["TitleTextBlockFontSize"] = 24 * fatorEscala;
+                resources["TitleLargeTextBlockFontSize"] = 28 * fatorEscala;
+                resources["HeaderTextBlockFontSize"] = 46 * fatorEscala;
+                
+                // Força uma atualização nos estilos existentes
+                rootElement.RequestedTheme = rootElement.RequestedTheme;
+                
+                Debug.WriteLine($"Tamanho de fonte '{tamanhoFonte}' aplicado com fator de escala {fatorEscala}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Erro ao aplicar configurações de fonte: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// Chamado quando o aplicativo é iniciado normalmente pelo usuário
     /// </summary>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
@@ -135,6 +193,9 @@ public partial class App : Application
             
             // Inicializa o serviço de notificações
             NotificationService.Instance.Initialize(Window.DispatcherQueue);
+            
+            // Aplica configurações de fonte ao iniciar
+            AplicarConfiguracoesFonte();
             
             Window.Activate();
         }

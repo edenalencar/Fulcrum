@@ -26,19 +26,27 @@
         </Grid.RowDefinitions>
 
         <!-- Cabeçalho -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock Text="Perfis de Sons" Style="{StaticResource TitleTextBlockStyle}" FontSize="28" Margin="0,0,0,8"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,20"
+                    AutomationProperties.Name="Cabeçalho da página de perfis">
+            <TextBlock Text="Perfis de Sons" Style="{StaticResource TitleTextBlockStyle}" FontSize="28" Margin="0,0,0,8"
+                      AutomationProperties.HeadingLevel="Level1"/>
             <TextBlock Text="Crie, gerencie e aplique configurações personalizadas de sons" Style="{StaticResource BodyTextBlockStyle}" 
-                     Opacity="0.7" TextWrapping="Wrap"/>
-            <InfoBar x:Name="infoBar" IsOpen="False" Severity="Success" Margin="0,10,0,0"/>
+                     Opacity="0.7" TextWrapping="Wrap"
+                     AutomationProperties.Name="Descrição da página de perfis de sons"/>
+            <InfoBar x:Name="infoBar" IsOpen="False" Severity="Success" Margin="0,10,0,0"
+                    AutomationProperties.Name="Mensagem de informação"
+                    AutomationProperties.LiveSetting="Assertive"/>
             
             <!-- Indicador de perfil ativo -->
-            <Grid x:Name="perfilAtivoIndicador" Margin="0,10,0,0" Visibility="Collapsed">
+            <Grid x:Name="perfilAtivoIndicador" Margin="0,10,0,0" Visibility="Collapsed"
+                  AutomationProperties.Name="Indicador de perfil ativo"
+                  AutomationProperties.LiveSetting="Polite">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <FontIcon Glyph="&#xE930;" Foreground="{ThemeResource SystemAccentColor}" Margin="0,0,8,0"/>
+                <FontIcon Glyph="&#xE930;" Foreground="{ThemeResource SystemAccentColor}" Margin="0,0,8,0"
+                         AutomationProperties.Name="Ícone de perfil ativo"/>
                 <TextBlock x:Name="txtPerfilAtivo" Grid.Column="1" Text="Nenhum perfil ativo"
                            Foreground="{ThemeResource SystemAccentColor}" FontWeight="SemiBold"/>
             </Grid>
@@ -61,10 +69,13 @@
                       BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                       Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                       CornerRadius="8"
-                      Padding="4">
+                      Padding="4"
+                      AutomationProperties.Name="Lista de perfis de som"
+                      TabIndex="0">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="bu:PerfilSom">
-                        <Grid Padding="8">
+                        <Grid Padding="8"
+                              AutomationProperties.Name="{x:Bind Nome, Mode=OneWay}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -78,7 +89,8 @@
                             <TextBlock Text="{x:Bind Nome}" 
                                        Grid.Row="0"
                                        Style="{StaticResource SubtitleTextBlockStyle}" 
-                                       Margin="0,0,0,4"/>
+                                       Margin="0,0,0,4"
+                                       AutomationProperties.HeadingLevel="Level3"/>
                                        
                             <!-- Indicador visual de perfil ativo -->
                             <Border Grid.Row="0" Grid.Column="1" 
@@ -86,7 +98,8 @@
                                     Padding="6,2" CornerRadius="10" 
                                     Margin="8,0,0,0"
                                     x:Name="ativoIndicador"
-                                    Visibility="Collapsed">
+                                    Visibility="Collapsed"
+                                    AutomationProperties.Name="Indicador de perfil ativo">
                                 <TextBlock Text="ATIVO" 
                                            Foreground="White" 
                                            FontSize="10" 
@@ -98,19 +111,23 @@
                                        Style="{StaticResource CaptionTextBlockStyle}" 
                                        TextWrapping="Wrap" 
                                        Opacity="0.7"
-                                       Margin="0,0,0,4"/>
+                                       Margin="0,0,0,4"
+                                       AutomationProperties.Name="Descrição"/>
                             <TextBlock Text="{x:Bind DataCriacao, Converter={StaticResource DateFormatConverter}}" 
                                        Grid.Row="2" Grid.ColumnSpan="2"
                                        Style="{StaticResource CaptionTextBlockStyle}" 
                                        Opacity="0.5"
-                                       FontSize="10"/>
+                                       FontSize="10"
+                                       AutomationProperties.Name="Data de criação"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
                 <ListView.HeaderTemplate>
                     <DataTemplate>
                         <Grid Padding="8">
-                            <TextBlock Text="Seus Perfis" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                            <TextBlock Text="Seus Perfis" 
+                                       Style="{StaticResource SubtitleTextBlockStyle}"
+                                       AutomationProperties.HeadingLevel="Level2"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.HeaderTemplate>
@@ -120,44 +137,75 @@
             <Rectangle Grid.Column="1" Width="1" Margin="12,0" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Opacity="0.5"/>
 
             <!-- Área de detalhes do perfil -->
-            <Grid Grid.Column="2" Padding="12,0,0,0">
+            <Grid Grid.Column="2" Padding="12,0,0,0"
+                  AutomationProperties.Name="Detalhes do perfil">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <!-- Cabeçalho da área de detalhes -->
-                <TextBlock Text="Detalhes do Perfil" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,0,0,12"/>
+                <TextBlock Text="Detalhes do Perfil" 
+                           Style="{StaticResource SubtitleTextBlockStyle}" 
+                           Margin="0,0,0,12"
+                           AutomationProperties.HeadingLevel="Level2"/>
 
                 <!-- Conteúdo dos detalhes -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                              AutomationProperties.Name="Conteúdo de detalhes do perfil">
                     <StackPanel>
                         <InfoBar x:Name="infoBarPerfil" 
                                  Title="Selecione um perfil" 
                                  Message="Selecione um perfil na lista à esquerda para ver seus detalhes." 
                                  IsOpen="True" 
                                  Severity="Informational" 
-                                 IsClosable="False"/>
+                                 IsClosable="False"
+                                 AutomationProperties.Name="Informação de seleção de perfil"
+                                 AutomationProperties.LiveSetting="Polite"/>
 
                         <TextBlock Text="Configurações de Som" 
                                     Style="{StaticResource SubtitleTextBlockStyle}" 
                                     Margin="0,20,0,8"
-                                    Visibility="{x:Bind perfisList.SelectedItem, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"/>
+                                    Visibility="{x:Bind perfisList.SelectedItem, Mode=OneWay, Converter={StaticResource NullToVisibilityConverter}}"
+                                    AutomationProperties.HeadingLevel="Level3"/>
 
                         <!-- Simplificado temporariamente para evitar erro WMC1006 -->
                         <TextBlock x:Name="txtConfiguracoesInfo" 
                                   Text="Selecione um perfil para ver as configurações de som"
-                                  Margin="0,10,0,0"/>
+                                  Margin="0,10,0,0"
+                                  AutomationProperties.Name="Informações de configurações do perfil"/>
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
         </Grid>
 
         <!-- Botões de ação -->
-        <CommandBar Grid.Row="2" Background="Transparent" DefaultLabelPosition="Right" Margin="0,12,0,0">
-            <AppBarButton x:Name="btnNovoPerfil" Icon="Add" Label="Novo Perfil" Click="BtnNovoPerfil_Click"/>
-            <AppBarButton x:Name="btnAplicarPerfil" Icon="Play" Label="Aplicar Perfil" Click="BtnAplicarPerfil_Click" IsEnabled="False"/>
-            <AppBarButton x:Name="btnRemoverPerfil" Icon="Delete" Label="Remover Perfil" Click="BtnRemoverPerfil_Click" IsEnabled="False"/>
+        <CommandBar Grid.Row="2" Background="Transparent" DefaultLabelPosition="Right" Margin="0,12,0,0"
+                    AutomationProperties.Name="Barra de ações de perfis">
+            <AppBarButton x:Name="btnNovoPerfil" Icon="Add" Label="Novo Perfil" Click="BtnNovoPerfil_Click"
+                          AutomationProperties.Name="Novo Perfil"
+                          AutomationProperties.HelpText="Cria um novo perfil de configurações de sons"
+                          TabIndex="1">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="N" Modifiers="Control"/>
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton x:Name="btnAplicarPerfil" Icon="Play" Label="Aplicar Perfil" Click="BtnAplicarPerfil_Click" IsEnabled="False"
+                          AutomationProperties.Name="Aplicar Perfil"
+                          AutomationProperties.HelpText="Aplica o perfil selecionado às configurações atuais"
+                          TabIndex="2">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="A" Modifiers="Control"/>
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
+            <AppBarButton x:Name="btnRemoverPerfil" Icon="Delete" Label="Remover Perfil" Click="BtnRemoverPerfil_Click" IsEnabled="False"
+                          AutomationProperties.Name="Remover Perfil"
+                          AutomationProperties.HelpText="Remove permanentemente o perfil selecionado"
+                          TabIndex="3">
+                <AppBarButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="Delete"/>
+                </AppBarButton.KeyboardAccelerators>
+            </AppBarButton>
         </CommandBar>
     </Grid>
 </Page>

@@ -120,9 +120,19 @@ public abstract class Reprodutor : IDisposable
     {
         try
         {
-            // Verifica se os objetos ainda são válidos
-            if (Reader == null || WaveOut == null)
+            // Verifica se a aplicação não está no processo de encerramento
+            bool isDisposed = WaveOut == null || Reader == null;
+            if (isDisposed)
             {
+                System.Diagnostics.Debug.WriteLine("Loop: Reprodutor já foi liberado, ignorando evento PlaybackStopped");
+                return;
+            }
+            
+            // Adiciona verificação adicional de estado (double-check)
+            // Verifica explicitamente se Reader é nulo antes de chamar CanAccessReader para evitar aviso CS8604
+            if (Reader == null || Reader.Length <= 0 || !CanAccessReader(Reader))
+            {
+                System.Diagnostics.Debug.WriteLine("Loop: Reader em estado inválido, ignorando evento PlaybackStopped");
                 return;
             }
             
@@ -131,12 +141,53 @@ public abstract class Reprodutor : IDisposable
             {
                 System.Diagnostics.Debug.WriteLine("Loop: Reiniciando áudio do início");
                 Reader.Position = 0; // Reinicia o áudio do início
-                WaveOut.Play();      // Começa a tocar novamente
+                
+                // Verificação adicional antes de chamar Play
+                if (WaveOut != null && !isDisposed)
+                {
+                    WaveOut.Play(); // Começa a tocar novamente
+                }
             }
+        }
+        catch (NullReferenceException ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"NullReferenceException ao processar loop de áudio (objeto já liberado): {ex.Message}");
+        }
+        catch (ObjectDisposedException ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"ObjectDisposedException ao processar loop de áudio: {ex.Message}");
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao processar loop de áudio: {ex.Message}");
+        }
+    }
+    
+    /// <summary>
+    /// Verifica se o Reader pode ser acessado com segurança
+    /// </summary>
+    private bool CanAccessReader(AudioFileReader reader)
+    {
+        if (reader == null) return false;
+        
+        try
+        {
+            // Tenta acessar propriedades críticas para verificar se o objeto ainda é válido
+            var dummy1 = reader.Position;
+            var dummy2 = reader.Length;
+            return true;
+        }
+        catch (ObjectDisposedException)
+        {
+            return false;
+        }
+        catch (NullReferenceException)
+        {
+            return false;
+        }
+        catch
+        {
+            return false;
         }
     }
     
@@ -661,6 +712,18 @@ public abstract class Reprodutor : IDisposable
     {
         try
         {
+            // Remove o handler de evento para evitar chamadas após o objeto ser liberado
+            if (WaveOut != null)
+            {
+                WaveOut.PlaybackStopped -= OnPlaybackStopped;
+            }
+            
+            // Para o timer de atualização do equalizador
+            if (_equalizerUpdateTimer != null)
+            {
+                _equalizerUpdateTimer.Stop();
+            }
+            
             // Para a visualização se estiver em execução
             StopVisualization();
             
@@ -669,25 +732,36 @@ public abstract class Reprodutor : IDisposable
             {
                 WaveOut.Stop();
                 WaveOut.Dispose();
+                WaveOut = null!;  // Define como null para evitar uso posterior
             }
             
             // Libera o leitor de áudio
             if (Reader != null)
             {
                 Reader.Dispose();
+                Reader = null!;   // Define como null para evitar uso posterior
             }
             
             // Libera recursos do equalizador
             if (Equalizer != null)
             {
                 Equalizer.Dispose();
+                Equalizer = null!;
             }
             
             // Libera recursos do gerenciador de efeitos
-            EffectsManager?.Dispose();
+            if (EffectsManager != null)
+            {
+                EffectsManager.Dispose();
+                EffectsManager = null!;
+            }
             
             // Libera o visualizador
-            Visualizer?.Dispose();
+            if (Visualizer != null)
+            {
+                Visualizer.Dispose();
+                Visualizer = null!;
+            }
             
             System.Diagnostics.Debug.WriteLine("Recursos do reprodutor liberados com sucesso");
         }

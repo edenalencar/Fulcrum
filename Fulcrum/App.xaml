@@ -91,6 +91,14 @@
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                     
+                    <!-- Tamanhos de fonte base para serem alterados pelo recurso de acessibilidade -->
+                    <x:Double x:Key="TextControlThemeFontSize">14</x:Double>
+                    <x:Double x:Key="BodyTextBlockFontSize">14</x:Double>
+                    <x:Double x:Key="SubtitleTextBlockFontSize">18</x:Double>
+                    <x:Double x:Key="TitleTextBlockFontSize">24</x:Double>
+                    <x:Double x:Key="TitleLargeTextBlockFontSize">28</x:Double>
+                    <x:Double x:Key="HeaderTextBlockFontSize">46</x:Double>
+                    
                     <!-- Estilos personalizados para os controles -->
                     <Style x:Key="CardTitleStyle" TargetType="TextBlock">
                         <Setter Property="FontWeight" Value="SemiBold" />
@@ -174,6 +182,42 @@
                         <Setter Property="CornerRadius" Value="20"/>
                         <Setter Property="Padding" Value="0"/>
                         <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                    
+                    <!-- Estilos que usam as chaves de tamanho de fonte -->
+                    <Style x:Key="BodyTextStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="{ThemeResource BodyTextBlockFontSize}" />
+                        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+                        <Setter Property="TextWrapping" Value="Wrap" />
+                    </Style>
+                    
+                    <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="{ThemeResource SubtitleTextBlockFontSize}" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+                    </Style>
+                    
+                    <Style x:Key="TitleTextStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="{ThemeResource TitleTextBlockFontSize}" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+                    </Style>
+                    
+                    <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="{ThemeResource HeaderTextBlockFontSize}" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}" />
+                    </Style>
+                    
+                    <!-- Modificação dos estilos existentes para usar os recursos de tamanho de fonte -->
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextStyle}" />
+                    
+                    <Style TargetType="TextBox">
+                        <Setter Property="FontSize" Value="{ThemeResource TextControlThemeFontSize}" />
+                    </Style>
+                    
+                    <Style TargetType="Button">
+                        <Setter Property="FontSize" Value="{ThemeResource TextControlThemeFontSize}" />
                     </Style>
                     
                     <!-- Animações e transições -->

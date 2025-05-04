@@ -58,6 +58,7 @@ public static class Constantes
         public const string Configuracoes = "Configurações";
         public const string AtalhosGlobais = "AtalhosGlobais";
         public const string AtalhosGlobaisHabilitados = "AtalhosGlobaisHabilitados";
+        public const string TamanhoFonte = "TamanhoFonte";
     }
 
     /// <summary>

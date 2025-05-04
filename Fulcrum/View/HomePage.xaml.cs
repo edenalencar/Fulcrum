@@ -2,6 +2,7 @@ using Fulcrum.Bu;
 using Fulcrum.Util;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
@@ -538,6 +539,11 @@ public sealed partial class HomePage : Page
                 ConfigurarEIniciarVisualizacao(soundId);
                 System.Diagnostics.Debug.WriteLine($"Visualização forçada para {soundId} após aumento de volume");
             }
+            
+            // Anunciar a mudança de volume para leitores de tela
+            string nomeSomAcessivel = ObterNomeSomAmigavel(soundId);
+            bool ativo = e.NewValue > 0.001f;
+            AcessibilidadeHelper.AnunciarEstadoSom(slider, nomeSomAcessivel, e.NewValue, ativo);
         }
         catch (Exception ex)
         {
@@ -624,6 +630,26 @@ public sealed partial class HomePage : Page
             Constantes.Sons.Ventos => Colors.LightBlue,
             Constantes.Sons.Cafeteria => Colors.SandyBrown,
             _ => Colors.Gray
+        };
+    }
+
+    /// <summary>
+    /// Obtém um nome amigável para o som baseado no ID
+    /// </summary>
+    private string ObterNomeSomAmigavel(string soundId)
+    {
+        return soundId switch
+        {
+            Constantes.Sons.Chuva => "Chuva",
+            Constantes.Sons.Fogueira => "Fogueira",
+            Constantes.Sons.Lancha => "Lancha",
+            Constantes.Sons.Ondas => "Ondas",
+            Constantes.Sons.Passaros => "Pássaros",
+            Constantes.Sons.Praia => "Praia",
+            Constantes.Sons.Trem => "Trem",
+            Constantes.Sons.Ventos => "Ventos",
+            Constantes.Sons.Cafeteria => "Cafeteria",
+            _ => soundId
         };
     }
 
@@ -793,17 +819,26 @@ public sealed partial class HomePage : Page
                 Spacing = 12
             };
 
-            panel.Children.Add(new TextBlock
+            var textBlock = new TextBlock
             {
                 Text = "Escolha quanto tempo o Fulcrum deve reproduzir antes de pausar automaticamente:",
                 TextWrapping = TextWrapping.Wrap
-            });
+            };
+            
+            // Configurações de acessibilidade para o texto explicativo
+            AutomationProperties.SetName(textBlock, "Instruções do temporizador de sono");
+            
+            panel.Children.Add(textBlock);
 
             var comboBox = new ComboBox
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 SelectedIndex = 2 // 30 minutos como padrão
             };
+            
+            // Configurações de acessibilidade para o ComboBox
+            AutomationProperties.SetName(comboBox, "Selecionar duração do temporizador");
+            AutomationProperties.SetHelpText(comboBox, "Escolha por quanto tempo os sons devem ser reproduzidos antes de parar");
 
             foreach (var option in timeOptions)
             {
@@ -823,12 +858,25 @@ public sealed partial class HomePage : Page
                 if (minutes > 0)
                 {
                     SleepTimerService.Instance.StartTimer(minutes);
+                    
+                    // Anunciar para leitores de tela
+                    string duracao = comboBox.SelectedItem.ToString() ?? $"{minutes} minutos";
+                    AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
+                        SetSleepTimerButton, 
+                        $"Temporizador de sono definido para {duracao}. Os sons serão pausados automaticamente após este período.",
+                        true);
                 }
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao definir timer: {ex.Message}");
+            
+            // Anunciar erro
+            AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
+                SetSleepTimerButton, 
+                "Ocorreu um erro ao definir o temporizador de sono", 
+                true);
         }
     }
 
@@ -858,6 +906,11 @@ public sealed partial class HomePage : Page
     private void CancelTimer_Click(object sender, RoutedEventArgs e)
     {
         SleepTimerService.Instance.CancelTimer();
+        
+        // Anunciar para leitores de tela
+        AcessibilidadeHelper.AnunciarParaLeitoresEscreens(cancelTimerButton, 
+            "Temporizador de sono cancelado. A reprodução continuará normalmente.", 
+            true);
     }
 
     /// <summary>
@@ -915,6 +968,9 @@ public sealed partial class HomePage : Page
                 // Se estiver tocando, pausamos todos
                 AudioManager.Instance.PauseAll();
                 System.Diagnostics.Debug.WriteLine("Pausando todos os sons");
+                
+                // Anunciar para leitores de tela
+                AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, "Todos os sons foram pausados", true);
             }
             else
             {
@@ -936,6 +992,14 @@ public sealed partial class HomePage : Page
                 if (!peloMenosUmPlayerComVolume)
                 {
                     System.Diagnostics.Debug.WriteLine("Nenhum player com volume maior que zero para reproduzir");
+                    // Anunciar a ausência de sons ativos
+                    AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, 
+                        "Não há sons com volume para reproduzir. Ajuste o volume de pelo menos um som.", true);
+                }
+                else
+                {
+                    // Anunciar início da reprodução
+                    AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, "Reprodução iniciada", true);
                 }
             }
             
@@ -947,6 +1011,10 @@ public sealed partial class HomePage : Page
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao manipular botão de reprodução: {ex.Message}");
+            
+            // Anunciar erro
+            AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, 
+                "Ocorreu um erro ao tentar reproduzir ou pausar os sons", true);
         }
     }
 

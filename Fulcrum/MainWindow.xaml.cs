@@ -127,6 +127,9 @@ public sealed partial class MainWindow : Window
         // Ajustar NavigationView para o tamanho atual da janela
         AdjustNavigationViewForWindowSize();
 
+        // Configurar propriedades de acessibilidade
+        ConfigurarAcessibilidade();
+
         // Inicializa todos os reprodutores de áudio com volume 0.0
         InitializeAudioPlayers();
         
@@ -386,5 +389,194 @@ public sealed partial class MainWindow : Window
     {
         AdjustNavigationViewForWindowSize();
         System.Diagnostics.Debug.WriteLine($"Janela redimensionada para {args.Size.Width}x{args.Size.Height}");
+    }
+
+    /// <summary>
+    /// Configura as propriedades de acessibilidade para leitores de tela
+    /// </summary>
+    private void ConfigurarAcessibilidade()
+    {
+        try
+        {
+            // Configura o NavigationView como uma região de navegação
+            AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                navigationView,
+                "Navegação principal",
+                "Menu principal do aplicativo Fulcrum",
+                Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Navigation);
+
+            // Configura o ContentFrame como a região principal
+            AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                contentFrame,
+                "Conteúdo principal",
+                "Área principal de conteúdo do aplicativo",
+                Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Main);
+            
+            // Registra um evento para configurar a acessibilidade quando a página é navegada
+            contentFrame.Navigated += ContentFrame_Navigated;
+            
+            System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade configuradas com sucesso");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao configurar propriedades de acessibilidade: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Manipula o evento de navegação completada para configurar a acessibilidade da página carregada
+    /// </summary>
+    private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
+    {
+        if (contentFrame.Content is Page page)
+        {
+            // Configuração específica por tipo de página
+            if (page is HomePage homePage)
+            {
+                // Verificando se a conversão não resultou em nulo antes de chamar o método
+                ConfigurarAcessibilidadeHomePage(homePage);
+            }
+            else if (page is PerfisPage perfisPage)
+            {
+                // Verificando se a conversão não resultou em nulo antes de chamar o método
+                ConfigurarAcessibilidadePerfisPage(perfisPage);
+            }
+            else if (page is SettingsPage settingsPage)
+            {
+                // Verificando se a conversão não resultou em nulo antes de chamar o método
+                ConfigurarAcessibilidadeSettingsPage(settingsPage);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Configura a acessibilidade específica para a página inicial
+    /// </summary>
+    private void ConfigurarAcessibilidadeHomePage(HomePage page)
+    {
+        try
+        {
+            // Obtém os elementos da página para configurar
+            var painelControles = page.FindName("painelControles") as FrameworkElement;
+            if (painelControles != null)
+            {
+                AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                    painelControles,
+                    "Controles principais",
+                    "Controles para reprodução e ajuste de volume",
+                    Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Main);
+            }
+
+            // Configura cada cartão de som como uma região de conteúdo
+            ConfigurarCardSons(page);
+            
+            System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade da HomePage configuradas");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao configurar acessibilidade da HomePage: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Configura os cartões de som com propriedades de acessibilidade corretas
+    /// </summary>
+    private void ConfigurarCardSons(HomePage page)
+    {
+        var sons = new[] { "chuva", "fogueira", "lancha", "ondas", "passaros", "praia", "trem", "ventos", "cafeteria" };
+        
+        foreach (var som in sons)
+        {
+            try
+            {
+                var card = page.FindName($"card{som.Substring(0, 1).ToUpper()}{som.Substring(1)}") as FrameworkElement;
+                if (card != null)
+                {
+                    AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                        card,
+                        $"Card de som {som}",
+                        $"Controles para o som de {som}",
+                        Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Custom);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erro ao configurar card de som {som}: {ex.Message}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Configura a acessibilidade específica para a página de perfis
+    /// </summary>
+    private void ConfigurarAcessibilidadePerfisPage(PerfisPage page)
+    {
+        try
+        {
+            // Configura a lista de perfis como uma região de navegação
+            var perfisList = page.FindName("perfisList") as FrameworkElement;
+            if (perfisList != null)
+            {
+                AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                    perfisList,
+                    "Lista de perfis",
+                    "Lista de perfis de som disponíveis",
+                    Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Custom);
+            }
+
+            // Configura a área de detalhes como uma região de conteúdo
+            var detalhesGrid = page.FindName("detalhesGrid") as FrameworkElement;
+            if (detalhesGrid != null)
+            {
+                AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                    detalhesGrid,
+                    "Detalhes do perfil",
+                    "Informações detalhadas sobre o perfil selecionado",
+                    Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Custom);
+            }
+            
+            System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade da PerfisPage configuradas");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao configurar acessibilidade da PerfisPage: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Configura a acessibilidade específica para a página de configurações
+    /// </summary>
+    private void ConfigurarAcessibilidadeSettingsPage(SettingsPage page)
+    {
+        try
+        {
+            // Configura o painel de tema como formulário
+            var temaGrid = page.FindName("temaGrid") as FrameworkElement;
+            if (temaGrid != null)
+            {
+                AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                    temaGrid,
+                    "Configurações de tema",
+                    "Opções para personalizar o tema visual do aplicativo",
+                    Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Form);
+            }
+
+            // Configura o painel de atalhos como região
+            var atalhosGrid = page.FindName("atalhosGrid") as FrameworkElement;
+            if (atalhosGrid != null)
+            {
+                AcessibilidadeHelper.ConfigurarParaLeitoresEscreens(
+                    atalhosGrid,
+                    "Configurações de teclas de atalho",
+                    "Opções para configurar as teclas de atalho do aplicativo",
+                    Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Custom);
+            }
+            
+            System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade da SettingsPage configuradas");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao configurar acessibilidade da SettingsPage: {ex.Message}");
+        }
     }
 }

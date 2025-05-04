@@ -34,8 +34,12 @@ public sealed partial class SettingsPage : Page
         // Carregamos as configurações de teclas de atalho
         CarregarConfiguracoesAtalhos();
         
+        // Carregamos o tamanho de fonte atual
+        CarregarTamanhoFonteAtual();
+        
         // Reativamos os eventos depois que a inicialização estiver completa
         ThemeRadioButtons.SelectionChanged += OnThemeSelectionChanged;
+        FontSizeRadioButtons.SelectionChanged += OnFontSizeSelectionChanged;
         
         // Registramos o evento de carregamento da página
         Loaded += SettingsPage_Loaded;
@@ -97,6 +101,32 @@ public sealed partial class SettingsPage : Page
     }
 
     /// <summary>
+    /// Carrega o tamanho de fonte atual das configurações
+    /// </summary>
+    private void CarregarTamanhoFonteAtual()
+    {
+        // Tenta obter a configuração salva
+        var tamanhoSalvo = _localSettings.Values[Constantes.Config.TamanhoFonte] as string ?? "Médio";
+        
+        // Define a seleção do RadioButtons baseado no tamanho salvo
+        switch (tamanhoSalvo)
+        {
+            case "Pequeno":
+                FontSizeRadioButtons.SelectedIndex = 0;
+                break;
+            case "Grande":
+                FontSizeRadioButtons.SelectedIndex = 2;
+                break;
+            case "Extra Grande":
+                FontSizeRadioButtons.SelectedIndex = 3;
+                break;
+            default: // Médio (padrão)
+                FontSizeRadioButtons.SelectedIndex = 1;
+                break;
+        }
+    }
+
+    /// <summary>
     /// Manipula a alteração na seleção de tema
     /// </summary>
     private void OnThemeSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -131,6 +161,100 @@ public sealed partial class SettingsPage : Page
         if (app?.Window?.Content is FrameworkElement rootElement)
         {
             rootElement.RequestedTheme = requestedTheme;
+        }
+    }
+
+    /// <summary>
+    /// Manipula a alteração na seleção de tamanho de fonte
+    /// </summary>
+    private void OnFontSizeSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // Se não houver item selecionado, sair
+        if (FontSizeRadioButtons.SelectedIndex < 0 || e.AddedItems.Count == 0) return;
+
+        string tamanhoFonte;
+        double fatorEscala;
+
+        switch (FontSizeRadioButtons.SelectedIndex)
+        {
+            case 0:
+                tamanhoFonte = "Pequeno";
+                fatorEscala = 0.85;
+                break;
+            case 2:
+                tamanhoFonte = "Grande";
+                fatorEscala = 1.2;
+                break;
+            case 3:
+                tamanhoFonte = "Extra Grande";
+                fatorEscala = 1.5;
+                break;
+            default:
+                tamanhoFonte = "Médio";
+                fatorEscala = 1.0;
+                break;
+        }
+
+        // Salva a configuração
+        _localSettings.Values[Constantes.Config.TamanhoFonte] = tamanhoFonte;
+
+        // Aplica o tamanho de fonte
+        AplicarTamanhoFonte(fatorEscala);
+    }
+
+    /// <summary>
+    /// Aplica o fator de escala às fontes do aplicativo
+    /// </summary>
+    private void AplicarTamanhoFonte(double fatorEscala)
+    {
+        try
+        {
+            // Obtém o tamanho de fonte atualmente selecionado
+            string tamanhoFonteSelecionado = _localSettings.Values[Constantes.Config.TamanhoFonte] as string ?? "Médio";
+            
+            var app = Application.Current as Fulcrum.App;
+            if (app?.Window?.Content is FrameworkElement rootElement)
+            {
+                // Atualiza os recursos de tamanho de fonte
+                var resources = rootElement.Resources;
+                
+                // Verifica se as chaves já existem, caso não, cria-as com valores padrão
+                if (!resources.ContainsKey("TextControlThemeFontSize"))
+                    resources.Add("TextControlThemeFontSize", 14.0);
+                if (!resources.ContainsKey("BodyTextBlockFontSize"))
+                    resources.Add("BodyTextBlockFontSize", 14.0);
+                if (!resources.ContainsKey("SubtitleTextBlockFontSize"))
+                    resources.Add("SubtitleTextBlockFontSize", 18.0);
+                if (!resources.ContainsKey("TitleTextBlockFontSize"))
+                    resources.Add("TitleTextBlockFontSize", 24.0);
+                if (!resources.ContainsKey("TitleLargeTextBlockFontSize"))
+                    resources.Add("TitleLargeTextBlockFontSize", 28.0);
+                if (!resources.ContainsKey("HeaderTextBlockFontSize"))
+                    resources.Add("HeaderTextBlockFontSize", 46.0);
+                
+                // Agora atualiza os tamanhos com o fator de escala
+                resources["TextControlThemeFontSize"] = 14 * fatorEscala;
+                resources["BodyTextBlockFontSize"] = 14 * fatorEscala;
+                resources["SubtitleTextBlockFontSize"] = 18 * fatorEscala;
+                resources["TitleTextBlockFontSize"] = 24 * fatorEscala;
+                resources["TitleLargeTextBlockFontSize"] = 28 * fatorEscala;
+                resources["HeaderTextBlockFontSize"] = 46 * fatorEscala;
+
+                // Força uma atualização nos estilos existentes para aplicar os novos tamanhos
+                rootElement.RequestedTheme = rootElement.RequestedTheme; // Isso força a reavaliação dos estilos
+                
+                // Anuncia a mudança para leitores de tela
+                AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
+                    FontSizeRadioButtons, 
+                    $"Tamanho de fonte alterado para {tamanhoFonteSelecionado}",
+                    true);
+                
+                System.Diagnostics.Debug.WriteLine($"Tamanho de fonte alterado: {tamanhoFonteSelecionado} (fator: {fatorEscala})");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao aplicar tamanho de fonte: {ex.Message}");
         }
     }
 
