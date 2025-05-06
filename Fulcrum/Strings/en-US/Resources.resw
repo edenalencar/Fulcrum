@@ -229,4 +229,702 @@
     <value>Wind</value>
     <comment>Sound of Wind</comment>
   </data>
+  <data name="SettingsScrollViewer.AutomationProperties.Name" xml:space="preserve">
+    <value>Settings page content</value>
+    <comment>Automation name for the settings page scroll viewer</comment>
+  </data>
+  <data name="SettingsHeader.Text" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Settings page title</comment>
+  </data>
+  <data name="ThemeSettingsCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Theme settings</value>
+    <comment>Theme settings card automation name</comment>
+  </data>
+  <data name="ThemeTitle.Text" xml:space="preserve">
+    <value>App Theme</value>
+    <comment>Theme settings section title</comment>
+  </data>
+  <data name="ThemeDescription.Text" xml:space="preserve">
+    <value>Choose between light, dark or system theme settings.</value>
+    <comment>Theme settings description</comment>
+  </data>
+  <data name="ThemeOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>Theme options</value>
+    <comment>Theme options radio buttons group</comment>
+  </data>
+  <data name="LightTheme.Content" xml:space="preserve">
+    <value>Light Theme</value>
+    <comment>Light theme option</comment>
+  </data>
+  <data name="LightTheme.AutomationProperties.Name" xml:space="preserve">
+    <value>Light Theme</value>
+    <comment>Light theme option automation name</comment>
+  </data>
+  <data name="DarkTheme.Content" xml:space="preserve">
+    <value>Dark Theme</value>
+    <comment>Dark theme option</comment>
+  </data>
+  <data name="DarkTheme.AutomationProperties.Name" xml:space="preserve">
+    <value>Dark Theme</value>
+    <comment>Dark theme option automation name</comment>
+  </data>
+  <data name="SystemTheme.Content" xml:space="preserve">
+    <value>Use System Setting</value>
+    <comment>System theme option</comment>
+  </data>
+  <data name="SystemTheme.AutomationProperties.Name" xml:space="preserve">
+    <value>Use System Setting</value>
+    <comment>System theme option automation name</comment>
+  </data>
+  <data name="ShortcutsInfoBar.Title" xml:space="preserve">
+    <value>Keyboard Shortcuts</value>
+    <comment>Keyboard shortcuts info bar title</comment>
+  </data>
+  <data name="ShortcutsSettingsCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Keyboard shortcuts settings</value>
+    <comment>Keyboard shortcuts settings card automation name</comment>
+  </data>
+  <data name="ShortcutsTitle.Text" xml:space="preserve">
+    <value>Keyboard Shortcuts</value>
+    <comment>Keyboard shortcuts section title</comment>
+  </data>
+  <data name="EnableGlobalShortcuts.Header" xml:space="preserve">
+    <value>Enable global keyboard shortcuts</value>
+    <comment>Enable global keyboard shortcuts toggle switch</comment>
+  </data>
+  <data name="EnableGlobalShortcuts.AutomationProperties.Name" xml:space="preserve">
+    <value>Enable global keyboard shortcuts</value>
+    <comment>Enable global keyboard shortcuts toggle switch automation name</comment>
+  </data>
+  <data name="ShortcutsDescription.Text" xml:space="preserve">
+    <value>When enabled, you can control Fulcrum even when it's not in focus, using the following keys:</value>
+    <comment>Keyboard shortcuts description</comment>
+  </data>
+  <data name="ShortcutsTable.AutomationProperties.Name" xml:space="preserve">
+    <value>Keyboard shortcuts table</value>
+    <comment>Keyboard shortcuts table automation name</comment>
+  </data>
+  <data name="FunctionHeader.Text" xml:space="preserve">
+    <value>Function</value>
+    <comment>Function column header in shortcuts table</comment>
+  </data>
+  <data name="FunctionHeader.AutomationProperties.Name" xml:space="preserve">
+    <value>Header: Function</value>
+    <comment>Function column header automation name</comment>
+  </data>
+  <data name="ShortcutHeader.Text" xml:space="preserve">
+    <value>Shortcut Key</value>
+    <comment>Shortcut key column header in shortcuts table</comment>
+  </data>
+  <data name="ShortcutHeader.AutomationProperties.Name" xml:space="preserve">
+    <value>Header: Shortcut Key</value>
+    <comment>Shortcut key column header automation name</comment>
+  </data>
+  <data name="PlayPauseFunction.Text" xml:space="preserve">
+    <value>Play/Pause</value>
+    <comment>Play/Pause function in shortcuts table</comment>
+  </data>
+  <data name="PlayPauseFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Function: Play/Pause</value>
+    <comment>Play/Pause function automation name</comment>
+  </data>
+  <data name="PlayPauseShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + P</value>
+    <comment>Play/Pause shortcut key in shortcuts table</comment>
+  </data>
+  <data name="PlayPauseShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Shortcut: Ctrl + Alt + P</value>
+    <comment>Play/Pause shortcut key automation name</comment>
+  </data>
+  <data name="VolumeUpFunction.Text" xml:space="preserve">
+    <value>Increase Volume</value>
+    <comment>Increase volume function in shortcuts table</comment>
+  </data>
+  <data name="VolumeUpFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Function: Increase Volume</value>
+    <comment>Increase volume function automation name</comment>
+  </data>
+  <data name="VolumeUpShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + ↑</value>
+    <comment>Increase volume shortcut key in shortcuts table</comment>
+  </data>
+  <data name="VolumeUpShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Shortcut: Ctrl + Alt + Up Arrow</value>
+    <comment>Increase volume shortcut key automation name</comment>
+  </data>
+  <data name="VolumeDownFunction.Text" xml:space="preserve">
+    <value>Decrease Volume</value>
+    <comment>Decrease volume function in shortcuts table</comment>
+  </data>
+  <data name="VolumeDownFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Function: Decrease Volume</value>
+    <comment>Decrease volume function automation name</comment>
+  </data>
+  <data name="VolumeDownShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + ↓</value>
+    <comment>Decrease volume shortcut key in shortcuts table</comment>
+  </data>
+  <data name="VolumeDownShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Shortcut: Ctrl + Alt + Down Arrow</value>
+    <comment>Decrease volume shortcut key automation name</comment>
+  </data>
+  <data name="MuteFunction.Text" xml:space="preserve">
+    <value>Mute/Unmute</value>
+    <comment>Mute/Unmute function in shortcuts table</comment>
+  </data>
+  <data name="MuteFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Function: Mute/Unmute</value>
+    <comment>Mute/Unmute function automation name</comment>
+  </data>
+  <data name="MuteShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + M</value>
+    <comment>Mute/Unmute shortcut key in shortcuts table</comment>
+  </data>
+  <data name="MuteShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Shortcut: Ctrl + Alt + M</value>
+    <comment>Mute/Unmute shortcut key automation name</comment>
+  </data>
+  <data name="FontSettingsCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Font size settings</value>
+    <comment>Font size settings card automation name</comment>
+  </data>
+  <data name="FontSizeTitle.Text" xml:space="preserve">
+    <value>Font Size</value>
+    <comment>Font size section title</comment>
+  </data>
+  <data name="FontSizeDescription.Text" xml:space="preserve">
+    <value>Adjust the text size to improve readability.</value>
+    <comment>Font size settings description</comment>
+  </data>
+  <data name="FontSizeOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>Font size options</value>
+    <comment>Font size options radio buttons group</comment>
+  </data>
+  <data name="SmallFont.Content" xml:space="preserve">
+    <value>Small</value>
+    <comment>Small font size option</comment>
+  </data>
+  <data name="SmallFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Small font</value>
+    <comment>Small font size option automation name</comment>
+  </data>
+  <data name="MediumFont.Content" xml:space="preserve">
+    <value>Medium (default)</value>
+    <comment>Medium font size option</comment>
+  </data>
+  <data name="MediumFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Medium font</value>
+    <comment>Medium font size option automation name</comment>
+  </data>
+  <data name="LargeFont.Content" xml:space="preserve">
+    <value>Large</value>
+    <comment>Large font size option</comment>
+  </data>
+  <data name="LargeFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Large font</value>
+    <comment>Large font size option automation name</comment>
+  </data>
+  <data name="ExtraLargeFont.Content" xml:space="preserve">
+    <value>Extra large</value>
+    <comment>Extra large font size option</comment>
+  </data>
+  <data name="ExtraLargeFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Extra large font</value>
+    <comment>Extra large font size option automation name</comment>
+  </data>
+  <data name="MainControlsPanel.AutomationProperties.Name" xml:space="preserve">
+    <value>Main controls</value>
+    <comment>Main controls panel automation name</comment>
+  </data>
+  <data name="AudioIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Audio icon</value>
+    <comment>Audio icon automation name</comment>
+  </data>
+  <data name="MainPlayButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Play all sounds</value>
+    <comment>Main play button automation name</comment>
+  </data>
+  <data name="MainPlayButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Start or pause playback of all ambient sounds</value>
+    <comment>Main play button automation help text</comment>
+  </data>
+  <data name="LowVolumeIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Low volume</value>
+    <comment>Low volume icon automation name</comment>
+  </data>
+  <data name="MainVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Master volume</value>
+    <comment>Main volume slider automation name</comment>
+  </data>
+  <data name="MainVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust volume for all sounds</value>
+    <comment>Main volume slider automation help text</comment>
+  </data>
+  <data name="HighVolumeIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>High volume</value>
+    <comment>High volume icon automation name</comment>
+  </data>
+  <data name="SetTimerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Set timer</value>
+    <comment>Set timer button automation name</comment>
+  </data>
+  <data name="SetTimerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configure a timer to automatically stop playback</value>
+    <comment>Set timer button automation help text</comment>
+  </data>
+  <data name="SetTimerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Set timer for automatic stop</value>
+    <comment>Set timer button tooltip</comment>
+  </data>
+  <data name="SetTimerText.Text" xml:space="preserve">
+    <value>Set Timer</value>
+    <comment>Text for set timer button</comment>
+  </data>
+  <data name="CancelTimerButton.Content" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text for cancel timer button</comment>
+  </data>
+  
+  <!-- Sound cards -->
+  <data name="RainSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Rain sound card</value>
+    <comment>Rain sound card automation name</comment>
+  </data>
+  <data name="RainIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Rain icon</value>
+    <comment>Rain icon automation name</comment>
+  </data>
+  <data name="RainIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sound of rain falling gently</value>
+    <comment>Rain icon automation help text</comment>
+  </data>
+  <data name="RainTitle.Text" xml:space="preserve">
+    <value>Rain</value>
+    <comment>Title for rain sound card</comment>
+  </data>
+  <data name="RainEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize rain sound</value>
+    <comment>Rain equalize button automation name</comment>
+  </data>
+  <data name="RainWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Rain sound waveform visualization</value>
+    <comment>Rain waveform automation name</comment>
+  </data>
+  <data name="RainVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Rain volume</value>
+    <comment>Rain volume slider automation name</comment>
+  </data>
+  <data name="RainVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust rain sound volume</value>
+    <comment>Rain volume slider automation help text</comment>
+  </data>
+  
+  <!-- Bonfire sound card -->
+  <data name="BonfireSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Bonfire sound card</value>
+    <comment>Bonfire sound card automation name</comment>
+  </data>
+  <data name="BonfireIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Bonfire icon</value>
+    <comment>Bonfire icon automation name</comment>
+  </data>
+  <data name="BonfireIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sound of wood crackling as it burns</value>
+    <comment>Bonfire icon automation help text</comment>
+  </data>
+  <data name="BonfireTitle.Text" xml:space="preserve">
+    <value>Bonfire</value>
+    <comment>Title for bonfire sound card</comment>
+  </data>
+  <data name="BonfireEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize bonfire sound</value>
+    <comment>Bonfire equalize button automation name</comment>
+  </data>
+  <data name="BonfireWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Bonfire sound waveform visualization</value>
+    <comment>Bonfire waveform automation name</comment>
+  </data>
+  <data name="BonfireVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Bonfire volume</value>
+    <comment>Bonfire volume slider automation name</comment>
+  </data>
+  <data name="BonfireVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust bonfire sound volume</value>
+    <comment>Bonfire volume slider automation help text</comment>
+  </data>
+  
+  <!-- Motorboat sound card -->
+  <data name="MotorboatSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Motorboat sound card</value>
+    <comment>Motorboat sound card automation name</comment>
+  </data>
+  <data name="MotorboatIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Motorboat icon</value>
+    <comment>Motorboat icon automation name</comment>
+  </data>
+  <data name="MotorboatIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sound of motorboat engine</value>
+    <comment>Motorboat icon automation help text</comment>
+  </data>
+  <data name="MotorboatTitle.Text" xml:space="preserve">
+    <value>Motorboat</value>
+    <comment>Title for motorboat sound card</comment>
+  </data>
+  <data name="MotorboatEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize motorboat sound</value>
+    <comment>Motorboat equalize button automation name</comment>
+  </data>
+  <data name="MotorboatWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Motorboat sound waveform visualization</value>
+    <comment>Motorboat waveform automation name</comment>
+  </data>
+  <data name="MotorboatVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Motorboat volume</value>
+    <comment>Motorboat volume slider automation name</comment>
+  </data>
+  <data name="MotorboatVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust motorboat sound volume</value>
+    <comment>Motorboat volume slider automation help text</comment>
+  </data>
+  
+  <!-- Waves sound card -->
+  <data name="WavesSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Waves sound card</value>
+    <comment>Waves sound card automation name</comment>
+  </data>
+  <data name="WavesIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Waves icon</value>
+    <comment>Waves icon automation name</comment>
+  </data>
+  <data name="WavesIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sound of ocean waves crashing</value>
+    <comment>Waves icon automation help text</comment>
+  </data>
+  <data name="WavesTitle.Text" xml:space="preserve">
+    <value>Waves</value>
+    <comment>Title for waves sound card</comment>
+  </data>
+  <data name="WavesEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize waves sound</value>
+    <comment>Waves equalize button automation name</comment>
+  </data>
+  <data name="WavesWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Waves sound waveform visualization</value>
+    <comment>Waves waveform automation name</comment>
+  </data>
+  <data name="WavesVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Waves volume</value>
+    <comment>Waves volume slider automation name</comment>
+  </data>
+  <data name="WavesVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust waves sound volume</value>
+    <comment>Waves volume slider automation help text</comment>
+  </data>
+  
+  <!-- Birds sound card -->
+  <data name="BirdsSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Birds sound card</value>
+    <comment>Birds sound card automation name</comment>
+  </data>
+  <data name="BirdsIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Birds icon</value>
+    <comment>Birds icon automation name</comment>
+  </data>
+  <data name="BirdsIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sound of various birds singing</value>
+    <comment>Birds icon automation help text</comment>
+  </data>
+  <data name="BirdsTitle.Text" xml:space="preserve">
+    <value>Birds</value>
+    <comment>Title for birds sound card</comment>
+  </data>
+  <data name="BirdsEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize birds sound</value>
+    <comment>Birds equalize button automation name</comment>
+  </data>
+  <data name="BirdsWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Birds sound waveform visualization</value>
+    <comment>Birds waveform automation name</comment>
+  </data>
+  <data name="BirdsVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Birds volume</value>
+    <comment>Birds volume slider automation name</comment>
+  </data>
+  <data name="BirdsVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust birds sound volume</value>
+    <comment>Birds volume slider automation help text</comment>
+  </data>
+  
+  <!-- Beach sound card -->
+  <data name="BeachSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Beach sound card</value>
+    <comment>Beach sound card automation name</comment>
+  </data>
+  <data name="BeachIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Beach icon</value>
+    <comment>Beach icon automation name</comment>
+  </data>
+  <data name="BeachIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Beach ambient sound</value>
+    <comment>Beach icon automation help text</comment>
+  </data>
+  <data name="BeachTitle.Text" xml:space="preserve">
+    <value>Beach</value>
+    <comment>Title for beach sound card</comment>
+  </data>
+  <data name="BeachEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize beach sound</value>
+    <comment>Beach equalize button automation name</comment>
+  </data>
+  <data name="BeachWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Beach sound waveform visualization</value>
+    <comment>Beach waveform automation name</comment>
+  </data>
+  <data name="BeachVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Beach volume</value>
+    <comment>Beach volume slider automation name</comment>
+  </data>
+  <data name="BeachVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust beach sound volume</value>
+    <comment>Beach volume slider automation help text</comment>
+  </data>
+  
+  <!-- Train sound card -->
+  <data name="TrainSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Train sound card</value>
+    <comment>Train sound card automation name</comment>
+  </data>
+  <data name="TrainIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Train icon</value>
+    <comment>Train icon automation name</comment>
+  </data>
+  <data name="TrainIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sound of train in motion</value>
+    <comment>Train icon automation help text</comment>
+  </data>
+  <data name="TrainTitle.Text" xml:space="preserve">
+    <value>Train</value>
+    <comment>Title for train sound card</comment>
+  </data>
+  <data name="TrainEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize train sound</value>
+    <comment>Train equalize button automation name</comment>
+  </data>
+  <data name="TrainWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Train sound waveform visualization</value>
+    <comment>Train waveform automation name</comment>
+  </data>
+  <data name="TrainVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Train volume</value>
+    <comment>Train volume slider automation name</comment>
+  </data>
+  <data name="TrainVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust train sound volume</value>
+    <comment>Train volume slider automation help text</comment>
+  </data>
+  
+  <!-- Wind sound card -->
+  <data name="WindSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Wind sound card</value>
+    <comment>Wind sound card automation name</comment>
+  </data>
+  <data name="WindIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Wind icon</value>
+    <comment>Wind icon automation name</comment>
+  </data>
+  <data name="WindIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sound of wind blowing</value>
+    <comment>Wind icon automation help text</comment>
+  </data>
+  <data name="WindTitle.Text" xml:space="preserve">
+    <value>Wind</value>
+    <comment>Title for wind sound card</comment>
+  </data>
+  <data name="WindEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize wind sound</value>
+    <comment>Wind equalize button automation name</comment>
+  </data>
+  <data name="WindWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Wind sound waveform visualization</value>
+    <comment>Wind waveform automation name</comment>
+  </data>
+  <data name="WindVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Wind volume</value>
+    <comment>Wind volume slider automation name</comment>
+  </data>
+  <data name="WindVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust wind sound volume</value>
+    <comment>Wind volume slider automation help text</comment>
+  </data>
+  
+  <!-- Coffee Shop sound card -->
+  <data name="CoffeeShopSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Coffee Shop sound card</value>
+    <comment>Coffee Shop sound card automation name</comment>
+  </data>
+  <data name="CoffeeShopIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Coffee Shop icon</value>
+    <comment>Coffee Shop icon automation name</comment>
+  </data>
+  <data name="CoffeeShopIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Coffee shop ambient sound</value>
+    <comment>Coffee Shop icon automation help text</comment>
+  </data>
+  <data name="CoffeeShopTitle.Text" xml:space="preserve">
+    <value>Coffee Shop</value>
+    <comment>Title for coffee shop sound card</comment>
+  </data>
+  <data name="CoffeeShopEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalize coffee shop sound</value>
+    <comment>Coffee Shop equalize button automation name</comment>
+  </data>
+  <data name="CoffeeShopWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Coffee shop sound waveform visualization</value>
+    <comment>Coffee Shop waveform automation name</comment>
+  </data>
+  <data name="CoffeeShopVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Coffee shop volume</value>
+    <comment>Coffee Shop volume slider automation name</comment>
+  </data>
+  <data name="CoffeeShopVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Adjust coffee shop sound volume</value>
+    <comment>Coffee Shop volume slider automation help text</comment>
+  </data>
+  
+  <!-- Strings for Equalizer and Effects page -->
+  <data name="EqualizerEffectsTitle.Text" xml:space="preserve">
+    <value>Equalizer and Effects</value>
+    <comment>Title of the equalizer and effects page</comment>
+  </data>
+  <data name="BackButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Go back to previous page</value>
+    <comment>Accessibility text for back button</comment>
+  </data>
+  <data name="SelectedSoundName.AutomationProperties.HeadingLevel" xml:space="preserve">
+    <value>Level2</value>
+    <comment>Heading level for selected sound name</comment>
+  </data>
+  <data name="EqualizerInfoBar.AutomationProperties.LiveSetting" xml:space="preserve">
+    <value>Assertive</value>
+    <comment>Screen reader setting for info bar</comment>
+  </data>
+  <data name="EqualizerInfoBar.Title" xml:space="preserve">
+    <value>Information</value>
+    <comment>Title for equalizer info bar</comment>
+  </data>
+  <data name="EqualizerSection.Header" xml:space="preserve">
+    <value>Equalization</value>
+    <comment>Title for equalization section</comment>
+  </data>
+  <data name="EqualizerSection.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalization section</value>
+    <comment>Accessibility text for equalization section</comment>
+  </data>
+  <data name="EqualizerToggleSwitch.Header" xml:space="preserve">
+    <value>Enable Equalization</value>
+    <comment>Text for toggle switch to enable equalization</comment>
+  </data>
+  <data name="EqualizerToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enables or disables the audio equalizer</value>
+    <comment>Accessibility help text for equalization toggle switch</comment>
+  </data>
+  <data name="LowBandLabel.Text" xml:space="preserve">
+    <value>Low (100 Hz)</value>
+    <comment>Label text for low frequency band</comment>
+  </data>
+  <data name="MidBandLabel.Text" xml:space="preserve">
+    <value>Mid (1 kHz)</value>
+    <comment>Label text for mid frequency band</comment>
+  </data>
+  <data name="HighBandLabel.Text" xml:space="preserve">
+    <value>High (8 kHz)</value>
+    <comment>Label text for high frequency band</comment>
+  </data>
+  <data name="ResetEqualizerButton.Content" xml:space="preserve">
+    <value>Reset Equalization</value>
+    <comment>Text for reset equalization button</comment>
+  </data>
+  <data name="ResetEqualizerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Reset equalization</value>
+    <comment>Accessibility text for reset equalization button</comment>
+  </data>
+  <data name="ResetEqualizerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restores all equalizer values to zero</value>
+    <comment>Accessibility help text for reset equalization button</comment>
+  </data>
+  <data name="TestEqualizerButton.Content" xml:space="preserve">
+    <value>Diagnostic Test</value>
+    <comment>Text for diagnostic test button</comment>
+  </data>
+  <data name="TestEqualizerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Diagnostic test</value>
+    <comment>Accessibility text for diagnostic test button</comment>
+  </data>
+  <data name="TestEqualizerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Applies an extreme test configuration to verify if the equalizer is working</value>
+    <comment>Tooltip for diagnostic test button</comment>
+  </data>
+  <data name="SoundEffectsSection.Header" xml:space="preserve">
+    <value>Sound Effects</value>
+    <comment>Title for sound effects section</comment>
+  </data>
+  <data name="SoundEffectsSection.AutomationProperties.Name" xml:space="preserve">
+    <value>Sound effects section</value>
+    <comment>Accessibility text for sound effects section</comment>
+  </data>
+  <data name="EffectsToggleSwitch.Header" xml:space="preserve">
+    <value>Enable Effects</value>
+    <comment>Text for toggle switch to enable effects</comment>
+  </data>
+  <data name="EffectsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enables or disables sound effects for the selected sound</value>
+    <comment>Accessibility help text for effects toggle switch</comment>
+  </data>
+  <data name="EffectTypeLabel.Text" xml:space="preserve">
+    <value>Effect Type</value>
+    <comment>Label for effect type selection</comment>
+  </data>
+  <data name="EffectTypeComboBox.AutomationProperties.Name" xml:space="preserve">
+    <value>Sound effect type</value>
+    <comment>Accessibility text for effect type selection box</comment>
+  </data>
+  <data name="EffectTypeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Select the type of effect to be applied</value>
+    <comment>Accessibility help text for effect type selection box</comment>
+  </data>
+  <data name="ReverbSectionTitle.Text" xml:space="preserve">
+    <value>Reverb</value>
+    <comment>Title for reverb section</comment>
+  </data>
+  <data name="ReverbMixLabel.Text" xml:space="preserve">
+    <value>Mix</value>
+    <comment>Label for reverb mix control</comment>
+  </data>
+  <data name="ReverbTimeLabel.Text" xml:space="preserve">
+    <value>Time</value>
+    <comment>Label for reverb time control</comment>
+  </data>
+  <data name="PitchSectionTitle.Text" xml:space="preserve">
+    <value>Pitch Adjustment</value>
+    <comment>Title for pitch adjustment section</comment>
+  </data>
+  <data name="EchoSectionTitle.Text" xml:space="preserve">
+    <value>Echo</value>
+    <comment>Title for echo section</comment>
+  </data>
+  
+  <!-- Strings for About page -->
+  <data name="AboutPageTitle.Text" xml:space="preserve">
+    <value>About Fulcrum</value>
+    <comment>Title of the About page</comment>
+  </data>
+  <data name="AboutVersion.Text" xml:space="preserve">
+    <value>Version {0}</value>
+    <comment>Application version information</comment>
+  </data>
+  <data name="AboutDescription.Text" xml:space="preserve">
+    <value>PREMIUM AUDIO TECHNOLOGY</value>
+    <comment>Short description of the app on the About page</comment>
+  </data>
 </root>

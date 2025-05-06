@@ -24,6 +24,8 @@
 
   <Resources>
     <Resource Language="x-generate"/>
+    <Resource Language="en-US"/>
+    <Resource Language="pt-BR"/>
   </Resources>
 
   <Applications>

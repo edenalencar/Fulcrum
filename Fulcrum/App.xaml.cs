@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 namespace Fulcrum;
 
@@ -183,12 +184,43 @@ public partial class App : Application
     }
 
     /// <summary>
+    /// Configura o idioma do aplicativo com base nas preferências do sistema ou configurações do usuário
+    /// </summary>
+    private void ConfigureLanguage()
+    {
+        try
+        {
+            // Obtém as preferências de idioma do usuário
+            var userLanguage = Windows.Globalization.ApplicationLanguages.Languages[0];
+            
+            // Define o idioma do aplicativo
+            Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = userLanguage;
+            
+            // Configura o idioma para recursos
+            var resourceContext = new Windows.ApplicationModel.Resources.Core.ResourceContext();
+            resourceContext.Languages = new List<string> { userLanguage };
+            
+            System.Diagnostics.Debug.WriteLine($"[APP] Idioma configurado: {userLanguage}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[APP] Erro ao configurar idioma: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// Chamado quando o aplicativo é iniciado normalmente pelo usuário
     /// </summary>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
+        // Inicializa os recursos com a cultura correta
+        Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
+        
         try
         {
+            // Configura o idioma do aplicativo
+            ConfigureLanguage();
+
             Window = new MainWindow();
             
             // Inicializa o serviço de notificações

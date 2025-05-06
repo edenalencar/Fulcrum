@@ -47,9 +47,9 @@
     </Page.Resources>
 
     <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto"
-                  AutomationProperties.Name="Conteúdo da página de configurações">
+                  x:Uid="SettingsScrollViewer" x:Name="SettingsScrollViewer">
         <StackPanel Orientation="Vertical" Spacing="16" MaxWidth="800" HorizontalAlignment="Center">
-            <TextBlock Text="Configurações" 
+            <TextBlock x:Uid="SettingsHeader" 
                        Style="{StaticResource TitleTextBlockStyle}" 
                        Margin="0,0,0,24" 
                        HorizontalAlignment="Center"
@@ -57,19 +57,18 @@
             
             <!-- Configurações de tema -->
             <Grid Style="{StaticResource SettingsCardStyle}"
-                  AutomationProperties.Name="Configurações de tema">
+                  x:Uid="ThemeSettingsCard">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <TextBlock Text="Tema do Aplicativo" 
+                <TextBlock x:Uid="ThemeTitle" 
                            Style="{StaticResource SectionTitleStyle}"
                            AutomationProperties.HeadingLevel="Level2"/>
                            
-                <TextBlock x:Name="txtThemeDescription" Grid.Row="1" 
-                           Text="Escolha entre o tema claro, escuro ou use as configurações do sistema."
+                <TextBlock x:Uid="ThemeDescription" Grid.Row="1" 
                            Style="{StaticResource SectionDescriptionStyle}"/>
                           
                 <!-- Usando apenas RadioButtons para seleção de tema -->
@@ -77,15 +76,12 @@
                               Grid.Row="2"
                               Margin="0,0,0,0"
                               SelectionChanged="OnThemeSelectionChanged"
-                              AutomationProperties.Name="Opções de tema">
-                    <RadioButton Content="Tema Claro" 
-                                 AutomationProperties.Name="Tema Claro"
+                              x:Uid="ThemeOptions">
+                    <RadioButton x:Uid="LightTheme" 
                                  TabIndex="0"/>
-                    <RadioButton Content="Tema Escuro" 
-                                 AutomationProperties.Name="Tema Escuro"
+                    <RadioButton x:Uid="DarkTheme" 
                                  TabIndex="1"/>
-                    <RadioButton Content="Usar configuração do sistema" 
-                                 AutomationProperties.Name="Usar configuração do sistema"
+                    <RadioButton x:Uid="SystemTheme" 
                                  TabIndex="2"/>
                 </RadioButtons>
             </Grid>
@@ -94,13 +90,12 @@
             <InfoBar x:Name="atalhosMensagemInfo" 
                      IsOpen="False" 
                      Severity="Informational" 
-                     Title="Teclas de Atalho"
+                     x:Uid="ShortcutsInfoBar"
                      IsClosable="True"
-                     Margin="0,0,0,16"
-                     AutomationProperties.Name="Mensagem sobre teclas de atalho"/>
+                     Margin="0,0,0,16"/>
                      
             <Grid Style="{StaticResource SettingsCardStyle}"
-                  AutomationProperties.Name="Configurações de teclas de atalho">
+                  x:Uid="ShortcutsSettingsCard">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -108,25 +103,23 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <TextBlock Text="Teclas de Atalho" 
+                <TextBlock x:Uid="ShortcutsTitle" 
                            Style="{StaticResource SectionTitleStyle}"
                            AutomationProperties.HeadingLevel="Level2"/>
                            
                 <ToggleSwitch x:Name="toggleAtalhosGlobais" 
-                              Header="Habilitar teclas de atalho globais"
+                              x:Uid="EnableGlobalShortcuts"
                               Grid.Row="1"
                               Toggled="ToggleAtalhosGlobais_Toggled"
-                              AutomationProperties.Name="Habilitar teclas de atalho globais"
                               TabIndex="3"/>
                 
-                <TextBlock x:Name="txtShortcutsDescription" 
-                           Text="Quando habilitado, você pode controlar o Fulcrum mesmo quando ele não estiver em foco, utilizando as seguintes teclas:" 
+                <TextBlock x:Uid="ShortcutsDescription" 
                            TextWrapping="Wrap"
                            Grid.Row="2"
                            Margin="0,16,0,16"/>
                 
                 <Grid RowSpacing="8" ColumnSpacing="16" Grid.Row="3"
-                      AutomationProperties.Name="Tabela de teclas de atalho">
+                      x:Uid="ShortcutsTable">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -139,66 +132,51 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     
-                    <TextBlock Text="Função" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0"
-                               AutomationProperties.Name="Cabeçalho: Função"/>
-                    <TextBlock Text="Tecla de Atalho" FontWeight="SemiBold" Grid.Row="0" Grid.Column="1"
-                               AutomationProperties.Name="Cabeçalho: Tecla de Atalho"/>
+                    <TextBlock x:Uid="FunctionHeader" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0"/>
+                    <TextBlock x:Uid="ShortcutHeader" FontWeight="SemiBold" Grid.Row="0" Grid.Column="1"/>
                     
-                    <TextBlock Text="Reproduzir/Pausar" Grid.Row="1" Grid.Column="0"
-                               AutomationProperties.Name="Função: Reproduzir/Pausar"/>
-                    <TextBlock Text="Ctrl + Alt + P" Grid.Row="1" Grid.Column="1"
-                               AutomationProperties.Name="Atalho: Ctrl + Alt + P"/>
+                    <TextBlock x:Uid="PlayPauseFunction" Grid.Row="1" Grid.Column="0"/>
+                    <TextBlock x:Uid="PlayPauseShortcut" Grid.Row="1" Grid.Column="1"/>
                     
-                    <TextBlock Text="Aumentar Volume" Grid.Row="2" Grid.Column="0"
-                               AutomationProperties.Name="Função: Aumentar Volume"/>
-                    <TextBlock Text="Ctrl + Alt + ↑" Grid.Row="2" Grid.Column="1"
-                               AutomationProperties.Name="Atalho: Ctrl + Alt + Seta para cima"/>
+                    <TextBlock x:Uid="VolumeUpFunction" Grid.Row="2" Grid.Column="0"/>
+                    <TextBlock x:Uid="VolumeUpShortcut" Grid.Row="2" Grid.Column="1"/>
                     
-                    <TextBlock Text="Diminuir Volume" Grid.Row="3" Grid.Column="0"
-                               AutomationProperties.Name="Função: Diminuir Volume"/>
-                    <TextBlock Text="Ctrl + Alt + ↓" Grid.Row="3" Grid.Column="1"
-                               AutomationProperties.Name="Atalho: Ctrl + Alt + Seta para baixo"/>
+                    <TextBlock x:Uid="VolumeDownFunction" Grid.Row="3" Grid.Column="0"/>
+                    <TextBlock x:Uid="VolumeDownShortcut" Grid.Row="3" Grid.Column="1"/>
                     
-                    <TextBlock Text="Mutar/Desmutar" Grid.Row="4" Grid.Column="0"
-                               AutomationProperties.Name="Função: Mutar/Desmutar"/>
-                    <TextBlock Text="Ctrl + Alt + M" Grid.Row="4" Grid.Column="1"
-                               AutomationProperties.Name="Atalho: Ctrl + Alt + M"/>
+                    <TextBlock x:Uid="MuteFunction" Grid.Row="4" Grid.Column="0"/>
+                    <TextBlock x:Uid="MuteShortcut" Grid.Row="4" Grid.Column="1"/>
                 </Grid>
             </Grid>
             
             <!-- Configurações de tamanho de fonte -->
             <Grid Style="{StaticResource SettingsCardStyle}"
-                  AutomationProperties.Name="Configurações de tamanho de fonte">
+                  x:Uid="FontSettingsCard">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <TextBlock Text="Tamanho da Fonte" 
+                <TextBlock x:Uid="FontSizeTitle" 
                            Style="{StaticResource SectionTitleStyle}"
                            AutomationProperties.HeadingLevel="Level2"/>
                            
-                <TextBlock Grid.Row="1" 
-                           Text="Ajuste o tamanho do texto para melhorar a legibilidade."
+                <TextBlock x:Uid="FontSizeDescription" Grid.Row="1" 
                            Style="{StaticResource SectionDescriptionStyle}"/>
                 
                 <RadioButtons x:Name="FontSizeRadioButtons" 
                               Grid.Row="2"
                               Margin="0,0,0,0"
                               SelectionChanged="OnFontSizeSelectionChanged"
-                              AutomationProperties.Name="Opções de tamanho de fonte">
-                    <RadioButton Content="Pequeno" 
-                                 AutomationProperties.Name="Fonte pequena"
+                              x:Uid="FontSizeOptions">
+                    <RadioButton x:Uid="SmallFont" 
                                  TabIndex="6"/>
-                    <RadioButton Content="Médio (padrão)" 
-                                 AutomationProperties.Name="Fonte média"
+                    <RadioButton x:Uid="MediumFont" 
                                  TabIndex="7"/>
-                    <RadioButton Content="Grande" 
-                                 AutomationProperties.Name="Fonte grande"
+                    <RadioButton x:Uid="LargeFont" 
                                  TabIndex="8"/>
-                    <RadioButton Content="Extra grande" 
-                                 AutomationProperties.Name="Fonte extra grande"
+                    <RadioButton x:Uid="ExtraLargeFont" 
                                  TabIndex="9"/>
                 </RadioButtons>
             </Grid>

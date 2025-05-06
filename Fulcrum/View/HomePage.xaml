@@ -130,7 +130,7 @@
                   Style="{StaticResource CardShadowStyle}"
                   Translation="0,0,24"
                   Shadow="{StaticResource SharedShadow}"
-                  AutomationProperties.Name="Controles principais">
+                  x:Uid="MainControlsPanel">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -140,10 +140,9 @@
                 <!-- Controles de reprodução e volume principal -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <FontIcon Glyph="&#xE767;" FontSize="20" Margin="0,0,12,0" VerticalAlignment="Center"
-                              AutomationProperties.Name="Ícone de áudio"/>
+                              x:Uid="AudioIcon"/>
                     <Button x:Name="PlayButton" Click="PlayButton_Click" Style="{StaticResource MainPlayButtonStyle}"
-                            AutomationProperties.Name="Reproduzir todos os sons"
-                            AutomationProperties.HelpText="Inicia ou pausa a reprodução de todos os sons ambientes"
+                            x:Uid="MainPlayButton"
                             KeyboardAcceleratorPlacementMode="Auto">
                         <Button.KeyboardAccelerators>
                             <KeyboardAccelerator Key="Space" Modifiers="Control"/>
@@ -154,12 +153,11 @@
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <FontIcon Glyph="&#xE992;" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Center"
-                              AutomationProperties.Name="Volume baixo"/>
+                              x:Uid="LowVolumeIcon"/>
                     <Slider x:Name="VolumeSlider" Style="{StaticResource MainVolumeSliderStyle}" 
                             ValueChanged="Volume_ValueChanged"
                             Value="0.0" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume principal"
-                            AutomationProperties.HelpText="Ajusta o volume de todos os sons"
+                            x:Uid="MainVolumeSlider"
                             TabIndex="0">
                         <Slider.KeyboardAccelerators>
                             <KeyboardAccelerator Key="Up" Modifiers="Control"/>
@@ -167,18 +165,16 @@
                         </Slider.KeyboardAccelerators>
                     </Slider>
                     <FontIcon Glyph="&#xE994;" FontSize="16" Margin="8,0,0,0" VerticalAlignment="Center"
-                              AutomationProperties.Name="Volume alto"/>
+                              x:Uid="HighVolumeIcon"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
                     <Button x:Name="SetSleepTimerButton" Click="SetSleepTimer_Click"
-                            ToolTipService.ToolTip="Definir timer para parar automaticamente"
-                            AutomationProperties.Name="Definir timer"
-                            AutomationProperties.HelpText="Configure um temporizador para parar automaticamente a reprodução"
+                            x:Uid="SetTimerButton"
                             TabIndex="1">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xE916;" Margin="0,0,8,0"/>
-                            <TextBlock Text="Definir Timer"/>
+                            <TextBlock x:Uid="SetTimerText"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -198,7 +194,7 @@
                 
                 <FontIcon Grid.Column="0" Glyph="&#xE916;" FontSize="16" Margin="0,0,12,0" Foreground="White"/>
                 <TextBlock Grid.Column="1" x:Name="timerDisplay" Text="00:00:00" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                <Button Grid.Column="2" x:Name="cancelTimerButton" Content="Cancelar" Click="CancelTimer_Click"
+                <Button Grid.Column="2" x:Name="cancelTimerButton" x:Uid="CancelTimerButton" Click="CancelTimer_Click"
                         Background="Transparent" Foreground="White" BorderThickness="0"/>
             </Grid>
 
@@ -217,7 +213,7 @@
 
                 <!-- Card de Chuva sem ThemeShadow -->
                 <Grid Grid.Column="0" Grid.Row="0" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Chuva">
+                      x:Uid="RainSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -231,29 +227,26 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/chuva.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Chuva" 
-                               AutomationProperties.HelpText="Som de chuva caindo suavemente"/>
-                        <TextBlock Grid.Column="1" Text="Chuva" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="RainIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="RainTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="chuva" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Chuva"
+                                IsHitTestVisible="True" x:Uid="RainEqualizeButton"
                                 TabIndex="2">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="chuvaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#6CB4EE"
-                              AutomationProperties.Name="Visualização de onda do som de Chuva"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="RainWaveform"/>
                     
                     <Slider x:Name="chuva" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" 
                             UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Chuva"
-                            AutomationProperties.HelpText="Ajuste o volume do som de chuva"
+                            x:Uid="RainVolumeSlider"
                             TabIndex="3"/>
                 </Grid>
 
                 <!-- Card de Fogueira sem ThemeShadow -->
                 <Grid Grid.Column="1" Grid.Row="0" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Fogueira">
+                      x:Uid="BonfireSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -267,28 +260,25 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/fogueira.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Fogueira"
-                               AutomationProperties.HelpText="Som do crepitar de madeira queimando"/>
-                        <TextBlock Grid.Column="1" Text="Fogueira" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="BonfireIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="BonfireTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="fogueira" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Fogueira"
+                                IsHitTestVisible="True" x:Uid="BonfireEqualizeButton"
                                 TabIndex="4">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="fogueiraWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#FF6347"
-                              AutomationProperties.Name="Visualização de onda do som de Fogueira"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="BonfireWaveform"/>
                     
                     <Slider x:Name="fogueira" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Fogueira"
-                            AutomationProperties.HelpText="Ajuste o volume do som de fogueira"
+                            x:Uid="BonfireVolumeSlider"
                             TabIndex="5"/>
                 </Grid>
 
                 <!-- Card de Lancha sem ThemeShadow -->
                 <Grid Grid.Column="2" Grid.Row="0" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Lancha">
+                      x:Uid="MotorboatSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -302,28 +292,25 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/lancha.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Lancha"
-                               AutomationProperties.HelpText="Som de motor de lancha"/>
-                        <TextBlock Grid.Column="1" Text="Lancha" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="MotorboatIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="MotorboatTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="lancha" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Lancha"
+                                IsHitTestVisible="True" x:Uid="MotorboatEqualizeButton"
                                 TabIndex="6">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="lanchaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#B19CD9"
-                              AutomationProperties.Name="Visualização de onda do som de Lancha"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="MotorboatWaveform"/>
                     
                     <Slider x:Name="lancha" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Lancha"
-                            AutomationProperties.HelpText="Ajuste o volume do som de lancha"
+                            x:Uid="MotorboatVolumeSlider"
                             TabIndex="7"/>
                 </Grid>
 
                 <!-- Card de Ondas sem ThemeShadow -->
                 <Grid Grid.Column="0" Grid.Row="1" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Ondas">
+                      x:Uid="WavesSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -337,28 +324,25 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/ondas.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Ondas"
-                               AutomationProperties.HelpText="Som de ondas do mar quebrando"/>
-                        <TextBlock Grid.Column="1" Text="Ondas" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="WavesIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="WavesTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="ondas" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Ondas"
+                                IsHitTestVisible="True" x:Uid="WavesEqualizeButton"
                                 TabIndex="8">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="ondasWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#20B2AA"
-                              AutomationProperties.Name="Visualização de onda do som de Ondas"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="WavesWaveform"/>
                     
                     <Slider x:Name="ondas" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Ondas"
-                            AutomationProperties.HelpText="Ajuste o volume do som de ondas"
+                            x:Uid="WavesVolumeSlider"
                             TabIndex="9"/>
                 </Grid>
 
                 <!-- Card de Pássaros sem ThemeShadow -->
                 <Grid Grid.Column="1" Grid.Row="1" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Pássaros">
+                      x:Uid="BirdsSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -372,28 +356,25 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/passaros.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Pássaros"
-                               AutomationProperties.HelpText="Som de diferentes pássaros cantando"/>
-                        <TextBlock Grid.Column="1" Text="Pássaros" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="BirdsIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="BirdsTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="passaros" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Pássaros"
+                                IsHitTestVisible="True" x:Uid="BirdsEqualizeButton"
                                 TabIndex="10">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="passarosWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#9ACD32"
-                              AutomationProperties.Name="Visualização de onda do som de Pássaros"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="BirdsWaveform"/>
                     
                     <Slider x:Name="passaros" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Pássaros"
-                            AutomationProperties.HelpText="Ajuste o volume do som de pássaros"
+                            x:Uid="BirdsVolumeSlider"
                             TabIndex="11"/>
                 </Grid>
 
                 <!-- Card de Praia sem ThemeShadow -->
                 <Grid Grid.Column="2" Grid.Row="1" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Praia">
+                      x:Uid="BeachSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -407,28 +388,25 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/praia.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Praia"
-                               AutomationProperties.HelpText="Som ambiente de praia"/>
-                        <TextBlock Grid.Column="1" Text="Praia" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="BeachIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="BeachTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="praia" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Praia"
+                                IsHitTestVisible="True" x:Uid="BeachEqualizeButton"
                                 TabIndex="12">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="praiaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#FFD700"
-                              AutomationProperties.Name="Visualização de onda do som de Praia"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="BeachWaveform"/>
                     
                     <Slider x:Name="praia" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Praia"
-                            AutomationProperties.HelpText="Ajuste o volume do som de praia"
+                            x:Uid="BeachVolumeSlider"
                             TabIndex="13"/>
                 </Grid>
 
                 <!-- Card de Trem sem ThemeShadow -->
                 <Grid Grid.Column="0" Grid.Row="2" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Trem">
+                      x:Uid="TrainSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -442,28 +420,25 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/trem.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Trem"
-                               AutomationProperties.HelpText="Som de trem em movimento"/>
-                        <TextBlock Grid.Column="1" Text="Trem" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="TrainIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="TrainTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="trem" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Trem"
+                                IsHitTestVisible="True" x:Uid="TrainEqualizeButton"
                                 TabIndex="14">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="tremWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#A9A9A9"
-                              AutomationProperties.Name="Visualização de onda do som de Trem"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="TrainWaveform"/>
                     
                     <Slider x:Name="trem" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Trem"
-                            AutomationProperties.HelpText="Ajuste o volume do som de trem"
+                            x:Uid="TrainVolumeSlider"
                             TabIndex="15"/>
                 </Grid>
 
                 <!-- Card de Ventos sem ThemeShadow -->
                 <Grid Grid.Column="1" Grid.Row="2" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Ventos">
+                      x:Uid="WindSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -477,28 +452,25 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/vento.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Ventos"
-                               AutomationProperties.HelpText="Som de ventos soprando"/>
-                        <TextBlock Grid.Column="1" Text="Ventos" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="WindIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="WindTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="ventos" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Ventos"
+                                IsHitTestVisible="True" x:Uid="WindEqualizeButton"
                                 TabIndex="16">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="ventosWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#ADD8E6"
-                              AutomationProperties.Name="Visualização de onda do som de Ventos"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="WindWaveform"/>
                     
                     <Slider x:Name="ventos" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Ventos"
-                            AutomationProperties.HelpText="Ajuste o volume do som de ventos"
+                            x:Uid="WindVolumeSlider"
                             TabIndex="17"/>
                 </Grid>
 
                 <!-- Card de Cafeteria sem ThemeShadow -->
                 <Grid Grid.Column="2" Grid.Row="2" Style="{StaticResource SoundCardStyle}"
-                      AutomationProperties.Name="Card de som Cafeteria">
+                      x:Uid="CoffeeShopSoundCard">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -512,22 +484,19 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Grid.Column="0" Source="/Assets/Images/cafeteria.png" Style="{StaticResource SoundIconStyle}"
-                               AutomationProperties.Name="Ícone de Cafeteria"
-                               AutomationProperties.HelpText="Som ambiente de cafeteria"/>
-                        <TextBlock Grid.Column="1" Text="Cafeteria" Style="{StaticResource CardTitleStyle}"/>
+                               x:Uid="CoffeeShopIcon"/>
+                        <TextBlock Grid.Column="1" x:Uid="CoffeeShopTitle" Style="{StaticResource CardTitleStyle}"/>
                         <Button Grid.Column="2" Tag="cafeteria" Click="BtnEqualizer_Click" Style="{StaticResource EqualizerButtonStyle}" 
-                                IsHitTestVisible="True" AutomationProperties.Name="Equalizar som de Cafeteria"
+                                IsHitTestVisible="True" x:Uid="CoffeeShopEqualizeButton"
                                 TabIndex="18">&#xE9E9;</Button>
                     </Grid>
 
                     <Polyline x:Name="cafeteriaWaveform" Grid.Row="1" Style="{StaticResource WaveformStyle}" Stroke="#F4A460"
-                              AutomationProperties.Name="Visualização de onda do som de Cafeteria"
-                              AutomationProperties.AccessibilityView="Raw"/>
+                              x:Uid="CoffeeShopWaveform"/>
                     
                     <Slider x:Name="cafeteria" Grid.Row="2" Style="{StaticResource SoundSliderStyle}" ValueChanged="Slider_ValueChanged" 
                             Margin="12,4,12,12" Width="Auto" IsHitTestVisible="True" UIElement.CanBeScrollAnchor="True"
-                            AutomationProperties.Name="Volume de Cafeteria"
-                            AutomationProperties.HelpText="Ajuste o volume do som de cafeteria"
+                            x:Uid="CoffeeShopVolumeSlider"
                             TabIndex="19"/>
                 </Grid>
             </Grid>

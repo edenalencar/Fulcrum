@@ -25,29 +25,29 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
-                <TextBlock x:Name="titleTextBlock" Text="Equalização e Efeitos" 
+                <TextBlock x:Name="titleTextBlock" x:Uid="EqualizerEffectsTitle"
                            Style="{ThemeResource TitleLargeTextBlockStyle}" 
                            FontWeight="SemiBold"
                            Margin="0,10,0,0"
                            AutomationProperties.HeadingLevel="Level1"/>
                 
                 <Button Grid.Column="1" Click="BtnVoltar_Click" 
+                       x:Uid="BackButton"
                        Style="{StaticResource DefaultButtonStyle}"
-                       ToolTipService.ToolTip="Voltar"
                        AutomationProperties.Name="Voltar para a página anterior"
                        TabIndex="0">
                     <FontIcon Glyph="&#xE72B;" FontFamily="Segoe MDL2 Assets"/>
                 </Button>
             </Grid>
             
-            <TextBlock x:Name="soundNameTextBlock" Text="Nome do Som" 
+            <TextBlock x:Name="soundNameTextBlock" x:Uid="SelectedSoundName"
                        Style="{ThemeResource SubtitleTextBlockStyle}" 
                        Opacity="0.8" 
                        Margin="0,5,0,0"
                        AutomationProperties.HeadingLevel="Level2"/>
             
             <!-- Info Bar para mensagens -->
-            <InfoBar x:Name="infoBar" IsOpen="False" Margin="0,16,0,0"
+            <InfoBar x:Name="infoBar" x:Uid="EqualizerInfoBar" IsOpen="False" Margin="0,16,0,0"
                      Severity="Informational" Title="Informação"
                      AutomationProperties.LiveSetting="Assertive"/>
         </StackPanel>
@@ -59,7 +59,7 @@
             <StackPanel Spacing="24">
                 
                 <!-- Painel de Equalização -->
-                <Expander Header="Equalização" IsExpanded="True"
+                <Expander x:Uid="EqualizerSection" Header="Equalização" IsExpanded="True"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Stretch"
                           BorderThickness="1"
@@ -86,10 +86,9 @@
                         
                         <!-- Switch para ativar/desativar equalização -->
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <ToggleSwitch x:Name="equalizerSwitch" Header="Ativar Equalização"
+                            <ToggleSwitch x:Name="equalizerSwitch" x:Uid="EqualizerToggleSwitch"
                                          Toggled="EqualizerSwitch_Toggled"
                                          Foreground="{ThemeResource SystemAccentColor}"
-                                         AutomationProperties.Name="Ativar Equalização"
                                          AutomationProperties.HelpText="Ativa ou desativa o equalizador de áudio"
                                          TabIndex="2"/>
                         </StackPanel>
@@ -106,7 +105,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 
-                                <TextBlock Text="Baixa (100 Hz)" VerticalAlignment="Center" MinWidth="120"
+                                <TextBlock x:Uid="LowBandLabel" VerticalAlignment="Center" MinWidth="120"
                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                 <Slider x:Name="sliderBaixa" Grid.Column="1" Minimum="-15" Maximum="15" 
                                         StepFrequency="0.5" Value="0" ValueChanged="SliderBaixa_ValueChanged"
@@ -128,7 +127,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 
-                                <TextBlock Text="Média (1 kHz)" VerticalAlignment="Center" MinWidth="120"
+                                <TextBlock x:Uid="MidBandLabel" VerticalAlignment="Center" MinWidth="120"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                 <Slider x:Name="sliderMedia" Grid.Column="1" Minimum="-15" Maximum="15" 
                                         StepFrequency="0.5" Value="0" ValueChanged="SliderMedia_ValueChanged"
@@ -150,7 +149,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 
-                                <TextBlock Text="Alta (8 kHz)" VerticalAlignment="Center" MinWidth="120"
+                                <TextBlock x:Uid="HighBandLabel" Text="Alta (8 kHz)" VerticalAlignment="Center" MinWidth="120"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                 <Slider x:Name="sliderAlta" Grid.Column="1" Minimum="-15" Maximum="15" 
                                         StepFrequency="0.5" Value="0" ValueChanged="SliderAlta_ValueChanged"
@@ -166,14 +165,14 @@
                             
                             <!-- Botão para resetar equalização -->
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
-                                <Button Content="Resetar Equalização" Click="BtnResetEqualizer_Click" 
+                                <Button x:Uid="ResetEqualizerButton" Content="Resetar Equalização" Click="BtnResetEqualizer_Click" 
                                     FontWeight="SemiBold"
                                     AutomationProperties.Name="Resetar equalização"
                                     AutomationProperties.HelpText="Restaura todos os valores do equalizador para zero"
                                     TabIndex="6"/>
                                     
                                 <!-- Novo botão de diagnóstico para testar o equalizador -->
-                                <Button x:Name="btnTestarEqualizer" Content="Teste de Diagnóstico" 
+                                <Button x:Name="btnTestarEqualizer" x:Uid="TestEqualizerButton" Content="Teste de Diagnóstico" 
                                         Click="BtnTestarEqualizer_Click"
                                         Foreground="White"
                                         Background="{ThemeResource SystemAccentColorDark1}"
@@ -188,7 +187,7 @@
                 </Expander>
                 
                 <!-- Painel de Efeitos -->
-                <Expander Header="Efeitos Sonoros" IsExpanded="True"
+                <Expander x:Uid="SoundEffectsSection" Header="Efeitos Sonoros" IsExpanded="True"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Stretch"
                           BorderThickness="1"
@@ -216,20 +215,19 @@
                         
                         <!-- Switch para ativar/desativar efeitos -->
                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                            <ToggleSwitch x:Name="effectsSwitch" Header="Ativar Efeitos"
+                            <ToggleSwitch x:Name="effectsSwitch" x:Uid="EffectsToggleSwitch"
                                          Toggled="EffectsSwitch_Toggled"
                                          Foreground="{ThemeResource SystemAccentColor}"
-                                         AutomationProperties.Name="Ativar efeitos sonoros"
                                          AutomationProperties.HelpText="Ativa ou desativa os efeitos sonoros para o som selecionado"
                                          TabIndex="9"/>
                         </StackPanel>
                         
                         <!-- Seleção de tipo de efeito -->
                         <StackPanel Grid.Row="1" Margin="0,12,0,0">
-                            <TextBlock Text="Tipo de Efeito" Margin="0,0,0,8"
+                            <TextBlock x:Uid="EffectTypeLabel" Text="Tipo de Efeito" Margin="0,0,0,8"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                        AutomationProperties.HeadingLevel="Level3"/>
-                            <ComboBox x:Name="tipoEfeitoComboBox" Width="240" 
+                            <ComboBox x:Name="tipoEfeitoComboBox" x:Uid="EffectTypeComboBox" Width="240" 
                                       SelectionChanged="TipoEfeito_SelectionChanged"
                                       HorizontalAlignment="Left" 
                                       CornerRadius="4"
@@ -245,7 +243,7 @@
                             <!-- Painel de Reverberação -->
                             <StackPanel x:Name="reverbPanel" Visibility="Collapsed" Spacing="16"
                                         AutomationProperties.Name="Configurações de reverberação">
-                                <TextBlock Text="Reverberação" 
+                                <TextBlock x:Uid="ReverbSectionTitle"
                                           Style="{ThemeResource BodyStrongTextBlockStyle}" 
                                           Margin="0,0,0,8"
                                           AutomationProperties.HeadingLevel="Level3"/>
@@ -258,7 +256,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     
-                                    <TextBlock Text="Mix" VerticalAlignment="Center" MinWidth="80"
+                                    <TextBlock x:Uid="ReverbMixLabel" Text="Mix" VerticalAlignment="Center" MinWidth="80"
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                     <Slider x:Name="sliderReverbMix" Grid.Column="1" Minimum="0" Maximum="1" 
                                             StepFrequency="0.01" Value="0.3" ValueChanged="SliderReverbMix_ValueChanged"
@@ -279,7 +277,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     
-                                    <TextBlock Text="Tempo" VerticalAlignment="Center" MinWidth="80"
+                                    <TextBlock x:Uid="ReverbTimeLabel" Text="Tempo" VerticalAlignment="Center" MinWidth="80"
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                     <Slider x:Name="sliderReverbTime" Grid.Column="1" Minimum="0.1" Maximum="10" 
                                             StepFrequency="0.1" Value="1.0" ValueChanged="SliderReverbTime_ValueChanged"
@@ -296,7 +294,7 @@
                             <!-- Painel de Pitch -->
                             <StackPanel x:Name="pitchPanel" Visibility="Collapsed" Spacing="16"
                                         AutomationProperties.Name="Configurações de pitch">
-                                <TextBlock Text="Ajuste de Pitch" 
+                                <TextBlock x:Uid="PitchSectionTitle" Text="Ajuste de Pitch" 
                                           Style="{ThemeResource BodyStrongTextBlockStyle}" 
                                           Margin="0,0,0,8"
                                           AutomationProperties.HeadingLevel="Level3"/>
@@ -326,7 +324,7 @@
                             <!-- Painel de Echo -->
                             <StackPanel x:Name="echoPanel" Visibility="Collapsed" Spacing="16"
                                         AutomationProperties.Name="Configurações de eco">
-                                <TextBlock Text="Eco" 
+                                <TextBlock x:Uid="EchoSectionTitle" Text="Eco" 
                                           Style="{ThemeResource BodyStrongTextBlockStyle}" 
                                           Margin="0,0,0,8"
                                           AutomationProperties.HeadingLevel="Level3"/>

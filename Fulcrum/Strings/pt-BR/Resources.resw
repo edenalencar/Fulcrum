@@ -118,115 +118,817 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About.Text" xml:space="preserve">
-    <value>Sobre este app</value>
-    <comment>About app</comment>
+    <value>Sobre este aplicativo</value>
+    <comment>Sobre o app</comment>
   </data>
   <data name="Appearance.Text" xml:space="preserve">
     <value>Aparência</value>
-    <comment>Appearance</comment>
+    <comment>Aparência</comment>
   </data>
   <data name="AppTheme.Description" xml:space="preserve">
-    <value>Selecione o tema do aplicativo a ser exibido</value>
-    <comment>Description</comment>
+    <value>Selecione qual tema do aplicativo exibir</value>
+    <comment>Descrição</comment>
   </data>
   <data name="AppTheme.Header" xml:space="preserve">
-    <value>Tema do aplicativo</value>
-    <comment>App Theme</comment>
+    <value>Tema do Aplicativo</value>
+    <comment>Tema do Aplicativo</comment>
   </data>
   <data name="Beach.Header" xml:space="preserve">
     <value>Praia</value>
-    <comment>Sound of Beach</comment>
+    <comment>Som de Praia</comment>
   </data>
   <data name="Birds.Header" xml:space="preserve">
-    <value>Passáros</value>
-    <comment>Sound of Birds</comment>
+    <value>Pássaros</value>
+    <comment>Som de Pássaros</comment>
   </data>
   <data name="Bonfire.Header" xml:space="preserve">
     <value>Fogueira</value>
-    <comment>Sound of Bonfire</comment>
+    <comment>Som de Fogueira</comment>
   </data>
   <data name="CoffeeShop.Header" xml:space="preserve">
     <value>Cafeteria</value>
-    <comment>Sound of Coffee shop</comment>
+    <comment>Som de Cafeteria</comment>
   </data>
   <data name="Dark.Content" xml:space="preserve">
     <value>Escuro</value>
-    <comment>Dark Theme</comment>
+    <comment>Tema Escuro</comment>
   </data>
   <data name="Dark.Tag" xml:space="preserve">
-    <value>Dark</value>
-    <comment>Dark Theme</comment>
+    <value>Escuro</value>
+    <comment>Tema Escuro</comment>
   </data>
   <data name="Default.Content" xml:space="preserve">
     <value>Usar configuração do sistema</value>
-    <comment>Default Theme of System</comment>
+    <comment>Tema padrão do sistema</comment>
   </data>
   <data name="Default.Tag" xml:space="preserve">
-    <value>Default</value>
-    <comment>Default Theme of System</comment>
+    <value>Padrão</value>
+    <comment>Tema padrão do sistema</comment>
   </data>
   <data name="DependenciesAndReferences.Header" xml:space="preserve">
     <value>Dependências e referências</value>
-    <comment>Dependencies and references used by the application</comment>
+    <comment>Dependências e referências usadas pelo aplicativo</comment>
   </data>
   <data name="Home.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Inicio</value>
-    <comment>ToolTip for home icon</comment>
+    <value>Início</value>
+    <comment>Dica para o ícone inicial</comment>
   </data>
   <data name="Light.Content" xml:space="preserve">
     <value>Claro</value>
-    <comment>Light Theme</comment>
+    <comment>Tema Claro</comment>
   </data>
   <data name="Light.Tag" xml:space="preserve">
-    <value>Light</value>
-    <comment>Light Theme</comment>
+    <value>Claro</value>
+    <comment>Tema Claro</comment>
   </data>
   <data name="Motorboat.Header" xml:space="preserve">
     <value>Lancha</value>
-    <comment>Sound of Motorboat</comment>
+    <comment>Som de Lancha</comment>
   </data>
   <data name="Pause.ToolTipService.ToolTip" xml:space="preserve">
     <value>Pausar</value>
-    <comment>ToolTipo for Pause icon</comment>
+    <comment>Dica para o ícone de Pausar</comment>
   </data>
   <data name="Play.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Executar</value>
-    <comment>ToolTipo for Play icon</comment>
+    <value>Reproduzir</value>
+    <comment>Dica para o ícone de Reproduzir</comment>
   </data>
   <data name="PrivacyPolicy.Content" xml:space="preserve">
-    <value>Política de privacidade</value>
-    <comment>Privacy Policy</comment>
+    <value>Política de Privacidade</value>
+    <comment>Política de Privacidade</comment>
   </data>
   <data name="Rain.Header" xml:space="preserve">
     <value>Chuva</value>
-    <comment>Sound of Rain</comment>
+    <comment>Som de Chuva</comment>
   </data>
   <data name="Rights.Text" xml:space="preserve">
-    <value>@{0} Éden Alencar.Todos os direitos reservados.</value>
-    <comment>Right about app</comment>
+    <value>@{0} Éden Alencar. Todos os direitos reservados</value>
+    <comment>Direitos sobre o aplicativo</comment>
   </data>
   <data name="Settings.Text" xml:space="preserve">
     <value>Configurações</value>
-    <comment>Settings</comment>
+    <comment>Configurações</comment>
   </data>
   <data name="TermsOfUse.Content" xml:space="preserve">
     <value>Termos de Uso</value>
-    <comment>Terms-of-Use</comment>
+    <comment>Termos de Uso</comment>
   </data>
   <data name="Train.Header" xml:space="preserve">
     <value>Trem</value>
-    <comment>Sound of Train</comment>
+    <comment>Som de Trem</comment>
   </data>
   <data name="Version.Text" xml:space="preserve">
-    <value>Fulcrum App Official {0}</value>
-    <comment>Nome and version</comment>
+    <value>Fulcrum App Oficial {0}</value>
+    <comment>Nome e versão</comment>
   </data>
   <data name="Waves.Header" xml:space="preserve">
     <value>Ondas</value>
-    <comment>Sound of Waves</comment>
+    <comment>Som de Ondas</comment>
   </data>
   <data name="Wind.Header" xml:space="preserve">
-    <value>Ventos</value>
-    <comment>Sound of Wind</comment>
+    <value>Vento</value>
+    <comment>Som de Vento</comment>
+  </data>
+  <data name="SettingsScrollViewer.AutomationProperties.Name" xml:space="preserve">
+    <value>Conteúdo da página de configurações</value>
+    <comment>Nome de automação para o visualizador de rolagem da página de configurações</comment>
+  </data>
+  <data name="SettingsHeader.Text" xml:space="preserve">
+    <value>Configurações</value>
+    <comment>Título da página de configurações</comment>
+  </data>
+  <data name="ThemeSettingsCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Configurações de tema</value>
+    <comment>Nome de automação do cartão de configurações de tema</comment>
+  </data>
+  <data name="ThemeTitle.Text" xml:space="preserve">
+    <value>Tema do Aplicativo</value>
+    <comment>Título da seção de configurações de tema</comment>
+  </data>
+  <data name="ThemeDescription.Text" xml:space="preserve">
+    <value>Escolha entre tema claro, escuro ou configurações do sistema.</value>
+    <comment>Descrição das configurações de tema</comment>
+  </data>
+  <data name="ThemeOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>Opções de tema</value>
+    <comment>Grupo de botões de opções de tema</comment>
+  </data>
+  <data name="LightTheme.Content" xml:space="preserve">
+    <value>Tema Claro</value>
+    <comment>Opção de tema claro</comment>
+  </data>
+  <data name="LightTheme.AutomationProperties.Name" xml:space="preserve">
+    <value>Tema Claro</value>
+    <comment>Nome de automação da opção de tema claro</comment>
+  </data>
+  <data name="DarkTheme.Content" xml:space="preserve">
+    <value>Tema Escuro</value>
+    <comment>Opção de tema escuro</comment>
+  </data>
+  <data name="DarkTheme.AutomationProperties.Name" xml:space="preserve">
+    <value>Tema Escuro</value>
+    <comment>Nome de automação da opção de tema escuro</comment>
+  </data>
+  <data name="SystemTheme.Content" xml:space="preserve">
+    <value>Usar Configuração do Sistema</value>
+    <comment>Opção de tema do sistema</comment>
+  </data>
+  <data name="SystemTheme.AutomationProperties.Name" xml:space="preserve">
+    <value>Usar Configuração do Sistema</value>
+    <comment>Nome de automação da opção de tema do sistema</comment>
+  </data>
+  <data name="ShortcutsInfoBar.Title" xml:space="preserve">
+    <value>Atalhos de Teclado</value>
+    <comment>Título da barra de informações de atalhos de teclado</comment>
+  </data>
+  <data name="ShortcutsSettingsCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Configurações de atalhos de teclado</value>
+    <comment>Nome de automação do cartão de configurações de atalhos de teclado</comment>
+  </data>
+  <data name="ShortcutsTitle.Text" xml:space="preserve">
+    <value>Atalhos de Teclado</value>
+    <comment>Título da seção de atalhos de teclado</comment>
+  </data>
+  <data name="EnableGlobalShortcuts.Header" xml:space="preserve">
+    <value>Ativar atalhos globais de teclado</value>
+    <comment>Botão de ativação de atalhos globais de teclado</comment>
+  </data>
+  <data name="EnableGlobalShortcuts.AutomationProperties.Name" xml:space="preserve">
+    <value>Ativar atalhos globais de teclado</value>
+    <comment>Nome de automação do botão de ativação de atalhos globais de teclado</comment>
+  </data>
+  <data name="ShortcutsDescription.Text" xml:space="preserve">
+    <value>Quando ativado, você pode controlar o Fulcrum mesmo quando não estiver em foco, usando as seguintes teclas:</value>
+    <comment>Descrição dos atalhos de teclado</comment>
+  </data>
+  <data name="ShortcutsTable.AutomationProperties.Name" xml:space="preserve">
+    <value>Tabela de atalhos de teclado</value>
+    <comment>Nome de automação da tabela de atalhos de teclado</comment>
+  </data>
+  <data name="FunctionHeader.Text" xml:space="preserve">
+    <value>Função</value>
+    <comment>Cabeçalho da coluna de função na tabela de atalhos</comment>
+  </data>
+  <data name="FunctionHeader.AutomationProperties.Name" xml:space="preserve">
+    <value>Cabeçalho: Função</value>
+    <comment>Nome de automação do cabeçalho da coluna de função</comment>
+  </data>
+  <data name="ShortcutHeader.Text" xml:space="preserve">
+    <value>Tecla de Atalho</value>
+    <comment>Cabeçalho da coluna de tecla de atalho na tabela de atalhos</comment>
+  </data>
+  <data name="ShortcutHeader.AutomationProperties.Name" xml:space="preserve">
+    <value>Cabeçalho: Tecla de Atalho</value>
+    <comment>Nome de automação do cabeçalho da coluna de tecla de atalho</comment>
+  </data>
+  <data name="PlayPauseFunction.Text" xml:space="preserve">
+    <value>Reproduzir/Pausar</value>
+    <comment>Função Reproduzir/Pausar na tabela de atalhos</comment>
+  </data>
+  <data name="PlayPauseFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Função: Reproduzir/Pausar</value>
+    <comment>Nome de automação da função Reproduzir/Pausar</comment>
+  </data>
+  <data name="PlayPauseShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + P</value>
+    <comment>Tecla de atalho Reproduzir/Pausar na tabela de atalhos</comment>
+  </data>
+  <data name="PlayPauseShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Atalho: Ctrl + Alt + P</value>
+    <comment>Nome de automação da tecla de atalho Reproduzir/Pausar</comment>
+  </data>
+  <data name="VolumeUpFunction.Text" xml:space="preserve">
+    <value>Aumentar Volume</value>
+    <comment>Função Aumentar Volume na tabela de atalhos</comment>
+  </data>
+  <data name="VolumeUpFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Função: Aumentar Volume</value>
+    <comment>Nome de automação da função Aumentar Volume</comment>
+  </data>
+  <data name="VolumeUpShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + ↑</value>
+    <comment>Tecla de atalho Aumentar Volume na tabela de atalhos</comment>
+  </data>
+  <data name="VolumeUpShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Atalho: Ctrl + Alt + Seta para Cima</value>
+    <comment>Nome de automação da tecla de atalho Aumentar Volume</comment>
+  </data>
+  <data name="VolumeDownFunction.Text" xml:space="preserve">
+    <value>Diminuir Volume</value>
+    <comment>Função Diminuir Volume na tabela de atalhos</comment>
+  </data>
+  <data name="VolumeDownFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Função: Diminuir Volume</value>
+    <comment>Nome de automação da função Diminuir Volume</comment>
+  </data>
+  <data name="VolumeDownShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + ↓</value>
+    <comment>Tecla de atalho Diminuir Volume na tabela de atalhos</comment>
+  </data>
+  <data name="VolumeDownShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Atalho: Ctrl + Alt + Seta para Baixo</value>
+    <comment>Nome de automação da tecla de atalho Diminuir Volume</comment>
+  </data>
+  <data name="MuteFunction.Text" xml:space="preserve">
+    <value>Mudo/Desativar Mudo</value>
+    <comment>Função Mudo/Desativar Mudo na tabela de atalhos</comment>
+  </data>
+  <data name="MuteFunction.AutomationProperties.Name" xml:space="preserve">
+    <value>Função: Mudo/Desativar Mudo</value>
+    <comment>Nome de automação da função Mudo/Desativar Mudo</comment>
+  </data>
+  <data name="MuteShortcut.Text" xml:space="preserve">
+    <value>Ctrl + Alt + M</value>
+    <comment>Tecla de atalho Mudo/Desativar Mudo na tabela de atalhos</comment>
+  </data>
+  <data name="MuteShortcut.AutomationProperties.Name" xml:space="preserve">
+    <value>Atalho: Ctrl + Alt + M</value>
+    <comment>Nome de automação da tecla de atalho Mudo/Desativar Mudo</comment>
+  </data>
+  <data name="FontSettingsCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Configurações de tamanho de fonte</value>
+    <comment>Nome de automação do cartão de configurações de tamanho de fonte</comment>
+  </data>
+  <data name="FontSizeTitle.Text" xml:space="preserve">
+    <value>Tamanho da Fonte</value>
+    <comment>Título da seção de tamanho de fonte</comment>
+  </data>
+  <data name="FontSizeDescription.Text" xml:space="preserve">
+    <value>Ajuste o tamanho do texto para melhorar a legibilidade.</value>
+    <comment>Descrição das configurações de tamanho de fonte</comment>
+  </data>
+  <data name="FontSizeOptions.AutomationProperties.Name" xml:space="preserve">
+    <value>Opções de tamanho de fonte</value>
+    <comment>Grupo de botões de opções de tamanho de fonte</comment>
+  </data>
+  <data name="SmallFont.Content" xml:space="preserve">
+    <value>Pequeno</value>
+    <comment>Opção de tamanho de fonte pequeno</comment>
+  </data>
+  <data name="SmallFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Fonte pequena</value>
+    <comment>Nome de automação da opção de tamanho de fonte pequeno</comment>
+  </data>
+  <data name="MediumFont.Content" xml:space="preserve">
+    <value>Médio (padrão)</value>
+    <comment>Opção de tamanho de fonte médio</comment>
+  </data>
+  <data name="MediumFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Fonte média</value>
+    <comment>Nome de automação da opção de tamanho de fonte médio</comment>
+  </data>
+  <data name="LargeFont.Content" xml:space="preserve">
+    <value>Grande</value>
+    <comment>Opção de tamanho de fonte grande</comment>
+  </data>
+  <data name="LargeFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Fonte grande</value>
+    <comment>Nome de automação da opção de tamanho de fonte grande</comment>
+  </data>
+  <data name="ExtraLargeFont.Content" xml:space="preserve">
+    <value>Extra grande</value>
+    <comment>Opção de tamanho de fonte extra grande</comment>
+  </data>
+  <data name="ExtraLargeFont.AutomationProperties.Name" xml:space="preserve">
+    <value>Fonte extra grande</value>
+    <comment>Nome de automação da opção de tamanho de fonte extra grande</comment>
+  </data>
+  <data name="MainControlsPanel.AutomationProperties.Name" xml:space="preserve">
+    <value>Controles principais</value>
+    <comment>Nome de automação do painel de controles principais</comment>
+  </data>
+  <data name="AudioIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de áudio</value>
+    <comment>Nome de automação do ícone de áudio</comment>
+  </data>
+  <data name="MainPlayButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Reproduzir todos os sons</value>
+    <comment>Nome de automação do botão principal de reprodução</comment>
+  </data>
+  <data name="MainPlayButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Inicia ou pausa a reprodução de todos os sons ambientes</value>
+    <comment>Texto de ajuda de automação do botão principal de reprodução</comment>
+  </data>
+  <data name="LowVolumeIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume baixo</value>
+    <comment>Nome de automação do ícone de volume baixo</comment>
+  </data>
+  <data name="MainVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume principal</value>
+    <comment>Nome de automação do controle deslizante de volume principal</comment>
+  </data>
+  <data name="MainVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume para todos os sons</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume principal</comment>
+  </data>
+  <data name="HighVolumeIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume alto</value>
+    <comment>Nome de automação do ícone de volume alto</comment>
+  </data>
+  <data name="SetTimerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Definir timer</value>
+    <comment>Nome de automação do botão de definir timer</comment>
+  </data>
+  <data name="SetTimerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Configura um timer para parar automaticamente a reprodução</value>
+    <comment>Texto de ajuda de automação do botão de definir timer</comment>
+  </data>
+  <data name="SetTimerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Definir timer para parada automática</value>
+    <comment>Dica de ferramenta do botão de definir timer</comment>
+  </data>
+  
+  <!-- Textos para cartões de som na página inicial -->
+  <data name="RainTitle.Text" xml:space="preserve">
+    <value>Chuva</value>
+    <comment>Título para o cartão de som de chuva</comment>
+  </data>
+  <data name="BonfireTitle.Text" xml:space="preserve">
+    <value>Fogueira</value>
+    <comment>Título para o cartão de som de fogueira</comment>
+  </data>
+  <data name="MotorboatTitle.Text" xml:space="preserve">
+    <value>Lancha</value>
+    <comment>Título para o cartão de som de lancha</comment>
+  </data>
+  <data name="WavesTitle.Text" xml:space="preserve">
+    <value>Ondas</value>
+    <comment>Título para o cartão de som de ondas</comment>
+  </data>
+  <data name="BirdsTitle.Text" xml:space="preserve">
+    <value>Pássaros</value>
+    <comment>Título para o cartão de som de pássaros</comment>
+  </data>
+  <data name="BeachTitle.Text" xml:space="preserve">
+    <value>Praia</value>
+    <comment>Título para o cartão de som de praia</comment>
+  </data>
+  <data name="TrainTitle.Text" xml:space="preserve">
+    <value>Trem</value>
+    <comment>Título para o cartão de som de trem</comment>
+  </data>
+  <data name="WindTitle.Text" xml:space="preserve">
+    <value>Vento</value>
+    <comment>Título para o cartão de som de vento</comment>
+  </data>
+  <data name="CoffeeShopTitle.Text" xml:space="preserve">
+    <value>Cafeteria</value>
+    <comment>Título para o cartão de som de cafeteria</comment>
+  </data>
+  
+  <!-- Controles principais -->
+  <data name="SetTimerText.Text" xml:space="preserve">
+    <value>Definir Timer</value>
+    <comment>Texto para o botão de definir timer</comment>
+  </data>
+  <data name="CancelTimerButton.Content" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Texto para o botão de cancelar timer</comment>
+  </data>
+  
+  <!-- Sound cards -->
+  <data name="RainSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de chuva</value>
+    <comment>Nome de automação do cartão de som de chuva</comment>
+  </data>
+  <data name="RainIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de chuva</value>
+    <comment>Nome de automação do ícone de chuva</comment>
+  </data>
+  <data name="RainIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som de chuva caindo suavemente</value>
+    <comment>Texto de ajuda de automação do ícone de chuva</comment>
+  </data>
+  <data name="RainEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de chuva</value>
+    <comment>Nome de automação do botão de equalizar chuva</comment>
+  </data>
+  <data name="RainWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de chuva</value>
+    <comment>Nome de automação da forma de onda de chuva</comment>
+  </data>
+  <data name="RainVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume da chuva</value>
+    <comment>Nome de automação do controle deslizante de volume da chuva</comment>
+  </data>
+  <data name="RainVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de chuva</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume da chuva</comment>
+  </data>
+  
+  <!-- Bonfire sound card -->
+  <data name="BonfireSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de fogueira</value>
+    <comment>Nome de automação do cartão de som de fogueira</comment>
+  </data>
+  <data name="BonfireIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de fogueira</value>
+    <comment>Nome de automação do ícone de fogueira</comment>
+  </data>
+  <data name="BonfireIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som de madeira estalando enquanto queima</value>
+    <comment>Texto de ajuda de automação do ícone de fogueira</comment>
+  </data>
+  <data name="BonfireEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de fogueira</value>
+    <comment>Nome de automação do botão de equalizar fogueira</comment>
+  </data>
+  <data name="BonfireWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de fogueira</value>
+    <comment>Nome de automação da forma de onda de fogueira</comment>
+  </data>
+  <data name="BonfireVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume da fogueira</value>
+    <comment>Nome de automação do controle deslizante de volume da fogueira</comment>
+  </data>
+  <data name="BonfireVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de fogueira</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume da fogueira</comment>
+  </data>
+  
+  <!-- Motorboat sound card -->
+  <data name="MotorboatSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de lancha</value>
+    <comment>Nome de automação do cartão de som de lancha</comment>
+  </data>
+  <data name="MotorboatIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de lancha</value>
+    <comment>Nome de automação do ícone de lancha</comment>
+  </data>
+  <data name="MotorboatIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som do motor de lancha</value>
+    <comment>Texto de ajuda de automação do ícone de lancha</comment>
+  </data>
+  <data name="MotorboatEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de lancha</value>
+    <comment>Nome de automação do botão de equalizar lancha</comment>
+  </data>
+  <data name="MotorboatWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de lancha</value>
+    <comment>Nome de automação da forma de onda de lancha</comment>
+  </data>
+  <data name="MotorboatVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume da lancha</value>
+    <comment>Nome de automação do controle deslizante de volume da lancha</comment>
+  </data>
+  <data name="MotorboatVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de lancha</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume da lancha</comment>
+  </data>
+  
+  <!-- Waves sound card -->
+  <data name="WavesSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de ondas</value>
+    <comment>Nome de automação do cartão de som de ondas</comment>
+  </data>
+  <data name="WavesIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de ondas</value>
+    <comment>Nome de automação do ícone de ondas</comment>
+  </data>
+  <data name="WavesIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som de ondas do oceano quebrando</value>
+    <comment>Texto de ajuda de automação do ícone de ondas</comment>
+  </data>
+  <data name="WavesEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de ondas</value>
+    <comment>Nome de automação do botão de equalizar ondas</comment>
+  </data>
+  <data name="WavesWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de ondas</value>
+    <comment>Nome de automação da forma de onda de ondas</comment>
+  </data>
+  <data name="WavesVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume das ondas</value>
+    <comment>Nome de automação do controle deslizante de volume das ondas</comment>
+  </data>
+  <data name="WavesVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de ondas</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume das ondas</comment>
+  </data>
+  
+  <!-- Birds sound card -->
+  <data name="BirdsSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de pássaros</value>
+    <comment>Nome de automação do cartão de som de pássaros</comment>
+  </data>
+  <data name="BirdsIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de pássaros</value>
+    <comment>Nome de automação do ícone de pássaros</comment>
+  </data>
+  <data name="BirdsIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som de vários pássaros cantando</value>
+    <comment>Texto de ajuda de automação do ícone de pássaros</comment>
+  </data>
+  <data name="BirdsEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de pássaros</value>
+    <comment>Nome de automação do botão de equalizar pássaros</comment>
+  </data>
+  <data name="BirdsWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de pássaros</value>
+    <comment>Nome de automação da forma de onda de pássaros</comment>
+  </data>
+  <data name="BirdsVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume dos pássaros</value>
+    <comment>Nome de automação do controle deslizante de volume dos pássaros</comment>
+  </data>
+  <data name="BirdsVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de pássaros</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume dos pássaros</comment>
+  </data>
+  
+  <!-- Beach sound card -->
+  <data name="BeachSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de praia</value>
+    <comment>Nome de automação do cartão de som de praia</comment>
+  </data>
+  <data name="BeachIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de praia</value>
+    <comment>Nome de automação do ícone de praia</comment>
+  </data>
+  <data name="BeachIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som ambiente de praia</value>
+    <comment>Texto de ajuda de automação do ícone de praia</comment>
+  </data>
+  <data name="BeachEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de praia</value>
+    <comment>Nome de automação do botão de equalizar praia</comment>
+  </data>
+  <data name="BeachWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de praia</value>
+    <comment>Nome de automação da forma de onda de praia</comment>
+  </data>
+  <data name="BeachVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume da praia</value>
+    <comment>Nome de automação do controle deslizante de volume da praia</comment>
+  </data>
+  <data name="BeachVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de praia</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume da praia</comment>
+  </data>
+  
+  <!-- Train sound card -->
+  <data name="TrainSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de trem</value>
+    <comment>Nome de automação do cartão de som de trem</comment>
+  </data>
+  <data name="TrainIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de trem</value>
+    <comment>Nome de automação do ícone de trem</comment>
+  </data>
+  <data name="TrainIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som de trem em movimento</value>
+    <comment>Texto de ajuda de automação do ícone de trem</comment>
+  </data>
+  <data name="TrainEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de trem</value>
+    <comment>Nome de automação do botão de equalizar trem</comment>
+  </data>
+  <data name="TrainWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de trem</value>
+    <comment>Nome de automação da forma de onda de trem</comment>
+  </data>
+  <data name="TrainVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume do trem</value>
+    <comment>Nome de automação do controle deslizante de volume do trem</comment>
+  </data>
+  <data name="TrainVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de trem</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume do trem</comment>
+  </data>
+  
+  <!-- Wind sound card -->
+  <data name="WindSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de vento</value>
+    <comment>Nome de automação do cartão de som de vento</comment>
+  </data>
+  <data name="WindIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de vento</value>
+    <comment>Nome de automação do ícone de vento</comment>
+  </data>
+  <data name="WindIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som de vento soprando</value>
+    <comment>Texto de ajuda de automação do ícone de vento</comment>
+  </data>
+  <data name="WindEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de vento</value>
+    <comment>Nome de automação do botão de equalizar vento</comment>
+  </data>
+  <data name="WindWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de vento</value>
+    <comment>Nome de automação da forma de onda de vento</comment>
+  </data>
+  <data name="WindVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume do vento</value>
+    <comment>Nome de automação do controle deslizante de volume do vento</comment>
+  </data>
+  <data name="WindVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de vento</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume do vento</comment>
+  </data>
+  
+  <!-- Coffee Shop sound card -->
+  <data name="CoffeeShopSoundCard.AutomationProperties.Name" xml:space="preserve">
+    <value>Cartão de som de cafeteria</value>
+    <comment>Nome de automação do cartão de som de cafeteria</comment>
+  </data>
+  <data name="CoffeeShopIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone de cafeteria</value>
+    <comment>Nome de automação do ícone de cafeteria</comment>
+  </data>
+  <data name="CoffeeShopIcon.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Som ambiente de cafeteria</value>
+    <comment>Texto de ajuda de automação do ícone de cafeteria</comment>
+  </data>
+  <data name="CoffeeShopEqualizeButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Equalizar som de cafeteria</value>
+    <comment>Nome de automação do botão de equalizar cafeteria</comment>
+  </data>
+  <data name="CoffeeShopWaveform.AutomationProperties.Name" xml:space="preserve">
+    <value>Visualização da forma de onda do som de cafeteria</value>
+    <comment>Nome de automação da forma de onda de cafeteria</comment>
+  </data>
+  <data name="CoffeeShopVolumeSlider.AutomationProperties.Name" xml:space="preserve">
+    <value>Volume da cafeteria</value>
+    <comment>Nome de automação do controle deslizante de volume da cafeteria</comment>
+  </data>
+  <data name="CoffeeShopVolumeSlider.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ajusta o volume do som de cafeteria</value>
+    <comment>Texto de ajuda de automação do controle deslizante de volume da cafeteria</comment>
+  </data>
+  
+  <!-- Strings for Equalizer and Effects page -->
+  <data name="EqualizerEffectsTitle.Text" xml:space="preserve">
+    <value>Equalizador e Efeitos</value>
+    <comment>Título da página de equalizador e efeitos</comment>
+  </data>
+  <data name="BackButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Voltar para a página anterior</value>
+    <comment>Texto de acessibilidade para o botão voltar</comment>
+  </data>
+  <data name="SelectedSoundName.AutomationProperties.HeadingLevel" xml:space="preserve">
+    <value>Level2</value>
+    <comment>Nível de título para o nome do som selecionado</comment>
+  </data>
+  <data name="EqualizerInfoBar.AutomationProperties.LiveSetting" xml:space="preserve">
+    <value>Assertive</value>
+    <comment>Configuração de leitor de tela para a barra de informações</comment>
+  </data>
+  <data name="EqualizerInfoBar.Title" xml:space="preserve">
+    <value>Informação</value>
+    <comment>Título para a barra de informações do equalizador</comment>
+  </data>
+  <data name="EqualizerSection.Header" xml:space="preserve">
+    <value>Equalização</value>
+    <comment>Título para a seção de equalização</comment>
+  </data>
+  <data name="EqualizerSection.AutomationProperties.Name" xml:space="preserve">
+    <value>Seção de equalização</value>
+    <comment>Texto de acessibilidade para a seção de equalização</comment>
+  </data>
+  <data name="EqualizerToggleSwitch.Header" xml:space="preserve">
+    <value>Habilitar Equalização</value>
+    <comment>Texto para o botão de ativar/desativar equalização</comment>
+  </data>
+  <data name="EqualizerToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilita ou desabilita o equalizador de áudio</value>
+    <comment>Texto de ajuda de acessibilidade para o botão de alternância de equalização</comment>
+  </data>
+  <data name="LowBandLabel.Text" xml:space="preserve">
+    <value>Baixa (100 Hz)</value>
+    <comment>Texto do rótulo para a banda de frequência baixa</comment>
+  </data>
+  <data name="MidBandLabel.Text" xml:space="preserve">
+    <value>Média (1 kHz)</value>
+    <comment>Texto do rótulo para a banda de frequência média</comment>
+  </data>
+  <data name="HighBandLabel.Text" xml:space="preserve">
+    <value>Alta (8 kHz)</value>
+    <comment>Texto do rótulo para a banda de frequência alta</comment>
+  </data>
+  <data name="ResetEqualizerButton.Content" xml:space="preserve">
+    <value>Resetar Equalização</value>
+    <comment>Texto para o botão de resetar equalização</comment>
+  </data>
+  <data name="ResetEqualizerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Resetar equalização</value>
+    <comment>Texto de acessibilidade para o botão de resetar equalização</comment>
+  </data>
+  <data name="ResetEqualizerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Restaura todos os valores do equalizador para zero</value>
+    <comment>Texto de ajuda de acessibilidade para o botão de resetar equalização</comment>
+  </data>
+  <data name="TestEqualizerButton.Content" xml:space="preserve">
+    <value>Teste de Diagnóstico</value>
+    <comment>Texto para o botão de teste de diagnóstico</comment>
+  </data>
+  <data name="TestEqualizerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Teste de diagnóstico</value>
+    <comment>Texto de acessibilidade para o botão de teste de diagnóstico</comment>
+  </data>
+  <data name="TestEqualizerButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplica uma configuração de teste extrema para verificar se o equalizador está funcionando</value>
+    <comment>Dica para o botão de teste de diagnóstico</comment>
+  </data>
+  <data name="SoundEffectsSection.Header" xml:space="preserve">
+    <value>Efeitos Sonoros</value>
+    <comment>Título para a seção de efeitos sonoros</comment>
+  </data>
+  <data name="SoundEffectsSection.AutomationProperties.Name" xml:space="preserve">
+    <value>Seção de efeitos sonoros</value>
+    <comment>Texto de acessibilidade para a seção de efeitos sonoros</comment>
+  </data>
+  <data name="EffectsToggleSwitch.Header" xml:space="preserve">
+    <value>Habilitar Efeitos</value>
+    <comment>Texto para o botão de ativar/desativar efeitos</comment>
+  </data>
+  <data name="EffectsToggleSwitch.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Habilita ou desabilita efeitos sonoros para o som selecionado</value>
+    <comment>Texto de ajuda de acessibilidade para o botão de alternância de efeitos</comment>
+  </data>
+  <data name="EffectTypeLabel.Text" xml:space="preserve">
+    <value>Tipo de Efeito</value>
+    <comment>Rótulo para seleção do tipo de efeito</comment>
+  </data>
+  <data name="EffectTypeComboBox.AutomationProperties.Name" xml:space="preserve">
+    <value>Tipo de efeito sonoro</value>
+    <comment>Texto de acessibilidade para a caixa de seleção do tipo de efeito</comment>
+  </data>
+  <data name="EffectTypeComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Selecione o tipo de efeito a ser aplicado</value>
+    <comment>Texto de ajuda de acessibilidade para a caixa de seleção do tipo de efeito</comment>
+  </data>
+  <data name="ReverbSectionTitle.Text" xml:space="preserve">
+    <value>Reverberação</value>
+    <comment>Título para a seção de reverberação</comment>
+  </data>
+  <data name="ReverbMixLabel.Text" xml:space="preserve">
+    <value>Mix</value>
+    <comment>Rótulo para o controle de mix de reverberação</comment>
+  </data>
+  <data name="ReverbTimeLabel.Text" xml:space="preserve">
+    <value>Tempo</value>
+    <comment>Rótulo para o controle de tempo de reverberação</comment>
+  </data>
+  <data name="PitchSectionTitle.Text" xml:space="preserve">
+    <value>Ajuste de Pitch</value>
+    <comment>Título para a seção de ajuste de pitch</comment>
+  </data>
+  <data name="EchoSectionTitle.Text" xml:space="preserve">
+    <value>Eco</value>
+    <comment>Título para a seção de eco</comment>
+  </data>
+  
+  <!-- Strings for About page -->
+  <data name="AboutPageTitle.Text" xml:space="preserve">
+    <value>Sobre o Fulcrum</value>
+    <comment>Título da página Sobre</comment>
+  </data>
+  <data name="AboutVersion.Text" xml:space="preserve">
+    <value>Versão {0}</value>
+    <comment>Informações da versão do aplicativo</comment>
+  </data>
+  <data name="AboutDescription.Text" xml:space="preserve">
+    <value>TECNOLOGIA DE ÁUDIO PREMIUM</value>
+    <comment>Descrição curta do aplicativo na página Sobre</comment>
   </data>
 </root>

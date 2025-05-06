@@ -62,7 +62,13 @@ public sealed partial class MainWindow : Window
     /// </summary>
     public MainWindow()
     {
-        this.InitializeComponent();
+        InitializeComponent();
+        
+        // Aplica o idioma preferido do sistema
+        ApplySystemLanguage();
+        
+        // Inicializa o AudioManager
+        InitializeAudioManager();
 
         // Configuração da janela
         ExtendsContentIntoTitleBar = true;
@@ -147,6 +153,23 @@ public sealed partial class MainWindow : Window
             AudioManager.Instance.InitializePlayers(0.0);
             _audioInitialized = true;
             System.Diagnostics.Debug.WriteLine("Reprodutores de áudio inicializados com volume zero");
+        }
+    }
+
+    /// <summary>
+    /// Inicializa o gerenciador de áudio central do aplicativo
+    /// </summary>
+    private void InitializeAudioManager()
+    {
+        try
+        {
+            // Obtém a instância do AudioManager (Singleton)
+            var audioManager = AudioManager.Instance;
+            System.Diagnostics.Debug.WriteLine("AudioManager inicializado com sucesso");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erro ao inicializar AudioManager: {ex.Message}");
         }
     }
 
@@ -577,6 +600,37 @@ public sealed partial class MainWindow : Window
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao configurar acessibilidade da SettingsPage: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Aplica o idioma do sistema ao aplicativo
+    /// </summary>
+    private void ApplySystemLanguage()
+    {
+        try
+        {
+            // Obtém o idioma preferido do usuário
+            string currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
+            
+            // Se não for português ou inglês, usa o inglês como padrão
+            if (!currentLanguage.StartsWith("pt") && !currentLanguage.StartsWith("en"))
+            {
+                currentLanguage = "en-US";
+            }
+            else if (currentLanguage.StartsWith("pt"))
+            {
+                currentLanguage = "pt-BR";
+            }
+            
+            // Define o idioma para a aplicação
+            Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = currentLanguage;
+            
+            System.Diagnostics.Debug.WriteLine($"[IDIOMA] Aplicando idioma: {currentLanguage}");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[IDIOMA] Erro ao aplicar idioma: {ex.Message}");
         }
     }
 }
