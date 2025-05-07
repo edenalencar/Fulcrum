@@ -747,11 +747,9 @@
                            Padding="32,18" Margin="0,60,0,0" HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal" Spacing="12">
                             <FontIcon Glyph="&#xE946;" FontSize="18" Opacity="0.7" VerticalAlignment="Center"/>
-                            <TextBlock x:Name="txtDireitos" Text="© 2025 Éden Alencar" Style="{StaticResource CaptionTextBlockStyle}" 
-                                      FontSize="13" VerticalAlignment="Center" Opacity="0.8"/>
-                            <TextBlock Text="•" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" Opacity="0.6"/>
-                            <TextBlock Text="Todos os direitos reservados" Style="{StaticResource CaptionTextBlockStyle}" 
-                                      FontSize="13" VerticalAlignment="Center" Opacity="0.8"/>
+                            <TextBlock x:Name="txtDireitos" x:Uid="Rights" 
+                                      FontSize="13" VerticalAlignment="Center" Opacity="0.8"
+                                      Style="{StaticResource CaptionTextBlockStyle}"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

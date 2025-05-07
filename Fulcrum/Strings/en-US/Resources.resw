@@ -927,4 +927,96 @@
     <value>PREMIUM AUDIO TECHNOLOGY</value>
     <comment>Short description of the app on the About page</comment>
   </data>
+  
+  <!-- Strings para o menu lateral -->
+  <data name="AppTitle.Text" xml:space="preserve">
+    <value>Fulcrum - Ambient Sounds</value>
+    <comment>Application title in the title bar</comment>
+  </data>
+  <data name="HomeMenuItem.Content" xml:space="preserve">
+    <value>Home</value>
+    <comment>Home menu item text</comment>
+  </data>
+  <data name="HomeMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Home - Control sounds</value>
+    <comment>Home menu item tooltip</comment>
+  </data>
+  <data name="ProfilesMenuItem.Content" xml:space="preserve">
+    <value>Sound Profiles</value>
+    <comment>Sound profiles menu item text</comment>
+  </data>
+  <data name="ProfilesMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Manage sound profiles</value>
+    <comment>Sound profiles menu item tooltip</comment>
+  </data>
+  <data name="SettingsMenuItem.Content" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Settings menu item text</comment>
+  </data>
+  <data name="SettingsMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configure the application</value>
+    <comment>Settings menu item tooltip</comment>
+  </data>
+  <data name="AboutMenuItem.Content" xml:space="preserve">
+    <value>About</value>
+    <comment>About menu item text</comment>
+  </data>
+  <data name="AboutMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Information about the application</value>
+    <comment>About menu item tooltip</comment>
+  </data>
+  
+  <!-- Strings para a página de Perfis -->
+  <data name="ProfilesPageTitle.Text" xml:space="preserve">
+    <value>Sound Profiles</value>
+    <comment>Profiles page title</comment>
+  </data>
+  <data name="ProfilesPageDescription.Text" xml:space="preserve">
+    <value>Create, manage and apply custom sound settings</value>
+    <comment>Profiles page description</comment>
+  </data>
+  <data name="ProfileHeaderText.Text" xml:space="preserve">
+    <value>Your Profiles</value>
+    <comment>Text for profile list header</comment>
+  </data>
+  <data name="ProfileDetailsText.Text" xml:space="preserve">
+    <value>Profile Details</value>
+    <comment>Text for profile details section</comment>
+  </data>
+  <data name="SelectProfileInfoBar.Title" xml:space="preserve">
+    <value>Select a profile</value>
+    <comment>Info bar title when no profile is selected</comment>
+  </data>
+  <data name="SelectProfileInfoBar.Message" xml:space="preserve">
+    <value>Select a profile from the list on the left to view its details.</value>
+    <comment>Info bar message when no profile is selected</comment>
+  </data>
+  <data name="SoundConfigurationsText.Text" xml:space="preserve">
+    <value>Sound Settings</value>
+    <comment>Text for sound configurations section</comment>
+  </data>
+  <data name="NoActiveProfileText.Text" xml:space="preserve">
+    <value>No active profile</value>
+    <comment>Text shown when no profile is active</comment>
+  </data>
+  <data name="ActiveText.Text" xml:space="preserve">
+    <value>ACTIVE</value>
+    <comment>Text shown for the active profile indicator</comment>
+  </data>
+  <data name="ConfigurationInfoText.Text" xml:space="preserve">
+    <value>Select a profile to view sound settings</value>
+    <comment>Text shown when no configuration info is available</comment>
+  </data>
+  <data name="NewProfileButton.Label" xml:space="preserve">
+    <value>New Profile</value>
+    <comment>Label for new profile button</comment>
+  </data>
+  <data name="ApplyProfileButton.Label" xml:space="preserve">
+    <value>Apply Profile</value>
+    <comment>Label for apply profile button</comment>
+  </data>
+  <data name="DeleteProfileButton.Label" xml:space="preserve">
+    <value>Delete Profile</value>
+    <comment>Label for delete profile button</comment>
+  </data>
 </root>

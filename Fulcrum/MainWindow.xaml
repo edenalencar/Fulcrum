@@ -39,7 +39,7 @@
             <Image Source="/Assets/StoreLogo.png" Width="24" Height="24" Margin="16,0,0,0" 
                    VerticalAlignment="Center" HorizontalAlignment="Left"/>
                    
-            <TextBlock Grid.Column="1" Text="Fulcrum - Sons Ambientes" 
+            <TextBlock Grid.Column="1" x:Uid="AppTitle"
                        Style="{StaticResource CaptionTextBlockStyle}"
                        FontWeight="SemiBold" VerticalAlignment="Center" Margin="12,0,0,0"
                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
@@ -57,22 +57,22 @@
                         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                         SelectionChanged="NavigationView_SelectionChanged">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Início" Tag="home" ToolTipService.ToolTip="Início - Controlar sons" Style="{StaticResource NavigationViewItemStyle}" IsSelected="True">
+                <NavigationViewItem x:Uid="HomeMenuItem" Tag="home" Style="{StaticResource NavigationViewItemStyle}" IsSelected="True">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE80F;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Perfis de Som" Tag="perfis" ToolTipService.ToolTip="Gerenciar perfis de som" Style="{StaticResource NavigationViewItemStyle}">
+                <NavigationViewItem x:Uid="ProfilesMenuItem" Tag="perfis" Style="{StaticResource NavigationViewItemStyle}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Configurações" Tag="settings" ToolTipService.ToolTip="Configurar o aplicativo" Style="{StaticResource NavigationViewItemStyle}">
+                <NavigationViewItem x:Uid="SettingsMenuItem" Tag="settings" Style="{StaticResource NavigationViewItemStyle}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE713;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Sobre" Tag="sobre" ToolTipService.ToolTip="Informações sobre o aplicativo" Style="{StaticResource NavigationViewItemStyle}">
+                <NavigationViewItem x:Uid="AboutMenuItem" Tag="sobre" Style="{StaticResource NavigationViewItemStyle}">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE946;"/>
                     </NavigationViewItem.Icon>

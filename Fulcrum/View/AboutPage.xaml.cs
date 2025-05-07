@@ -24,9 +24,17 @@ public sealed partial class AboutPage : Page
     /// </summary>
     private void AboutPage_Loaded(object sender, RoutedEventArgs e)
     {
-        // Preenche informações dinâmicas
+        // Preenche informações dinâmicas com texto localizado
         var appVersion = GetAppVersion();
-        txtVersion.Text = $"Versão {appVersion}";
+        
+        // Carrega a string de recursos formatada com a versão do aplicativo
+        var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+        string versionTextFormat = loader.GetString("AboutVersion/Text");
+        txtVersion.Text = string.Format(versionTextFormat, appVersion);
+        
+        // Atualiza o texto de direitos autorais com o ano atual
+        string rightsTextFormat = loader.GetString("Rights/Text");
+        txtDireitos.Text = string.Format(rightsTextFormat, DateTime.Now.Year);
     }
 
     /// <summary>

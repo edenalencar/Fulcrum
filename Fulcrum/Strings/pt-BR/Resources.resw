@@ -931,4 +931,96 @@
     <value>TECNOLOGIA DE ÁUDIO PREMIUM</value>
     <comment>Descrição curta do aplicativo na página Sobre</comment>
   </data>
+
+  <!-- Strings para o menu lateral -->
+  <data name="AppTitle.Text" xml:space="preserve">
+    <value>Fulcrum - Sons Ambientes</value>
+    <comment>Título da aplicação na barra de título</comment>
+  </data>
+  <data name="HomeMenuItem.Content" xml:space="preserve">
+    <value>Início</value>
+    <comment>Texto do item de menu Início</comment>
+  </data>
+  <data name="HomeMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Início - Controlar sons</value>
+    <comment>Dica do item de menu Início</comment>
+  </data>
+  <data name="ProfilesMenuItem.Content" xml:space="preserve">
+    <value>Perfis de Som</value>
+    <comment>Texto do item de menu Perfis de Som</comment>
+  </data>
+  <data name="ProfilesMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gerenciar perfis de som</value>
+    <comment>Dica do item de menu Perfis de Som</comment>
+  </data>
+  <data name="SettingsMenuItem.Content" xml:space="preserve">
+    <value>Configurações</value>
+    <comment>Texto do item de menu Configurações</comment>
+  </data>
+  <data name="SettingsMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configurar o aplicativo</value>
+    <comment>Dica do item de menu Configurações</comment>
+  </data>
+  <data name="AboutMenuItem.Content" xml:space="preserve">
+    <value>Sobre</value>
+    <comment>Texto do item de menu Sobre</comment>
+  </data>
+  <data name="AboutMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Informações sobre o aplicativo</value>
+    <comment>Dica do item de menu Sobre</comment>
+  </data>
+
+  <!-- Strings para a página de Perfis -->
+  <data name="ProfilesPageTitle.Text" xml:space="preserve">
+    <value>Perfis de Sons</value>
+    <comment>Título da página de Perfis</comment>
+  </data>
+  <data name="ProfilesPageDescription.Text" xml:space="preserve">
+    <value>Crie, gerencie e aplique configurações personalizadas de sons</value>
+    <comment>Descrição da página de Perfis</comment>
+  </data>
+  <data name="ProfileHeaderText.Text" xml:space="preserve">
+    <value>Seus Perfis</value>
+    <comment>Texto para o cabeçalho da lista de perfis</comment>
+  </data>
+  <data name="ProfileDetailsText.Text" xml:space="preserve">
+    <value>Detalhes do Perfil</value>
+    <comment>Texto para a seção de detalhes do perfil</comment>
+  </data>
+  <data name="SelectProfileInfoBar.Title" xml:space="preserve">
+    <value>Selecione um perfil</value>
+    <comment>Título da barra de informações quando nenhum perfil está selecionado</comment>
+  </data>
+  <data name="SelectProfileInfoBar.Message" xml:space="preserve">
+    <value>Selecione um perfil na lista à esquerda para ver seus detalhes.</value>
+    <comment>Mensagem da barra de informações quando nenhum perfil está selecionado</comment>
+  </data>
+  <data name="SoundConfigurationsText.Text" xml:space="preserve">
+    <value>Configurações de Som</value>
+    <comment>Texto para a seção de configurações de som</comment>
+  </data>
+  <data name="NoActiveProfileText.Text" xml:space="preserve">
+    <value>Nenhum perfil ativo</value>
+    <comment>Texto mostrado quando nenhum perfil está ativo</comment>
+  </data>
+  <data name="ActiveText.Text" xml:space="preserve">
+    <value>ATIVO</value>
+    <comment>Texto mostrado para o indicador de perfil ativo</comment>
+  </data>
+  <data name="ConfigurationInfoText.Text" xml:space="preserve">
+    <value>Selecione um perfil para ver as configurações de som</value>
+    <comment>Texto mostrado quando nenhuma informação de configuração está disponível</comment>
+  </data>
+  <data name="NewProfileButton.Label" xml:space="preserve">
+    <value>Novo Perfil</value>
+    <comment>Rótulo para o botão novo perfil</comment>
+  </data>
+  <data name="ApplyProfileButton.Label" xml:space="preserve">
+    <value>Aplicar Perfil</value>
+    <comment>Rótulo para o botão aplicar perfil</comment>
+  </data>
+  <data name="DeleteProfileButton.Label" xml:space="preserve">
+    <value>Remover Perfil</value>
+    <comment>Rótulo para o botão remover perfil</comment>
+  </data>
 </root>
