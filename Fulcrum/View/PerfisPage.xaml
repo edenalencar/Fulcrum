@@ -13,7 +13,7 @@
         <converters:DateConverter x:Key="DateFormatConverter" />
         
         <!-- Conversor para visibilidade do indicador de perfil ativo -->
-        <local:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Page.Resources>
 
     <Grid Margin="20">

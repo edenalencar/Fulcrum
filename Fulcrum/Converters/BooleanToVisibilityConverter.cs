@@ -1,7 +1,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
 
-namespace Fulcrum.View;
+namespace Fulcrum.Converters;
 
 /// <summary>
 /// Converte um valor booleano para visibilidade (Visible se verdadeiro, Collapsed se falso)
