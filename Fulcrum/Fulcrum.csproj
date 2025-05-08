@@ -15,6 +15,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <WindowsAppSDKSelfContainedOnly>true</WindowsAppSDKSelfContainedOnly>
+    <WindowsAppSdkDefaultSelfContainedArch>x64</WindowsAppSdkDefaultSelfContainedArch>
     <!-- Configurações XAML -->
     <EnableDefaultXamlItems>false</EnableDefaultXamlItems>
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
@@ -187,4 +189,11 @@
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
   </PropertyGroup>
+  
+  <!-- Target para limpar arquivos intermediários durante o build -->
+  <Target Name="CleanIntermediates" BeforeTargets="Clean">
+    <RemoveDir Directories="$(BaseIntermediateOutputPath)" />
+    <RemoveDir Directories="$(BaseOutputPath)" />
+    <Message Text="Arquivos intermediários limpos com sucesso" Importance="high" />
+  </Target>
 </Project>
