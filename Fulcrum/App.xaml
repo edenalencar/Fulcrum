@@ -229,11 +229,10 @@
                     <CornerRadius x:Key="DefaultCornerRadius">8</CornerRadius>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            
-            <!-- Conversores -->
+              <!-- Conversores -->
             <converters:DateConverter x:Key="DateConverter"/>
             <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-            <view:VolumePercentageConverter x:Key="VolumePercentageConverter"/>
+            <converters:VolumePercentageConverter x:Key="VolumePercentageConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

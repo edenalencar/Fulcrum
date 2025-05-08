@@ -1,18 +1,16 @@
 <Page
-    x:Class="Fulcrum.View.PerfisPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    x:Class="Fulcrum.View.PerfisPage"    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Fulcrum.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:bu="using:Fulcrum.Bu"
+    xmlns:converters="using:Fulcrum.Converters"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Page.Resources>
-        <local:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-        <local:DateFormatConverter x:Key="DateFormatConverter"/>
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">    <Page.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <converters:DateConverter x:Key="DateFormatConverter" />
         
         <!-- Conversor para visibilidade do indicador de perfil ativo -->
         <local:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
