@@ -174,7 +174,7 @@
                             TabIndex="1">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xE916;" Margin="0,0,8,0"/>
-                            <TextBlock x:Uid="SetTimerText"/>
+                            <TextBlock x:Name="TimerButtonText" x:Uid="SetTimerText"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>

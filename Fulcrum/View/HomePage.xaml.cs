@@ -771,13 +771,45 @@ public sealed partial class HomePage : Page
             {
                 timerDisplay.Text = SleepTimerService.Instance.GetFormattedTimeRemaining();
                 timerContainer.Visibility = Visibility.Visible;
-                SetSleepTimerButton.Content = "Alterar Timer";
+                
+                // Usa o MRT Core (Microsoft.Windows.ApplicationModel.Resources) para carregar recursos
+                try
+                {
+                    // Instancia o ResourceLoader do Windows App SDK
+                    var resourceLoader = new Microsoft.Windows.ApplicationModel.Resources.ResourceLoader();
+                    // Correção: use apenas o nome base do recurso, sem o sufixo .Text
+                    string changeTimerText = resourceLoader.GetString("ChangeTimerText");
+                    SetSleepTimerButton.Content = string.IsNullOrEmpty(changeTimerText) ? "Alterar Timer" : changeTimerText;
+                }
+                catch (Exception ex)
+                {
+                    // Em caso de falha, usa texto padrão em português
+                    SetSleepTimerButton.Content = "Alterar Timer";
+                    System.Diagnostics.Debug.WriteLine($"Erro ao acessar recurso localizado: {ex.Message}");
+                }
+                
                 cancelTimerButton.Visibility = Visibility.Visible;
             }
             else
             {
                 timerContainer.Visibility = Visibility.Collapsed;
-                SetSleepTimerButton.Content = "Definir Timer";
+                
+                // Usa o MRT Core (Microsoft.Windows.ApplicationModel.Resources) para carregar recursos
+                try
+                {
+                    // Instancia o ResourceLoader do Windows App SDK
+                    var resourceLoader = new Microsoft.Windows.ApplicationModel.Resources.ResourceLoader();
+                    // Correção: use apenas o nome base do recurso, sem o sufixo .Text
+                    string setTimerText = resourceLoader.GetString("SetTimerText/Text");
+                    SetSleepTimerButton.Content = string.IsNullOrEmpty(setTimerText) ? "Definir Timer" : setTimerText;
+                }
+                catch (Exception ex)
+                {
+                    // Em caso de falha, usa texto padrão em português
+                    SetSleepTimerButton.Content = "Definir Timer";
+                    System.Diagnostics.Debug.WriteLine($"Erro ao acessar recurso localizado: {ex.Message}");
+                }
+                
                 cancelTimerButton.Visibility = Visibility.Collapsed;
             }
         });

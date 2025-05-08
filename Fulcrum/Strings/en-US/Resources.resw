@@ -202,8 +202,8 @@
     <comment>Sound of Rain</comment>
   </data>
   <data name="Rights.Text" xml:space="preserve">
-    <value>@{0} Éden Alencar. All rights reserved</value>
-    <comment>Right about app</comment>
+    <value>© {0} Fulcrum App Official. All rights reserved.</value>
+    <comment>Copyright information with year placeholder</comment>
   </data>
   <data name="Settings.Text" xml:space="preserve">
     <value>Settings</value>
@@ -477,13 +477,37 @@
     <value>Set timer for automatic stop</value>
     <comment>Set timer button tooltip</comment>
   </data>
+  <data name="ChangeTimerText" xml:space="preserve">
+    <value>Change Timer</value>
+    <comment>Text for change timer button when timer is active</comment>
+  </data>
   <data name="SetTimerText.Text" xml:space="preserve">
     <value>Set Timer</value>
-    <comment>Text for set timer button</comment>
+    <comment>Text for set timer button when timer is not active</comment>
   </data>
   <data name="CancelTimerButton.Content" xml:space="preserve">
     <value>Cancel</value>
-    <comment>Text for cancel timer button</comment>
+    <comment>Text for the cancel timer button</comment>
+  </data>
+  <data name="TimerCompletedTitle" xml:space="preserve">
+    <value>Timer completed</value>
+    <comment>Title of notification when timer is completed</comment>
+  </data>
+  <data name="TimerCompletedMessage" xml:space="preserve">
+    <value>The sleep timer has ended. All sounds have been paused.</value>
+    <comment>Message of notification when timer is completed</comment>
+  </data>
+  <data name="SleepTimerDialogTitle" xml:space="preserve">
+    <value>Sleep Timer</value>
+    <comment>Title of sleep timer configuration dialog</comment>
+  </data>
+  <data name="ConfirmButtonText" xml:space="preserve">
+    <value>Confirm</value>
+    <comment>Text for confirmation button in dialogs</comment>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text for cancellation button in dialogs</comment>
   </data>
   
   <!-- Sound cards -->
@@ -927,6 +951,54 @@
     <value>PREMIUM AUDIO TECHNOLOGY</value>
     <comment>Short description of the app on the About page</comment>
   </data>
+  <data name="SourceCodeButton.Content" xml:space="preserve">
+    <value>View Source Code</value>
+    <comment>Text for the source code button</comment>
+  </data>
+  <data name="ReportIssueButton.Content" xml:space="preserve">
+    <value>Report Issue</value>
+    <comment>Text for the report issue button</comment>
+  </data>
+  <data name="RateAppButton.Content" xml:space="preserve">
+    <value>Rate in Microsoft Store</value>
+    <comment>Text for the rate app button</comment>
+  </data>
+  <data name="ContactButton.Content" xml:space="preserve">
+    <value>Contact Us</value>
+    <comment>Text for the contact button</comment>
+  </data>
+  <data name="FeaturesTitle.Text" xml:space="preserve">
+    <value>Key Features</value>
+    <comment>Title for the features section</comment>
+  </data>
+  <data name="TechnologiesTitle.Text" xml:space="preserve">
+    <value>Technologies</value>
+    <comment>Title for the technologies section</comment>
+  </data>
+  <data name="AboutAbout.Text" xml:space="preserve">
+    <value>About Fulcrum</value>
+    <comment>Title of About section on About page</comment>
+  </data>
+  <data name="AboutSectionTitle.Text" xml:space="preserve">
+    <value>About Fulcrum</value>
+    <comment>Title of About section on About page (alternate key)</comment>
+  </data>
+  <data name="AboutIntroP1.Text" xml:space="preserve">
+    <value>Fulcrum is a premium ambient sound player meticulously designed to transform your focus, relaxation and productivity experience. Developed with precision to provide a truly immersive atmosphere, Fulcrum allows you to transcend everyday noise and find your perfect sound balance.</value>
+    <comment>First paragraph of app description</comment>
+  </data>
+  <data name="AboutText1.Text" xml:space="preserve">
+    <value>Fulcrum is a premium ambient sound player meticulously designed to transform your focus, relaxation and productivity experience. Developed with precision to provide a truly immersive atmosphere, Fulcrum allows you to transcend everyday noise and find your perfect sound balance.</value>
+    <comment>First paragraph of app description (alternate key)</comment>
+  </data>
+  <data name="AboutIntroP2.Text" xml:space="preserve">
+    <value>Combining high-fidelity ambient sounds with an elegant and minimalist interface, Fulcrum elevates your sound experience to a new level. It's the ideal tool for those who seek to create the perfect acoustic environment for working with greater concentration, studying with intense focus, meditating deeply, or simply relaxing completely.</value>
+    <comment>Second paragraph of app description</comment>
+  </data>
+  <data name="AboutText2.Text" xml:space="preserve">
+    <value>Combining high-fidelity ambient sounds with an elegant and minimalist interface, Fulcrum elevates your sound experience to a new level. It's the ideal tool for those who seek to create the perfect acoustic environment for working with greater concentration, studying with intense focus, meditating deeply, or simply relaxing completely.</value>
+    <comment>Second paragraph of app description (alternate key)</comment>
+  </data>
   
   <!-- Strings para o menu lateral -->
   <data name="AppTitle.Text" xml:space="preserve">
@@ -1018,5 +1090,151 @@
   <data name="DeleteProfileButton.Label" xml:space="preserve">
     <value>Delete Profile</value>
     <comment>Label for delete profile button</comment>
+  </data>
+  
+  <!-- Strings for Premium Resources -->
+  <data name="PremiumResourcesTitle.Text" xml:space="preserve">
+    <value>Premium Features</value>
+    <comment>Title of premium resources section</comment>
+  </data>
+  <data name="MixerTitle.Text" xml:space="preserve">
+    <value>Professional Sound Mixer</value>
+    <comment>Title of mixer feature</comment>
+  </data>
+  <data name="MixerDescription.Text" xml:space="preserve">
+    <value>Combine and customize different ambient sounds to create your ideal sound atmosphere with precise control.</value>
+    <comment>Description of mixer feature</comment>
+  </data>
+  <data name="TimerTitle.Text" xml:space="preserve">
+    <value>Smart Timer</value>
+    <comment>Title of timer feature</comment>
+  </data>
+  <data name="TimerDescription.Text" xml:space="preserve">
+    <value>Set custom timers that smoothly fade the volume until stopping, perfect for falling asleep or focused sessions.</value>
+    <comment>Description of timer feature</comment>
+  </data>
+  <data name="WaveVisTitle.Text" xml:space="preserve">
+    <value>Advanced Wave Visualization</value>
+    <comment>Title of wave visualization feature</comment>
+  </data>
+  <data name="WaveVisDescription.Text" xml:space="preserve">
+    <value>Experience a dynamic visual representation of sound patterns, creating a perfect audiovisual connection.</value>
+    <comment>Description of wave visualization feature</comment>
+  </data>
+  <data name="ProfilesTitle.Text" xml:space="preserve">
+    <value>Smart Custom Profiles</value>
+    <comment>Title of profiles feature</comment>
+  </data>
+  <data name="ProfilesDescription.Text" xml:space="preserve">
+    <value>Save and load multiple custom settings for different moments of your day, with cloud synchronization.</value>
+    <comment>Description of profiles feature</comment>
+  </data>
+  <data name="EqualizationTitle.Text" xml:space="preserve">
+    <value>Professional Equalization</value>
+    <comment>Title of equalization feature</comment>
+  </data>
+  <data name="EqualizationDescription.Text" xml:space="preserve">
+    <value>Adjust the sound experience with custom equalizers and advanced effects such as reverb and spatialization.</value>
+    <comment>Description of equalization feature</comment>
+  </data>
+  <data name="DesignTitle.Text" xml:space="preserve">
+    <value>Adaptive Fluid Design</value>
+    <comment>Title of design feature</comment>
+  </data>
+  <data name="DesignDescription.Text" xml:space="preserve">
+    <value>Enjoy an elegant interface that perfectly adapts to light and dark themes, with smooth transitions and subtle animations.</value>
+    <comment>Description of design feature</comment>
+  </data>
+  <data name="DspTitle.Text" xml:space="preserve">
+    <value>Advanced DSP Processing</value>
+    <comment>Title of DSP feature</comment>
+  </data>
+  <data name="DspDescription.Text" xml:space="preserve">
+    <value>Digital signal processing (DSP) algorithms provide effects such as Freeverb, Flanger, and Pitch Shifting with professional quality.</value>
+    <comment>Description of DSP feature</comment>
+  </data>
+  <data name="MasteringTitle.Text" xml:space="preserve">
+    <value>Audio Mastering</value>
+    <comment>Title of mastering feature</comment>
+  </data>
+  <data name="MasteringDescription.Text" xml:space="preserve">
+    <value>Audio normalization and cleaning system that removes artifacts and noise, preserving sound quality even in extreme settings.</value>
+    <comment>Description of mastering feature</comment>
+  </data>
+  <data name="CommunityAndSupportTitle.Text" xml:space="preserve">
+    <value>Community and Support</value>
+    <comment>Title of community and support section</comment>
+  </data>
+  <data name="SourceCodeTitle.Text" xml:space="preserve">
+    <value>GitHub Code</value>
+    <comment>Title of source code button</comment>
+  </data>
+  <data name="SourceCodeDesc.Text" xml:space="preserve">
+    <value>Explore the source code and contribute to the project</value>
+    <comment>Description of source code button</comment>
+  </data>
+  <data name="ReportIssueTitle.Text" xml:space="preserve">
+    <value>Report Issue</value>
+    <comment>Title of report issue button</comment>
+  </data>
+  <data name="ReportIssueDesc.Text" xml:space="preserve">
+    <value>Help us improve Fulcrum by sharing your experience</value>
+    <comment>Description of report issue button</comment>
+  </data>
+  <data name="ContactTitle.Text" xml:space="preserve">
+    <value>Contact Us</value>
+    <comment>Title of contact button</comment>
+  </data>
+  <data name="ContactDesc.Text" xml:space="preserve">
+    <value>Get in touch with our dedicated support team</value>
+    <comment>Description of contact button</comment>
+  </data>
+  <data name="RateAppTitle.Text" xml:space="preserve">
+    <value>Rate in Store</value>
+    <comment>Title of rate app button</comment>
+  </data>
+  <data name="RateAppDesc.Text" xml:space="preserve">
+    <value>Leave your feedback and rate Fulcrum on the Microsoft Store</value>
+    <comment>Description of rate app button</comment>
+  </data>
+  <data name="AdvancedTechTitle.Text" xml:space="preserve">
+    <value>Advanced Technologies</value>
+    <comment>Title of advanced technologies section</comment>
+  </data>
+  <data name="AdvancedTechDescription.Text" xml:space="preserve">
+    <value>Fulcrum integrates the most advanced Windows development technologies, providing an exceptional experience with optimized performance, fluid interfaces, and professional audio quality.</value>
+    <comment>Text of advanced technologies section</comment>
+  </data>
+  <data name="WinAppSdkTitle.Text" xml:space="preserve">
+    <value>Windows App SDK</value>
+    <comment>Title of Windows App SDK technology</comment>
+  </data>
+  <data name="WinAppSdkDescription.Text" xml:space="preserve">
+    <value>Modern native interface with Fluent Design controls and smooth animations for a premium experience. Native support for light and dark themes with perfect adaptation to all screens.</value>
+    <comment>Description of Windows App SDK technology</comment>
+  </data>
+  <data name="DotNetTitle.Text" xml:space="preserve">
+    <value>.NET 8 and Modern C#</value>
+    <comment>Title of .NET technology</comment>
+  </data>
+  <data name="DotNetDescription.Text" xml:space="preserve">
+    <value>Sophisticated architecture with Singleton patterns for audio management, asynchronous resource loading, and optimized multithreading for uninterrupted playback.</value>
+    <comment>Description of .NET technology</comment>
+  </data>
+  <data name="AudioProcTitle.Text" xml:space="preserve">
+    <value>Audio Processing</value>
+    <comment>Title of audio processing technology</comment>
+  </data>
+  <data name="AudioProcDescription.Text" xml:space="preserve">
+    <value>Professional digital signal processing (DSP) algorithms implemented with NAudio, including Freeverb, 3-band equalizer, adaptive normalization, and low-latency optimizations.</value>
+    <comment>Description of audio processing technology</comment>
+  </data>
+  <data name="ArchTitle.Text" xml:space="preserve">
+    <value>Advanced Architecture</value>
+    <comment>Title of architecture technology</comment>
+  </data>
+  <data name="ArchDescription.Text" xml:space="preserve">
+    <value>Smart profile system, state management with JSON serialization, automatic settings persistence, and smooth transitions between different audio configurations.</value>
+    <comment>Description of architecture technology</comment>
   </data>
 </root>

@@ -611,20 +611,21 @@ public sealed partial class MainWindow : Window
         try
         {
             // Obtém o idioma preferido do usuário
-            string currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
-            
+            //string currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
+            string currentLanguage = "en-US"; // Para fins de teste, forçando o inglês
+
             // Se não for português ou inglês, usa o inglês como padrão
-            if (!currentLanguage.StartsWith("pt") && !currentLanguage.StartsWith("en"))
+            if (currentLanguage.StartsWith("en") || !currentLanguage.StartsWith("pt"))
             {
                 currentLanguage = "en-US";
-            }
+            }            
             else if (currentLanguage.StartsWith("pt"))
             {
                 currentLanguage = "pt-BR";
-            }
-            
-            // Define o idioma para a aplicação
-            Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = currentLanguage;
+            }            
+
+                // Define o idioma para a aplicação
+                Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = currentLanguage;
             
             System.Diagnostics.Debug.WriteLine($"[IDIOMA] Aplicando idioma: {currentLanguage}");
         }

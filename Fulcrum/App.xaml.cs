@@ -33,60 +33,7 @@ public partial class App : Application
     /// Inicializa uma nova instância da classe App
     /// </summary>
     public App()
-    {
-        try
-        {
-            // Verificar e criar arquivo de log
-            string logPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                "fulcrum_startup.log");
-            
-            File.WriteAllText(logPath, 
-                $"Iniciando Fulcrum: {DateTime.Now}\n" +
-                $"Versão .NET: {Environment.Version}\n" +
-                $"OS: {Environment.OSVersion}\n\n");
-                
-            // Testar carregamento de DLLs críticas
-            string[] dllsParaTestar = new[]
-            {
-                "NAudio.dll",
-                "NAudio.WinMM.dll",
-                "Microsoft.UI.Xaml.dll",
-                "Microsoft.WindowsAppRuntime.Bootstrap.dll",
-                "Microsoft.WinUI.dll"
-            };
-            
-            foreach (var dll in dllsParaTestar)
-            {
-                IntPtr handle = LoadLibrary(dll);
-                if (handle == IntPtr.Zero)
-                {
-                    uint error = GetLastError();
-                    File.AppendAllText(logPath, 
-                        $"ERRO ao carregar {dll}: Código {error}\n");
-                }
-                else
-                {
-                    File.AppendAllText(logPath, 
-                        $"Carregamento bem-sucedido: {dll}\n");
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            try
-            {
-                File.WriteAllText(
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 
-                    "fulcrum_error.log"),
-                    $"Erro na inicialização: {ex.Message}\n{ex.StackTrace}");
-            }
-            catch
-            {
-                // Se não puder criar o log, continuamos mesmo assim
-            }
-        }
-        
+    {        
         // Inicializa o componente após o diagnóstico
         this.InitializeComponent();
         this.UnhandledException += App_UnhandledException;

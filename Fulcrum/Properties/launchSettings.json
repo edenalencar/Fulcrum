@@ -2,7 +2,7 @@
   "profiles": {
     "Fulcrum (Package)": {
       "commandName": "MsixPackage",
-      "commandLineArgs": "/lang:en-US"
+      "commandLineArgs": "en-US"
     },
     "Fulcrum (Unpackaged)": {
       "commandName": "Project"

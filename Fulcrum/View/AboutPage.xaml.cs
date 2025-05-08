@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.System;
+using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace Fulcrum.View;
 
@@ -28,12 +29,14 @@ public sealed partial class AboutPage : Page
         var appVersion = GetAppVersion();
         
         // Carrega a string de recursos formatada com a versão do aplicativo
-        var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-        string versionTextFormat = loader.GetString("AboutVersion/Text");
+        var resourceLoader = new ResourceLoader();
+        
+        // Pega o texto do recurso AboutVersion e formata com a versão
+        string versionTextFormat = resourceLoader.GetString("AboutVersion/Text");
         txtVersion.Text = string.Format(versionTextFormat, appVersion);
         
         // Atualiza o texto de direitos autorais com o ano atual
-        string rightsTextFormat = loader.GetString("Rights/Text");
+        string rightsTextFormat = resourceLoader.GetString("Rights/Text");
         txtDireitos.Text = string.Format(rightsTextFormat, DateTime.Now.Year);
     }
 
@@ -70,7 +73,7 @@ public sealed partial class AboutPage : Page
     private async void BtnRateApp_Click(object sender, RoutedEventArgs e)
     {
         // Abre a página do aplicativo na Microsoft Store para avaliação
-        await Launcher.LaunchUriAsync(new Uri("https://apps.microsoft.com/detail/9PNHBQJWWK3J?hl=pt-br&gl=BR&ocid=pdpshare"));
+        await Launcher.LaunchUriAsync(new Uri("ms-windows-store://review/?ProductId=9PNHBQJWWK3J"));
     }
 
     /// <summary>

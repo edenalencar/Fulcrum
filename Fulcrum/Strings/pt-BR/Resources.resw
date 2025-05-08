@@ -477,6 +477,34 @@
     <value>Definir timer para parada automática</value>
     <comment>Dica de ferramenta do botão de definir timer</comment>
   </data>
+  <data name="ChangeTimerText" xml:space="preserve">
+    <value>Alterar Timer</value>
+    <comment>Texto para o botão de alterar timer quando o timer está ativo</comment>
+  </data>
+  <data name="SetTimerText.Text" xml:space="preserve">
+    <value>Definir Timer</value>
+    <comment>Texto para o botão de definir timer quando o timer não está ativo</comment>
+  </data>
+  <data name="TimerCompletedTitle" xml:space="preserve">
+    <value>Temporizador concluído</value>
+    <comment>Título da notificação quando o timer é concluído</comment>
+  </data>
+  <data name="TimerCompletedMessage" xml:space="preserve">
+    <value>O temporizador de sono foi encerrado. Todos os sons foram pausados.</value>
+    <comment>Mensagem da notificação quando o timer é concluído</comment>
+  </data>
+  <data name="SleepTimerDialogTitle" xml:space="preserve">
+    <value>Temporizador de Sono</value>
+    <comment>Título do diálogo de configuração do temporizador de sono</comment>
+  </data>
+  <data name="ConfirmButtonText" xml:space="preserve">
+    <value>Confirmar</value>
+    <comment>Texto do botão de confirmação em diálogos</comment>
+  </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Texto do botão de cancelamento em diálogos</comment>
+  </data>
   
   <!-- Textos para cartões de som na página inicial -->
   <data name="RainTitle.Text" xml:space="preserve">
@@ -517,10 +545,6 @@
   </data>
   
   <!-- Controles principais -->
-  <data name="SetTimerText.Text" xml:space="preserve">
-    <value>Definir Timer</value>
-    <comment>Texto para o botão de definir timer</comment>
-  </data>
   <data name="CancelTimerButton.Content" xml:space="preserve">
     <value>Cancelar</value>
     <comment>Texto para o botão de cancelar timer</comment>
@@ -931,96 +955,184 @@
     <value>TECNOLOGIA DE ÁUDIO PREMIUM</value>
     <comment>Descrição curta do aplicativo na página Sobre</comment>
   </data>
-
-  <!-- Strings para o menu lateral -->
-  <data name="AppTitle.Text" xml:space="preserve">
-    <value>Fulcrum - Sons Ambientes</value>
-    <comment>Título da aplicação na barra de título</comment>
+  <data name="SourceCodeButton.Content" xml:space="preserve">
+    <value>Ver Código Fonte</value>
+    <comment>Texto para o botão de código fonte</comment>
   </data>
-  <data name="HomeMenuItem.Content" xml:space="preserve">
-    <value>Início</value>
-    <comment>Texto do item de menu Início</comment>
+  <data name="ReportIssueButton.Content" xml:space="preserve">
+    <value>Reportar Problema</value>
+    <comment>Texto para o botão de reportar problema</comment>
   </data>
-  <data name="HomeMenuItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Início - Controlar sons</value>
-    <comment>Dica do item de menu Início</comment>
+  <data name="RateAppButton.Content" xml:space="preserve">
+    <value>Avaliar na Microsoft Store</value>
+    <comment>Texto para o botão de avaliar na loja</comment>
   </data>
-  <data name="ProfilesMenuItem.Content" xml:space="preserve">
-    <value>Perfis de Som</value>
-    <comment>Texto do item de menu Perfis de Som</comment>
+  <data name="ContactButton.Content" xml:space="preserve">
+    <value>Fale Conosco</value>
+    <comment>Texto para o botão de contato</comment>
   </data>
-  <data name="ProfilesMenuItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Gerenciar perfis de som</value>
-    <comment>Dica do item de menu Perfis de Som</comment>
+  <data name="FeaturesTitle.Text" xml:space="preserve">
+    <value>Recursos Principais</value>
+    <comment>Título para a seção de recursos</comment>
   </data>
-  <data name="SettingsMenuItem.Content" xml:space="preserve">
-    <value>Configurações</value>
-    <comment>Texto do item de menu Configurações</comment>
+  <data name="TechnologiesTitle.Text" xml:space="preserve">
+    <value>Tecnologias</value>
+    <comment>Título para a seção de tecnologias</comment>
   </data>
-  <data name="SettingsMenuItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Configurar o aplicativo</value>
-    <comment>Dica do item de menu Configurações</comment>
+  <data name="AboutSectionTitle.Text" xml:space="preserve">
+    <value>Sobre o Fulcrum</value>
+    <comment>Título da seção sobre no About</comment>
   </data>
-  <data name="AboutMenuItem.Content" xml:space="preserve">
-    <value>Sobre</value>
-    <comment>Texto do item de menu Sobre</comment>
+  <data name="AboutText1.Text" xml:space="preserve">
+    <value>O Fulcrum é um aplicativo premium de reprodução de sons ambientes meticulosamente projetado para transformar sua experiência de foco, relaxamento e produtividade. Desenvolvido com precisão para proporcionar uma atmosfera verdadeiramente imersiva, o Fulcrum permite que você transcenda o ruído cotidiano e encontre seu equilíbrio sonoro perfeito.</value>
+    <comment>Primeiro parágrafo do texto sobre o aplicativo</comment>
   </data>
-  <data name="AboutMenuItem.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Informações sobre o aplicativo</value>
-    <comment>Dica do item de menu Sobre</comment>
+  <data name="AboutText2.Text" xml:space="preserve">
+    <value>Combinando sons ambientes de alta fidelidade com uma interface elegante e minimalista, o Fulcrum eleva sua experiência sonora a um novo patamar. É a ferramenta ideal para quem busca criar o ambiente acústico perfeito para trabalhar com maior concentração, estudar com foco intenso, meditar profundamente ou simplesmente relaxar completamente.</value>
+    <comment>Segundo parágrafo do texto sobre o aplicativo</comment>
   </data>
-
-  <!-- Strings para a página de Perfis -->
-  <data name="ProfilesPageTitle.Text" xml:space="preserve">
-    <value>Perfis de Sons</value>
-    <comment>Título da página de Perfis</comment>
+  <data name="PremiumResourcesTitle.Text" xml:space="preserve">
+    <value>Recursos Premium</value>
+    <comment>Título da seção de recursos premium</comment>
   </data>
-  <data name="ProfilesPageDescription.Text" xml:space="preserve">
-    <value>Crie, gerencie e aplique configurações personalizadas de sons</value>
-    <comment>Descrição da página de Perfis</comment>
+  <data name="MixerTitle.Text" xml:space="preserve">
+    <value>Mixador de Sons Profissional</value>
+    <comment>Título do recurso de mixador</comment>
   </data>
-  <data name="ProfileHeaderText.Text" xml:space="preserve">
-    <value>Seus Perfis</value>
-    <comment>Texto para o cabeçalho da lista de perfis</comment>
+  <data name="MixerDescription.Text" xml:space="preserve">
+    <value>Combine e personalize diferentes sons ambientes para criar sua atmosfera sonora ideal com controle preciso.</value>
+    <comment>Descrição do recurso de mixador</comment>
   </data>
-  <data name="ProfileDetailsText.Text" xml:space="preserve">
-    <value>Detalhes do Perfil</value>
-    <comment>Texto para a seção de detalhes do perfil</comment>
+  <data name="TimerTitle.Text" xml:space="preserve">
+    <value>Timer Inteligente</value>
+    <comment>Título do recurso de timer</comment>
   </data>
-  <data name="SelectProfileInfoBar.Title" xml:space="preserve">
-    <value>Selecione um perfil</value>
-    <comment>Título da barra de informações quando nenhum perfil está selecionado</comment>
+  <data name="TimerDescription.Text" xml:space="preserve">
+    <value>Configure temporizadores personalizados que suavemente diminuem o volume até parar, perfeito para adormecer ou sessões focadas.</value>
+    <comment>Descrição do recurso de timer</comment>
   </data>
-  <data name="SelectProfileInfoBar.Message" xml:space="preserve">
-    <value>Selecione um perfil na lista à esquerda para ver seus detalhes.</value>
-    <comment>Mensagem da barra de informações quando nenhum perfil está selecionado</comment>
+  <data name="WaveVisTitle.Text" xml:space="preserve">
+    <value>Visualização de Ondas Avançada</value>
+    <comment>Título do recurso de visualização de ondas</comment>
   </data>
-  <data name="SoundConfigurationsText.Text" xml:space="preserve">
-    <value>Configurações de Som</value>
-    <comment>Texto para a seção de configurações de som</comment>
+  <data name="WaveVisDescription.Text" xml:space="preserve">
+    <value>Experimente uma representação visual dinâmica dos padrões sonoros, criando uma conexão audiovisual perfeita.</value>
+    <comment>Descrição do recurso de visualização de ondas</comment>
   </data>
-  <data name="NoActiveProfileText.Text" xml:space="preserve">
-    <value>Nenhum perfil ativo</value>
-    <comment>Texto mostrado quando nenhum perfil está ativo</comment>
+  <data name="ProfilesTitle.Text" xml:space="preserve">
+    <value>Perfis Personalizados Inteligentes</value>
+    <comment>Título do recurso de perfis</comment>
   </data>
-  <data name="ActiveText.Text" xml:space="preserve">
-    <value>ATIVO</value>
-    <comment>Texto mostrado para o indicador de perfil ativo</comment>
+  <data name="ProfilesDescription.Text" xml:space="preserve">
+    <value>Salve e carregue múltiplas configurações personalizadas para diferentes momentos do seu dia, com sincronização na nuvem.</value>
+    <comment>Descrição do recurso de perfis</comment>
   </data>
-  <data name="ConfigurationInfoText.Text" xml:space="preserve">
-    <value>Selecione um perfil para ver as configurações de som</value>
-    <comment>Texto mostrado quando nenhuma informação de configuração está disponível</comment>
+  <data name="EqualizationTitle.Text" xml:space="preserve">
+    <value>Equalização Profissional</value>
+    <comment>Título do recurso de equalização</comment>
   </data>
-  <data name="NewProfileButton.Label" xml:space="preserve">
-    <value>Novo Perfil</value>
-    <comment>Rótulo para o botão novo perfil</comment>
+  <data name="EqualizationDescription.Text" xml:space="preserve">
+    <value>Ajuste a experiência sonora com equalizadores personalizados e efeitos avançados como reverberação e espacialização.</value>
+    <comment>Descrição do recurso de equalização</comment>
   </data>
-  <data name="ApplyProfileButton.Label" xml:space="preserve">
-    <value>Aplicar Perfil</value>
-    <comment>Rótulo para o botão aplicar perfil</comment>
+  <data name="DesignTitle.Text" xml:space="preserve">
+    <value>Design Fluido Adaptativo</value>
+    <comment>Título do recurso de design</comment>
   </data>
-  <data name="DeleteProfileButton.Label" xml:space="preserve">
-    <value>Remover Perfil</value>
-    <comment>Rótulo para o botão remover perfil</comment>
+  <data name="DesignDescription.Text" xml:space="preserve">
+    <value>Desfrute de uma interface elegante que se adapta perfeitamente aos temas claro e escuro, com transições suaves e animações sutis.</value>
+    <comment>Descrição do recurso de design</comment>
+  </data>
+  <data name="DspTitle.Text" xml:space="preserve">
+    <value>Processamento DSP Avançado</value>
+    <comment>Título do recurso de DSP</comment>
+  </data>
+  <data name="DspDescription.Text" xml:space="preserve">
+    <value>Algoritmos de processamento digital de sinais (DSP) proporcionam efeitos como Freeverb, Flanger e Pitch Shifting com qualidade profissional.</value>
+    <comment>Descrição do recurso de DSP</comment>
+  </data>
+  <data name="MasteringTitle.Text" xml:space="preserve">
+    <value>Masterização de Áudio</value>
+    <comment>Título do recurso de masterização</comment>
+  </data>
+  <data name="MasteringDescription.Text" xml:space="preserve">
+    <value>Sistema de normalização e limpeza de áudio que remove artefatos e ruídos, preservando a qualidade sonora mesmo em configurações extremas.</value>
+    <comment>Descrição do recurso de masterização</comment>
+  </data>
+  <data name="CommunityAndSupportTitle.Text" xml:space="preserve">
+    <value>Comunidade e Suporte</value>
+    <comment>Título da seção de comunidade e suporte</comment>
+  </data>
+  <data name="SourceCodeTitle.Text" xml:space="preserve">
+    <value>Código no GitHub</value>
+    <comment>Título do botão de código-fonte</comment>
+  </data>
+  <data name="SourceCodeDesc.Text" xml:space="preserve">
+    <value>Explore o código-fonte e contribua com o projeto</value>
+    <comment>Descrição do botão de código-fonte</comment>
+  </data>
+  <data name="ReportIssueTitle.Text" xml:space="preserve">
+    <value>Relatar Problema</value>
+    <comment>Título do botão de relatar problema</comment>
+  </data>
+  <data name="ReportIssueDesc.Text" xml:space="preserve">
+    <value>Ajude-nos a melhorar o Fulcrum compartilhando sua experiência</value>
+    <comment>Descrição do botão de relatar problema</comment>
+  </data>
+  <data name="ContactTitle.Text" xml:space="preserve">
+    <value>Fale Conosco</value>
+    <comment>Título do botão de contato</comment>
+  </data>
+  <data name="ContactDesc.Text" xml:space="preserve">
+    <value>Entre em contato com nossa equipe de suporte dedicada</value>
+    <comment>Descrição do botão de contato</comment>
+  </data>
+  <data name="RateAppTitle.Text" xml:space="preserve">
+    <value>Avaliar na Loja</value>
+    <comment>Título do botão de avaliar</comment>
+  </data>
+  <data name="RateAppDesc.Text" xml:space="preserve">
+    <value>Deixe sua opinião e avalie o Fulcrum na Microsoft Store</value>
+    <comment>Descrição do botão de avaliar</comment>
+  </data>
+  <data name="AdvancedTechTitle.Text" xml:space="preserve">
+    <value>Tecnologias Avançadas</value>
+    <comment>Título da seção de tecnologias</comment>
+  </data>
+  <data name="AdvancedTechDescription.Text" xml:space="preserve">
+    <value>O Fulcrum integra as mais avançadas tecnologias de desenvolvimento para Windows, proporcionando uma experiência excepcional com desempenho otimizado, interfaces fluidas e qualidade de áudio profissional.</value>
+    <comment>Texto da seção de tecnologias avançadas</comment>
+  </data>
+  <data name="WinAppSdkTitle.Text" xml:space="preserve">
+    <value>Windows App SDK</value>
+    <comment>Título tecnologia Windows App SDK</comment>
+  </data>
+  <data name="WinAppSdkDescription.Text" xml:space="preserve">
+    <value>Interface moderna e nativa com controles Fluent Design e animações suaves para experiência premium. Suporte nativo a temas claro e escuro com adaptação perfeita a todas as telas.</value>
+    <comment>Descrição tecnologia Windows App SDK</comment>
+  </data>
+  <data name="DotNetTitle.Text" xml:space="preserve">
+    <value>.NET 8 e C# Moderno</value>
+    <comment>Título tecnologia .NET</comment>
+  </data>
+  <data name="DotNetDescription.Text" xml:space="preserve">
+    <value>Arquitetura sofisticada com padrões Singleton para gerenciamento de áudio, carregamento assíncrono de recursos, e multithreading otimizado para reprodução sem interrupções.</value>
+    <comment>Descrição tecnologia .NET</comment>
+  </data>
+  <data name="AudioProcTitle.Text" xml:space="preserve">
+    <value>Processamento de Áudio</value>
+    <comment>Título tecnologia processamento áudio</comment>
+  </data>
+  <data name="AudioProcDescription.Text" xml:space="preserve">
+    <value>Algoritmos profissionais de processamento digital de sinais (DSP) implementados com NAudio, incluindo Freeverb, equalizador de 3 bandas, normalização adaptativa e otimizações de baixa latência.</value>
+    <comment>Descrição tecnologia processamento áudio</comment>
+  </data>
+  <data name="ArchTitle.Text" xml:space="preserve">
+    <value>Arquitetura Avançada</value>
+    <comment>Título tecnologia arquitetura</comment>
+  </data>
+  <data name="ArchDescription.Text" xml:space="preserve">
+    <value>Sistema de perfis inteligentes, gerenciamento de estado com serialização JSON, persistência automática de configurações, e transições suaves entre diferentes configurações de áudio.</value>
+    <comment>Descrição tecnologia arquitetura</comment>
   </data>
 </root>
