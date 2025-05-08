@@ -63,10 +63,9 @@ public static class LocalizationHelper
             using (var xmlReader = XmlReader.Create(stringReader))
             {
                 while (xmlReader.Read())
-                {
-                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "data")
+                {                    if (xmlReader.NodeType == XmlNodeType.Element && xmlReader.Name == "data")
                     {
-                        string key = xmlReader.GetAttribute("name");
+                        string? key = xmlReader.GetAttribute("name");
                         xmlReader.Read(); // Move para o próximo nó
 
                         while (xmlReader.NodeType != XmlNodeType.Element && xmlReader.Read())
@@ -113,12 +112,10 @@ public static class LocalizationHelper
         }
 
         if (string.IsNullOrEmpty(resourceKey))
-            return defaultValue;
-
-        try
+            return defaultValue;        try
         {
             // Tenta obter do dicionário em memória primeiro
-            if (_resources.TryGetValue(resourceKey, out string value))
+            if (_resources.TryGetValue(resourceKey, out string? value) && value != null)
             {
                 return value;
             }
