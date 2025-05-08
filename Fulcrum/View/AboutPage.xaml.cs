@@ -2,7 +2,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.System;
-using Microsoft.Windows.ApplicationModel.Resources;
+using Fulcrum.Util;
 
 namespace Fulcrum.View;
 
@@ -25,18 +25,20 @@ public sealed partial class AboutPage : Page
     /// </summary>
     private void AboutPage_Loaded(object sender, RoutedEventArgs e)
     {
+        // Inicializa o LocalizationHelper se ainda não foi inicializado
+        LocalizationHelper.Initialize();
+        
         // Preenche informações dinâmicas com texto localizado
         var appVersion = GetAppVersion();
         
-        // Carrega a string de recursos formatada com a versão do aplicativo
-        var resourceLoader = new ResourceLoader();
-        
         // Pega o texto do recurso AboutVersion e formata com a versão
-        string versionTextFormat = resourceLoader.GetString("AboutVersion/Text");
+        // usando o LocalizationHelper em vez do ResourceLoader direto
+        string versionTextFormat = LocalizationHelper.GetString("AboutVersion/Text", "Versão {0}");
         txtVersion.Text = string.Format(versionTextFormat, appVersion);
         
         // Atualiza o texto de direitos autorais com o ano atual
-        string rightsTextFormat = resourceLoader.GetString("Rights/Text");
+        // usando o LocalizationHelper em vez do ResourceLoader direto
+        string rightsTextFormat = LocalizationHelper.GetString("Rights/Text", "@{0} Éden Alencar. Todos os direitos reservados");
         txtDireitos.Text = string.Format(rightsTextFormat, DateTime.Now.Year);
     }
 

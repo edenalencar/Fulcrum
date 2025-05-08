@@ -772,14 +772,10 @@ public sealed partial class HomePage : Page
                 timerDisplay.Text = SleepTimerService.Instance.GetFormattedTimeRemaining();
                 timerContainer.Visibility = Visibility.Visible;
                 
-                // Usa o MRT Core (Microsoft.Windows.ApplicationModel.Resources) para carregar recursos
+                // Usar LocalizationHelper em vez de ResourceLoader direto
                 try
                 {
-                    // Instancia o ResourceLoader do Windows App SDK
-                    var resourceLoader = new Microsoft.Windows.ApplicationModel.Resources.ResourceLoader();
-                    // Correção: use apenas o nome base do recurso, sem o sufixo .Text
-                    string changeTimerText = resourceLoader.GetString("ChangeTimerText");
-                    SetSleepTimerButton.Content = string.IsNullOrEmpty(changeTimerText) ? "Alterar Timer" : changeTimerText;
+                    SetSleepTimerButton.Content = LocalizationHelper.GetString("ChangeTimerText", "Alterar Timer");
                 }
                 catch (Exception ex)
                 {
@@ -794,14 +790,10 @@ public sealed partial class HomePage : Page
             {
                 timerContainer.Visibility = Visibility.Collapsed;
                 
-                // Usa o MRT Core (Microsoft.Windows.ApplicationModel.Resources) para carregar recursos
+                // Usar LocalizationHelper em vez de ResourceLoader direto
                 try
                 {
-                    // Instancia o ResourceLoader do Windows App SDK
-                    var resourceLoader = new Microsoft.Windows.ApplicationModel.Resources.ResourceLoader();
-                    // Correção: use apenas o nome base do recurso, sem o sufixo .Text
-                    string setTimerText = resourceLoader.GetString("SetTimerText/Text");
-                    SetSleepTimerButton.Content = string.IsNullOrEmpty(setTimerText) ? "Definir Timer" : setTimerText;
+                    SetSleepTimerButton.Content = LocalizationHelper.GetString("SetTimerTextValue", "Definir Timer");
                 }
                 catch (Exception ex)
                 {

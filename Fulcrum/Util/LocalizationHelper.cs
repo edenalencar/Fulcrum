@@ -15,7 +15,7 @@ public static class LocalizationHelper
 {
     private static readonly Dictionary<string, string> _resources = new Dictionary<string, string>();
     private static bool _initialized = false;
-    private static string _currentLanguage = "pt-BR"; // Padrão: português
+    private static string _currentLanguage = "en-US"; // Padrão: português
 
     /// <summary>
     /// Inicializa o helper carregando os recursos do arquivo .resw
@@ -28,8 +28,8 @@ public static class LocalizationHelper
         try
         {
             // Determinar a linguagem atual do sistema
-            //var currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
-            string currentLanguage = "en-US"; // Para fins de teste, forçando o inglês
+            var currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
+            
             if (!string.IsNullOrEmpty(currentLanguage))
             {
                 if (currentLanguage.StartsWith("en"))
@@ -171,5 +171,41 @@ public static class LocalizationHelper
                 return defaultFormat;
             }
         }
+    }
+
+    /// <summary>
+    /// Define o idioma atual e recarrega os recursos, se necessário
+    /// </summary>
+    /// <param name="language">O código do idioma (ex: "pt-BR", "en-US")</param>
+    /// <returns>True se o idioma foi alterado com sucesso</returns>
+    public static bool SetLanguage(string language)
+    {
+        if (string.IsNullOrEmpty(language))
+            return false;
+
+        // Só faz algo se o idioma for diferente do atual
+        if (language != _currentLanguage)
+        {
+            // Verifica se o idioma é suportado
+            if (language.StartsWith("en"))
+                language = "en-US";
+            else if (language.StartsWith("pt"))
+                language = "pt-BR";
+            else
+                return false; // Idioma não suportado
+
+            Debug.WriteLine($"Alterando idioma de {_currentLanguage} para {language}");
+            
+            // Atualiza o idioma e limpa o cache
+            _currentLanguage = language;
+            _resources.Clear();
+            _initialized = false;
+            
+            // Recarrega os recursos
+            Initialize();
+            return true;
+        }
+
+        return false; // Nada foi alterado
     }
 }

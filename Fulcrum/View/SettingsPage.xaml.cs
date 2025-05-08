@@ -277,9 +277,21 @@ public sealed partial class SettingsPage : Page
         _hotKeyManager.HotKeysEnabled = isEnabled;
         
         // Mostra uma mensagem informativa
-        atalhosMensagemInfo.Message = isEnabled
-            ? "Teclas de atalho globais habilitadas. Você pode controlar o Fulcrum mesmo quando ele estiver em segundo plano."
-            : "Teclas de atalho globais desabilitadas.";
+        try
+        {
+            // Usa LocalizationHelper em vez de ResourceLoader direto
+            atalhosMensagemInfo.Message = isEnabled
+                ? LocalizationHelper.GetString("ShortcutsEnabledMessage", "Atalhos de teclado globais ativados. Você pode controlar o Fulcrum mesmo quando ele estiver em segundo plano.")
+                : LocalizationHelper.GetString("ShortcutsDisabledMessage", "Atalhos de teclado globais desativados.");
+        }
+        catch (Exception ex)
+        {
+            // Fallback para mensagens hardcoded em caso de erro
+            System.Diagnostics.Debug.WriteLine($"Erro ao carregar recursos: {ex.Message}");
+            atalhosMensagemInfo.Message = isEnabled
+                ? "Atalhos de teclado globais ativados. Você pode controlar o Fulcrum mesmo quando ele estiver em segundo plano."
+                : "Atalhos de teclado globais desativados.";
+        }
             
         atalhosMensagemInfo.IsOpen = true;
         

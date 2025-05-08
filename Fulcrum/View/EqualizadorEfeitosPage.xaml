@@ -337,7 +337,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     
-                                    <TextBlock Text="Atraso" VerticalAlignment="Center" MinWidth="80"
+                                    <TextBlock x:Uid="DelayLabel" VerticalAlignment="Center" MinWidth="80"
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                     <Slider x:Name="sliderEchoDelay" Grid.Column="1" Minimum="10" Maximum="1000" 
                                             StepFrequency="10" Value="250" ValueChanged="SliderEchoDelay_ValueChanged"
@@ -358,7 +358,7 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     
-                                    <TextBlock Text="Mix" VerticalAlignment="Center" MinWidth="80"
+                                    <TextBlock x:Uid="MixLabel" VerticalAlignment="Center" MinWidth="80"
                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                     <Slider x:Name="sliderEchoMix" Grid.Column="1" Minimum="0" Maximum="1" 
                                             StepFrequency="0.01" Value="0.5" ValueChanged="SliderEchoMix_ValueChanged"
@@ -424,7 +424,8 @@
                             </StackPanel>
                             
                             <!-- Botão para resetar efeitos -->
-                            <Button Content="Resetar Efeitos" Click="BtnResetEffects_Click" 
+                            <Button x:Uid="ResetEffectsButton"
+                                    Click="BtnResetEffects_Click" 
                                     HorizontalAlignment="Center" Margin="0,24,0,0"
                                     FontWeight="SemiBold"
                                     AutomationProperties.Name="Resetar efeitos"
@@ -439,7 +440,8 @@
         <!-- Botões de ação -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0"
                     AutomationProperties.Name="Barra de ações">
-            <Button Content="Salvar Configurações" Click="BtnSalvarConfiguracoes_Click" 
+            <Button x:Uid="SaveConfigButton"
+                    Click="BtnSalvarConfiguracoes_Click" 
                     Style="{StaticResource AccentButtonStyle}" Margin="0,0,16,0"
                     MinWidth="180"
                     AutomationProperties.Name="Salvar configurações"
@@ -449,7 +451,8 @@
                     <KeyboardAccelerator Key="S" Modifiers="Control"/>
                 </Button.KeyboardAccelerators>
             </Button>
-            <Button Content="Cancelar" Click="BtnVoltar_Click"
+            <Button x:Uid="CancelButton"
+                    Click="BtnVoltar_Click"
                     MinWidth="100"
                     AutomationProperties.Name="Cancelar"
                     AutomationProperties.HelpText="Descarta todas as alterações e volta para a página principal"

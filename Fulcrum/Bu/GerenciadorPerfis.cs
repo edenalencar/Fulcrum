@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Fulcrum.Util;
 using Windows.Storage;
+using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace Fulcrum.Bu;
 
@@ -233,10 +234,20 @@ public class GerenciadorPerfis
     /// <summary>
     /// Cria um perfil com todas as configurações padrão
     /// </summary>
+    /// <param name="nome">Nome opcional do perfil (usa valor localizado se não especificado)</param>
     /// <returns>Perfil de som com valores padrão</returns>
-    public PerfilSom CriarPerfilPadrao(string nome = "Perfil Padrão")
+    public PerfilSom CriarPerfilPadrao(string? nome = null)
     {
-        var perfil = new PerfilSom(nome, "Configurações padrão para todos os sons");
+        // Se o nome não for fornecido, usa o valor do recurso localizado
+        if (string.IsNullOrEmpty(nome))
+        {
+            nome = LocalizationHelper.GetString("DefaultProfileName", "Perfil Padrão");
+        }
+        
+        // Obtém a descrição localizada
+        string descricao = LocalizationHelper.GetString("DefaultProfileDescription", "Configurações padrão para todos os sons");
+        
+        var perfil = new PerfilSom(nome, descricao);
         
         // Configura valores iniciais para todos os sons conhecidos
         perfil.DefinirVolumeSom(Constantes.Sons.Chuva, 0.2f);

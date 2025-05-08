@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
+using Fulcrum.Util; // Adicionado para usar o LocalizationHelper
 
 namespace Fulcrum.View;
 
@@ -26,6 +27,9 @@ public sealed partial class PerfisPage : Page
     public PerfisPage()
     {
         this.InitializeComponent();
+        
+        // Garante que o helper de localização esteja inicializado
+        LocalizationHelper.Initialize();
     }
     
     /// <summary>
@@ -66,12 +70,15 @@ public sealed partial class PerfisPage : Page
         // Atualiza o indicador global
         if (perfilAtivo != null)
         {
-            txtPerfilAtivo.Text = $"Perfil Ativo: {perfilAtivo.Nome}";
+            // Usa a string formatada com o nome do perfil
+            string perfilAtivoTexto = LocalizationHelper.GetString("PerfilAtivo", "Perfil Ativo:");
+            txtPerfilAtivo.Text = $"{perfilAtivoTexto} {perfilAtivo.Nome}";
             perfilAtivoIndicador.Visibility = Visibility.Visible;
         }
         else
         {
-            txtPerfilAtivo.Text = "Nenhum perfil ativo";
+            // Usa a string do arquivo de recursos
+            txtPerfilAtivo.Text = LocalizationHelper.GetString("NoActiveProfileText/Text", "Nenhum perfil ativo");
             perfilAtivoIndicador.Visibility = Visibility.Collapsed;
         }
         
@@ -130,19 +137,19 @@ public sealed partial class PerfisPage : Page
         // Exibe diálogo para inserir nome e descrição
         var dialogNome = new ContentDialog
         {
-            Title = "Novo Perfil",
+            Title = LocalizationHelper.GetString("NewProfileTitle", "Novo Perfil"),
             Content = new StackPanel
             {
                 Children =
                 {
-                    new TextBlock { Text = "Nome:" },
-                    new TextBox { Name = "txtNome", PlaceholderText = "Digite o nome do perfil" },
-                    new TextBlock { Text = "Descrição:", Margin = new Thickness(0, 10, 0, 0) },
-                    new TextBox { Name = "txtDescricao", PlaceholderText = "Digite uma descrição (opcional)" }
+                    new TextBlock { Text = LocalizationHelper.GetString("ProfileNameLabel", "Nome:") },
+                    new TextBox { Name = "txtNome", PlaceholderText = LocalizationHelper.GetString("ProfileNamePlaceholder", "Digite o nome do perfil") },
+                    new TextBlock { Text = LocalizationHelper.GetString("ProfileDescriptionLabel", "Descrição:"), Margin = new Thickness(0, 10, 0, 0) },
+                    new TextBox { Name = "txtDescricao", PlaceholderText = LocalizationHelper.GetString("ProfileDescriptionPlaceholder", "Digite uma descrição (opcional)") }
                 }
             },
-            PrimaryButtonText = "Criar",
-            CloseButtonText = "Cancelar",
+            PrimaryButtonText = LocalizationHelper.GetString("CreateButtonText", "Criar"),
+            CloseButtonText = LocalizationHelper.GetString("CancelButtonText", "Cancelar"),
             DefaultButton = ContentDialogButton.Primary,
             XamlRoot = this.XamlRoot
         };
@@ -168,7 +175,7 @@ public sealed partial class PerfisPage : Page
             
             if (string.IsNullOrWhiteSpace(nome))
             {
-                nome = "Novo Perfil";
+                nome = LocalizationHelper.GetString("DefaultProfileName", "Novo Perfil");
             }
             
             // Cria o perfil baseado nas configurações atuais
@@ -200,8 +207,11 @@ public sealed partial class PerfisPage : Page
             MostrarConfirmacaoVisual(perfilSelecionado.Nome);
             
             // Exibe mensagem de confirmação
-            infoBar.Title = "Perfil Aplicado";
-            infoBar.Message = $"Perfil '{perfilSelecionado.Nome}' aplicado com sucesso!";
+            infoBar.Title = LocalizationHelper.GetString("ProfileAppliedTitle", "Perfil Aplicado");
+            infoBar.Message = LocalizationHelper.GetFormattedString(
+                "ProfileAppliedMessage", 
+                "Perfil '{0}' aplicado com sucesso!", 
+                perfilSelecionado.Nome);
             infoBar.Severity = InfoBarSeverity.Success;
             infoBar.IsOpen = true;
             
@@ -259,13 +269,16 @@ public sealed partial class PerfisPage : Page
                     },
                     new TextBlock
                     {
-                        Text = "Perfil Aplicado!",
+                        Text = LocalizationHelper.GetString("ProfileAppliedTitle", "Perfil Aplicado!"),
                         Style = Application.Current.Resources["SubtitleTextBlockStyle"] as Style,
                         HorizontalAlignment = HorizontalAlignment.Center
                     },
                     new TextBlock
                     {
-                        Text = $"O perfil '{nomePerfil}' foi aplicado com sucesso.",
+                        Text = LocalizationHelper.GetFormattedString(
+                            "ProfileAppliedDescription", 
+                            "O perfil '{0}' foi aplicado com sucesso.", 
+                            nomePerfil),
                         TextWrapping = TextWrapping.Wrap,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         TextAlignment = TextAlignment.Center,
@@ -307,10 +320,13 @@ public sealed partial class PerfisPage : Page
             // Pede confirmação antes de remover
             var dialog = new ContentDialog
             {
-                Title = "Remover Perfil",
-                Content = $"Tem certeza que deseja remover o perfil '{perfilSelecionado.Nome}'? Esta ação não pode ser desfeita.",
-                PrimaryButtonText = "Remover",
-                CloseButtonText = "Cancelar",
+                Title = LocalizationHelper.GetString("DeleteProfileTitle", "Remover Perfil"),
+                Content = LocalizationHelper.GetFormattedString(
+                    "DeleteProfileConfirmation", 
+                    "Tem certeza que deseja remover o perfil '{0}'? Esta ação não pode ser desfeita.", 
+                    perfilSelecionado.Nome),
+                PrimaryButtonText = LocalizationHelper.GetString("DeleteButton", "Remover"),
+                CloseButtonText = LocalizationHelper.GetString("CancelButtonText", "Cancelar"),
                 DefaultButton = ContentDialogButton.Close,
                 XamlRoot = this.XamlRoot
             };
@@ -332,7 +348,11 @@ public sealed partial class PerfisPage : Page
                 }
                 
                 // Exibe mensagem de confirmação
-                infoBar.Message = $"Perfil '{perfilSelecionado.Nome}' removido com sucesso!";
+                infoBar.Title = LocalizationHelper.GetString("ProfileDeletedTitle", "Perfil Removido");
+                infoBar.Message = LocalizationHelper.GetFormattedString(
+                    "ProfileDeletedMessage", 
+                    "Perfil '{0}' removido com sucesso!", 
+                    perfilSelecionado.Nome);
                 infoBar.Severity = InfoBarSeverity.Informational;
                 infoBar.IsOpen = true;
                 
@@ -384,7 +404,7 @@ public sealed partial class PerfisPage : Page
         else
         {
             // Se nenhum perfil estiver selecionado, exibe mensagem padrão
-            txtConfiguracoesInfo.Text = "Selecione um perfil para ver as configurações de som";
+            txtConfiguracoesInfo.Text = LocalizationHelper.GetString("ConfigurationInfoText/Text", "Selecione um perfil para ver as configurações de som");
             infoBarPerfil.IsOpen = true;
         }
     }
@@ -396,15 +416,15 @@ public sealed partial class PerfisPage : Page
     {
         return chaveSom switch
         {
-            "chuva" => "Chuva",
-            "fogueira" => "Fogueira",
-            "lancha" => "Lancha",
-            "ondas" => "Ondas do Mar",
-            "passaros" => "Pássaros",
-            "praia" => "Praia",
-            "trem" => "Trem",
-            "ventos" => "Ventos",
-            "cafeteria" => "Cafeteria",
+            "chuva" => LocalizationHelper.GetString("Rain/Header", "Chuva"),
+            "fogueira" => LocalizationHelper.GetString("Bonfire/Header", "Fogueira"),
+            "lancha" => LocalizationHelper.GetString("Motorboat/Header", "Lancha"),
+            "ondas" => LocalizationHelper.GetString("Waves/Header", "Ondas do Mar"),
+            "passaros" => LocalizationHelper.GetString("Birds/Header", "Pássaros"),
+            "praia" => LocalizationHelper.GetString("Beach/Header", "Praia"),
+            "trem" => LocalizationHelper.GetString("Train/Header", "Trem"),
+            "ventos" => LocalizationHelper.GetString("Wind/Header", "Ventos"),
+            "cafeteria" => LocalizationHelper.GetString("CoffeeShop/Header", "Cafeteria"),
             _ => chaveSom // Se não encontrar correspondência, retorna a própria chave
         };
     }

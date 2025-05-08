@@ -481,6 +481,10 @@
     <value>Change Timer</value>
     <comment>Text for change timer button when timer is active</comment>
   </data>
+  <data name="SetTimerTextValue" xml:space="preserve">
+    <value>Set Timer</value>
+    <comment>Text for set timer button</comment>
+  </data>
   <data name="SetTimerText.Text" xml:space="preserve">
     <value>Set Timer</value>
     <comment>Text for set timer button when timer is not active</comment>
@@ -508,6 +512,26 @@
   <data name="CancelButtonText" xml:space="preserve">
     <value>Cancel</value>
     <comment>Text for cancellation button in dialogs</comment>
+  </data>
+  <data name="TimerContainer.AutomationProperties.Name" xml:space="preserve">
+    <value>Timer display area</value>
+    <comment>Automation name for timer display area</comment>
+  </data>
+  <data name="TimerIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Timer icon</value>
+    <comment>Automation name for timer icon</comment>
+  </data>
+  <data name="TimerDisplay.AutomationProperties.Name" xml:space="preserve">
+    <value>Time remaining</value>
+    <comment>Automation name for remaining time display</comment>
+  </data>
+  <data name="CancelTimerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Cancel timer</value>
+    <comment>Automation name for cancel timer button</comment>
+  </data>
+  <data name="CancelTimerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Stops the timer and cancels automatic shutdown</value>
+    <comment>Automation help text for cancel timer button</comment>
   </data>
   
   <!-- Sound cards -->
@@ -937,6 +961,130 @@
     <value>Echo</value>
     <comment>Title for echo section</comment>
   </data>
+  <data name="SaveConfigButton.Content" xml:space="preserve">
+    <value>Save Settings</value>
+    <comment>Text for save settings button</comment>
+  </data>
+  <data name="CancelButton.Content" xml:space="preserve">
+    <value>Cancel</value>
+    <comment>Text for cancel button</comment>
+  </data>
+  <data name="ResetEffectsButton.Content" xml:space="preserve">
+    <value>Reset Effects</value>
+    <comment>Text for reset effects button</comment>
+  </data>
+  <data name="DelayLabel.Text" xml:space="preserve">
+    <value>Delay</value>
+    <comment>Text for echo effect delay label</comment>
+  </data>
+  <data name="EnableEffectsLabel.Text" xml:space="preserve">
+    <value>Enable Effects</value>
+    <comment>Text for enable effects label</comment>
+  </data>
+  <data name="MixLabel.Text" xml:space="preserve">
+    <value>Mix</value>
+    <comment>Label for effect mix control</comment>
+  </data>
+  <data name="EqEffects_Close" xml:space="preserve">
+    <value>Close</value>
+    <comment>Close button text in equalizer dialogs</comment>
+  </data>
+  <data name="EqEffects_Understood" xml:space="preserve">
+    <value>I understand</value>
+    <comment>Button to acknowledge test information</comment>
+  </data>
+  <data name="EqEffects_TestTeachingTipContent" xml:space="preserve">
+    <value>Bass has been reduced and treble amplified to create an audible difference. If you don't notice a difference in the sound, the equalizer may not be working properly.</value>
+    <comment>Content explaining the equalizer test</comment>
+  </data>
+  <data name="EqEffects_TestTeachingTipSubtitle" xml:space="preserve">
+    <value>You should notice a significant difference in the sound</value>
+    <comment>Subtitle of equalizer test teaching tip</comment>
+  </data>
+  <data name="EqEffects_TestTeachingTipTitle" xml:space="preserve">
+    <value>Equalization Test</value>
+    <comment>Title of equalizer test teaching tip</comment>
+  </data>
+  <data name="EqEffects_BandResetSuccess" xml:space="preserve">
+    <value>Equalization band reset to {0} dB</value>
+    <comment>Success message when resetting an equalization band</comment>
+  </data>
+  <data name="EqEffects_ConfigSavedSuccess" xml:space="preserve">
+    <value>Settings saved successfully.</value>
+    <comment>Success message when saving configuration</comment>
+  </data>
+  <data name="EqEffects_EffectsResetSuccess" xml:space="preserve">
+    <value>Effects reset to default values.</value>
+    <comment>Success message when resetting effects</comment>
+  </data>
+  <data name="EqEffects_EqualizerResetSuccess" xml:space="preserve">
+    <value>Equalization reset successfully</value>
+    <comment>Success message when resetting equalization</comment>
+  </data>
+  <data name="EqEffects_TestSuccess" xml:space="preserve">
+    <value>Test configuration applied: Bass=-12dB, Mids=0dB, Treble=+12dB</value>
+    <comment>Success message when applying test configuration</comment>
+  </data>
+  <data name="EqEffects_TestError" xml:space="preserve">
+    <value>Error applying test configuration: {0}</value>
+    <comment>Error message when test configuration fails</comment>
+  </data>
+  <data name="EqEffects_PlayerOrEqNotAvailable" xml:space="preserve">
+    <value>Player or equalizer not available</value>
+    <comment>Error message when player or equalizer is not available</comment>
+  </data>
+  <data name="EqEffects_NoSoundSelectedForTest" xml:space="preserve">
+    <value>No sound selected to test equalization</value>
+    <comment>Message when there's no sound to test equalization</comment>
+  </data>
+  <data name="EqEffects_EqNotAccessible" xml:space="preserve">
+    <value>Could not access the equalizer</value>
+    <comment>Error message when accessing equalizer</comment>
+  </data>
+  <data name="EqEffects_PlayerNotFoundById" xml:space="preserve">
+    <value>Player for sound '{0}' not found</value>
+    <comment>Message when player not found for equalization</comment>
+  </data>
+  <data name="EqEffects_NoSoundSelectedForEq" xml:space="preserve">
+    <value>No sound selected to reset equalization</value>
+    <comment>Message when there's no sound to equalize</comment>
+  </data>
+  <data name="EqEffects_PlayerNotAvailable" xml:space="preserve">
+    <value>Player not available to reset effects.</value>
+    <comment>Message when player is not available for effects</comment>
+  </data>
+  <data name="EqEffects_InitControlsError" xml:space="preserve">
+    <value>Error loading settings: {0}</value>
+    <comment>Error message when loading settings fails</comment>
+  </data>
+  <data name="EqEffects_SoundNotFound" xml:space="preserve">
+    <value>Player '{0}' not found.</value>
+    <comment>Message when player not found</comment>
+  </data>
+  <data name="EqEffects_NoSoundSelected" xml:space="preserve">
+    <value>No sound selected to adjust.</value>
+    <comment>Message when no sound is selected</comment>
+  </data>
+  <data name="EqEffects_Flanger" xml:space="preserve">
+    <value>Flanger</value>
+    <comment>Name of flanger effect</comment>
+  </data>
+  <data name="EqEffects_Pitch" xml:space="preserve">
+    <value>Pitch</value>
+    <comment>Name of pitch effect</comment>
+  </data>
+  <data name="EqEffects_Echo" xml:space="preserve">
+    <value>Echo</value>
+    <comment>Name of echo effect</comment>
+  </data>
+  <data name="EqEffects_Reverb" xml:space="preserve">
+    <value>Reverb</value>
+    <comment>Name of reverb effect</comment>
+  </data>
+  <data name="EqEffects_None" xml:space="preserve">
+    <value>None</value>
+    <comment>Name for no effect</comment>
+  </data>
   
   <!-- Strings for About page -->
   <data name="AboutPageTitle.Text" xml:space="preserve">
@@ -1091,6 +1239,74 @@
     <value>Delete Profile</value>
     <comment>Label for delete profile button</comment>
   </data>
+  <data name="NewProfileTitle" xml:space="preserve">
+    <value>New Profile</value>
+    <comment>Title of dialog for creating a new profile</comment>
+  </data>
+  <data name="ProfileNameLabel" xml:space="preserve">
+    <value>Name:</value>
+    <comment>Label for profile name field</comment>
+  </data>
+  <data name="ProfileNamePlaceholder" xml:space="preserve">
+    <value>Enter profile name</value>
+    <comment>Placeholder text for profile name field</comment>
+  </data>
+  <data name="ProfileDescriptionLabel" xml:space="preserve">
+    <value>Description:</value>
+    <comment>Label for profile description field</comment>
+  </data>
+  <data name="ProfileDescriptionPlaceholder" xml:space="preserve">
+    <value>Enter a description (optional)</value>
+    <comment>Placeholder text for profile description field</comment>
+  </data>
+  <data name="CreateButtonText" xml:space="preserve">
+    <value>Create</value>
+    <comment>Text for create button in dialogs</comment>
+  </data>
+  <data name="DefaultProfileName" xml:space="preserve">
+    <value>New Profile</value>
+    <comment>Default name for a new profile</comment>
+  </data>
+  <data name="DefaultProfileDescription" xml:space="preserve">
+    <value>Default settings for all sounds</value>
+    <comment>Default description for the default profile</comment>
+  </data>
+  <data name="ProfileAppliedDescription" xml:space="preserve">
+    <value>The profile '{0}' has been successfully applied.</value>
+    <comment>Description message when a profile is applied</comment>
+  </data>
+  <data name="PerfilAtivo" xml:space="preserve">
+    <value>Active Profile:</value>
+    <comment>Text to indicate the active profile</comment>
+  </data>
+  <data name="ProfileDeletedMessage" xml:space="preserve">
+    <value>Profile '{0}' successfully removed!</value>
+    <comment>Message of notification when a profile is deleted</comment>
+  </data>
+  <data name="ProfileDeletedTitle" xml:space="preserve">
+    <value>Profile Removed</value>
+    <comment>Title of notification when a profile is deleted</comment>
+  </data>
+  <data name="ProfileAppliedMessage" xml:space="preserve">
+    <value>Profile '{0}' successfully applied!</value>
+    <comment>Message of notification when a profile is applied</comment>
+  </data>
+  <data name="ProfileAppliedTitle" xml:space="preserve">
+    <value>Profile Applied</value>
+    <comment>Title of notification when a profile is applied</comment>
+  </data>
+  <data name="DeleteButton" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Text for delete button</comment>
+  </data>
+  <data name="DeleteProfileConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete the profile '{0}'? This action cannot be undone.</value>
+    <comment>Confirmation text for profile deletion</comment>
+  </data>
+  <data name="DeleteProfileTitle" xml:space="preserve">
+    <value>Delete Profile</value>
+    <comment>Title of confirmation dialog for deleting a profile</comment>
+  </data>
   
   <!-- Strings for Premium Resources -->
   <data name="PremiumResourcesTitle.Text" xml:space="preserve">
@@ -1236,5 +1452,157 @@
   <data name="ArchDescription.Text" xml:space="preserve">
     <value>Smart profile system, state management with JSON serialization, automatic settings persistence, and smooth transitions between different audio configurations.</value>
     <comment>Description of architecture technology</comment>
+  </data>
+  <data name="ShortcutsEnabledMessage" xml:space="preserve">
+    <value>Global keyboard shortcuts enabled. You can control Fulcrum even when it's in the background.</value>
+    <comment>Message displayed when global keyboard shortcuts are enabled</comment>
+  </data>
+  <data name="ShortcutsDisabledMessage" xml:space="preserve">
+    <value>Global keyboard shortcuts disabled.</value>
+    <comment>Message displayed when global keyboard shortcuts are disabled</comment>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+    <comment>Title for error messages</comment>
+  </data>
+  <data name="SuccessTitle" xml:space="preserve">
+    <value>Success</value>
+    <comment>Title for success messages</comment>
+  </data>
+  <data name="NoSoundSelected" xml:space="preserve">
+    <value>No sound selected for adjustment.</value>
+    <comment>Message when no sound is selected</comment>
+  </data>
+  <data name="PlayerNotFound" xml:space="preserve">
+    <value>Player '{0}' not found.</value>
+    <comment>Message when the player is not found</comment>
+  </data>
+  <data name="ControlsInitError" xml:space="preserve">
+    <value>Could not initialize equalization and effects controls.</value>
+    <comment>Error message on controls initialization</comment>
+  </data>
+  <data name="ReverbEffectName" xml:space="preserve">
+    <value>Reverb</value>
+    <comment>Name of reverb effect</comment>
+  </data>
+  <data name="EchoEffectName" xml:space="preserve">
+    <value>Echo</value>
+    <comment>Name of echo effect</comment>
+  </data>
+  <data name="PitchEffectName" xml:space="preserve">
+    <value>Pitch</value>
+    <comment>Name of pitch effect</comment>
+  </data>
+  <data name="FlangerEffectName" xml:space="preserve">
+    <value>Flanger</value>
+    <comment>Name of flanger effect</comment>
+  </data>
+  <data name="NoneEffectName" xml:space="preserve">
+    <value>None</value>
+    <comment>Name for no effect</comment>
+  </data>
+  <data name="NoSoundSelectedForEQ" xml:space="preserve">
+    <value>No sound selected to reset equalization</value>
+    <comment>Message when there's no sound to equalize</comment>
+  </data>
+  <data name="PlayerNotFoundForEQ" xml:space="preserve">
+    <value>Player for sound '{0}' not found</value>
+    <comment>Message when player not found for equalization</comment>
+  </data>
+  <data name="EQResetSuccess" xml:space="preserve">
+    <value>Equalization reset successfully</value>
+    <comment>Success message when resetting equalization</comment>
+  </data>
+  <data name="EQAccessError" xml:space="preserve">
+    <value>Could not access the equalizer</value>
+    <comment>Error message when accessing equalizer</comment>
+  </data>
+  <data name="PlayerNotAvailableForEffects" xml:space="preserve">
+    <value>Player not available to reset effects.</value>
+    <comment>Message when player is not available for effects</comment>
+  </data>
+  <data name="EffectsResetSuccess" xml:space="preserve">
+    <value>Effects reset to default values.</value>
+    <comment>Success message when resetting effects</comment>
+  </data>
+  <data name="NoSoundSelectedForTest" xml:space="preserve">
+    <value>No sound selected to test equalization</value>
+    <comment>Message when there's no sound to test equalization</comment>
+  </data>
+  <data name="PlayerOrEQNotAvailable" xml:space="preserve">
+    <value>Player or equalizer not available</value>
+    <comment>Message when player or equalizer are not available</comment>
+  </data>
+  <data name="TestEQApplied" xml:space="preserve">
+    <value>Test configuration applied: Bass=-12dB, Mid=0dB, Treble=+12dB</value>
+    <comment>Success message when applying test configuration</comment>
+  </data>
+  <data name="TestEQFailure" xml:space="preserve">
+    <value>Error applying test configuration: {0}</value>
+    <comment>Error message when applying test configuration</comment>
+  </data>
+  <data name="BandResetSuccess" xml:space="preserve">
+    <value>Equalization band reset to {0:F1} dB</value>
+    <comment>Success message when resetting equalization band</comment>
+  </data>
+  <data name="ConfigurationSaved" xml:space="preserve">
+    <value>Settings saved successfully.</value>
+    <comment>Success message when saving settings</comment>
+  </data>
+  <data name="TestEQTitle" xml:space="preserve">
+    <value>Equalization Test</value>
+    <comment>Title of equalization test</comment>
+  </data>
+  <data name="TestEQSubtitle" xml:space="preserve">
+    <value>You should notice a significant difference in sound</value>
+    <comment>Subtitle of equalization test</comment>
+  </data>
+  <data name="TestEQContent" xml:space="preserve">
+    <value>Bass has been reduced and treble amplified to create an audible difference. If you don't notice any difference in sound, the equalizer may not be working properly.</value>
+    <comment>Content of equalization test</comment>
+  </data>
+  <data name="UnderstandButton" xml:space="preserve">
+    <value>Got it</value>
+    <comment>Understanding button</comment>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Close</value>
+    <comment>Close button</comment>
+  </data>
+  <data name="RainSoundName" xml:space="preserve">
+    <value>Rain</value>
+    <comment>Name of rain sound</comment>
+  </data>
+  <data name="BonfireSoundName" xml:space="preserve">
+    <value>Bonfire</value>
+    <comment>Name of bonfire sound</comment>
+  </data>
+  <data name="WavesSoundName" xml:space="preserve">
+    <value>Ocean Waves</value>
+    <comment>Name of ocean waves sound</comment>
+  </data>
+  <data name="BirdsSoundName" xml:space="preserve">
+    <value>Birds</value>
+    <comment>Name of birds sound</comment>
+  </data>
+  <data name="BeachSoundName" xml:space="preserve">
+    <value>Beach</value>
+    <comment>Name of beach sound</comment>
+  </data>
+  <data name="TrainSoundName" xml:space="preserve">
+    <value>Train</value>
+    <comment>Name of train sound</comment>
+  </data>
+  <data name="WindSoundName" xml:space="preserve">
+    <value>Wind</value>
+    <comment>Name of wind sound</comment>
+  </data>
+  <data name="CoffeeSoundName" xml:space="preserve">
+    <value>Coffee Shop</value>
+    <comment>Name of coffee shop sound</comment>
+  </data>
+  <data name="MotorboatSoundName" xml:space="preserve">
+    <value>Motorboat</value>
+    <comment>Name of motorboat sound</comment>
   </data>
 </root>

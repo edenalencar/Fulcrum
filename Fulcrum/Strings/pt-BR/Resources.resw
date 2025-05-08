@@ -466,23 +466,27 @@
     <comment>Nome de automação do ícone de volume alto</comment>
   </data>
   <data name="SetTimerButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Definir timer</value>
+    <value>Definir temporizador</value>
     <comment>Nome de automação do botão de definir timer</comment>
   </data>
   <data name="SetTimerButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Configura um timer para parar automaticamente a reprodução</value>
+    <value>Configura um temporizador para parar automaticamente a reprodução</value>
     <comment>Texto de ajuda de automação do botão de definir timer</comment>
   </data>
   <data name="SetTimerButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Definir timer para parada automática</value>
+    <value>Definir temporizador para parada automática</value>
     <comment>Dica de ferramenta do botão de definir timer</comment>
   </data>
   <data name="ChangeTimerText" xml:space="preserve">
-    <value>Alterar Timer</value>
+    <value>Alterar Temporizador</value>
     <comment>Texto para o botão de alterar timer quando o timer está ativo</comment>
   </data>
+  <data name="SetTimerTextValue" xml:space="preserve">
+    <value>Definir Temporizador</value>
+    <comment>Texto para o botão de definir timer</comment>
+  </data>
   <data name="SetTimerText.Text" xml:space="preserve">
-    <value>Definir Timer</value>
+    <value>Definir Temporizador</value>
     <comment>Texto para o botão de definir timer quando o timer não está ativo</comment>
   </data>
   <data name="TimerCompletedTitle" xml:space="preserve">
@@ -820,7 +824,29 @@
     <comment>Texto de ajuda de automação do controle deslizante de volume da cafeteria</comment>
   </data>
   
-  <!-- Strings for Equalizer and Effects page -->
+  <!-- Timer container -->
+  <data name="TimerContainer.AutomationProperties.Name" xml:space="preserve">
+    <value>Área de exibição do temporizador</value>
+    <comment>Nome de automação da área de exibição do temporizador</comment>
+  </data>
+  <data name="TimerIcon.AutomationProperties.Name" xml:space="preserve">
+    <value>Ícone do temporizador</value>
+    <comment>Nome de automação do ícone do temporizador</comment>
+  </data>
+  <data name="TimerDisplay.AutomationProperties.Name" xml:space="preserve">
+    <value>Tempo restante</value>
+    <comment>Nome de automação da exibição de tempo restante</comment>
+  </data>
+  <data name="CancelTimerButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Cancelar temporizador</value>
+    <comment>Nome de automação do botão de cancelar temporizador</comment>
+  </data>
+  <data name="CancelTimerButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Interrompe o temporizador e cancela a parada automática</value>
+    <comment>Texto de ajuda de automação do botão de cancelar temporizador</comment>
+  </data>
+  
+  <!-- Strings para a página do Equalizador e Efeitos -->
   <data name="EqualizerEffectsTitle.Text" xml:space="preserve">
     <value>Equalizador e Efeitos</value>
     <comment>Título da página de equalizador e efeitos</comment>
@@ -911,7 +937,7 @@
   </data>
   <data name="EffectTypeLabel.Text" xml:space="preserve">
     <value>Tipo de Efeito</value>
-    <comment>Rótulo para seleção do tipo de efeito</comment>
+    <comment>Texto para o label do tipo de efeito</comment>
   </data>
   <data name="EffectTypeComboBox.AutomationProperties.Name" xml:space="preserve">
     <value>Tipo de efeito sonoro</value>
@@ -934,12 +960,112 @@
     <comment>Rótulo para o controle de tempo de reverberação</comment>
   </data>
   <data name="PitchSectionTitle.Text" xml:space="preserve">
-    <value>Ajuste de Pitch</value>
+    <value>Ajuste de Afinação</value>
     <comment>Título para a seção de ajuste de pitch</comment>
   </data>
   <data name="EchoSectionTitle.Text" xml:space="preserve">
     <value>Eco</value>
     <comment>Título para a seção de eco</comment>
+  </data>
+  <data name="EqEffects_None" xml:space="preserve">
+    <value>Nenhum</value>
+    <comment>Opção Nenhum na caixa de combinação de tipo de efeito</comment>
+  </data>
+  <data name="EqEffects_Reverb" xml:space="preserve">
+    <value>Reverberação</value>
+    <comment>Opção Reverberação na caixa de combinação de tipo de efeito</comment>
+  </data>
+  <data name="EqEffects_Echo" xml:space="preserve">
+    <value>Eco</value>
+    <comment>Opção Eco na caixa de combinação de tipo de efeito</comment>
+  </data>
+  <data name="EqEffects_Pitch" xml:space="preserve">
+    <value>Afinação</value>
+    <comment>Opção Pitch na caixa de combinação de tipo de efeito</comment>
+  </data>
+  <data name="EqEffects_Flanger" xml:space="preserve">
+    <value>Flanger</value>
+    <comment>Opção Flanger na caixa de combinação de tipo de efeito</comment>
+  </data>
+  <data name="EqEffects_NoSoundSelected" xml:space="preserve">
+    <value>Nenhum som selecionado para ajustar.</value>
+    <comment>Mensagem de erro quando nenhum som está selecionado</comment>
+  </data>
+  <data name="EqEffects_SoundNotFound" xml:space="preserve">
+    <value>Reprodutor para o som '{0}' não encontrado.</value>
+    <comment>Mensagem de erro quando o reprodutor de som não é encontrado</comment>
+  </data>
+  <data name="EqEffects_InitControlsError" xml:space="preserve">
+    <value>Não foi possível inicializar os controles de equalização e efeitos.</value>
+    <comment>Mensagem de erro quando os controles não podem ser inicializados</comment>
+  </data>
+  <data name="EqEffects_PlayerNotAvailable" xml:space="preserve">
+    <value>Reprodutor não disponível para resetar efeitos.</value>
+    <comment>Mensagem de erro quando o reprodutor não está disponível</comment>
+  </data>
+  <data name="EqEffects_NoSoundSelectedForEq" xml:space="preserve">
+    <value>Nenhum som selecionado para redefinir equalização</value>
+    <comment>Mensagem de erro quando nenhum som está selecionado para redefinição de equalização</comment>
+  </data>
+  <data name="EqEffects_PlayerNotFoundById" xml:space="preserve">
+    <value>Reprodutor para o som '{0}' não encontrado</value>
+    <comment>Mensagem de erro quando o reprodutor não é encontrado pelo ID</comment>
+  </data>
+  <data name="EqEffects_EqNotAccessible" xml:space="preserve">
+    <value>Não foi possível acessar o equalizador</value>
+    <comment>Mensagem de erro quando o equalizador não está acessível</comment>
+  </data>
+  <data name="EqEffects_NoSoundSelectedForTest" xml:space="preserve">
+    <value>Nenhum som selecionado para testar equalização</value>
+    <comment>Mensagem de erro quando nenhum som está selecionado para teste de equalização</comment>
+  </data>
+  <data name="EqEffects_PlayerOrEqNotAvailable" xml:space="preserve">
+    <value>Reprodutor ou equalizador não disponível</value>
+    <comment>Mensagem de erro quando o reprodutor ou equalizador não está disponível</comment>
+  </data>
+  <data name="EqEffects_TestError" xml:space="preserve">
+    <value>Erro ao aplicar configuração de teste: {0}</value>
+    <comment>Mensagem de erro quando a configuração de teste não pode ser aplicada</comment>
+  </data>
+  <data name="EqEffects_TestSuccess" xml:space="preserve">
+    <value>Configuração de teste aplicada: Graves=-12dB, Médios=0dB, Agudos=+12dB</value>
+    <comment>Mensagem de sucesso quando a configuração de teste é aplicada</comment>
+  </data>
+  <data name="EqEffects_EqualizerResetSuccess" xml:space="preserve">
+    <value>Equalização redefinida com sucesso</value>
+    <comment>Mensagem de sucesso quando a equalização é redefinida</comment>
+  </data>
+  <data name="EqEffects_EffectsResetSuccess" xml:space="preserve">
+    <value>Efeitos resetados para os valores padrão.</value>
+    <comment>Mensagem de sucesso quando os efeitos são redefinidos</comment>
+  </data>
+  <data name="EqEffects_ConfigSavedSuccess" xml:space="preserve">
+    <value>Configurações salvas com sucesso.</value>
+    <comment>Mensagem de sucesso quando as configurações são salvas</comment>
+  </data>
+  <data name="EqEffects_BandResetSuccess" xml:space="preserve">
+    <value>Banda de equalização redefinida para {0:F1} dB</value>
+    <comment>Mensagem de sucesso quando a banda de equalização é redefinida</comment>
+  </data>
+  <data name="EqEffects_TestTeachingTipTitle" xml:space="preserve">
+    <value>Teste de Equalização</value>
+    <comment>Título para a dica de ensino de teste de equalização</comment>
+  </data>
+  <data name="EqEffects_TestTeachingTipSubtitle" xml:space="preserve">
+    <value>Você deve notar uma diferença significativa no som</value>
+    <comment>Subtítulo para a dica de ensino de teste de equalização</comment>
+  </data>
+  <data name="EqEffects_TestTeachingTipContent" xml:space="preserve">
+    <value>Graves foram reduzidos e agudos amplificados para criar uma diferença audível. Se você não percebe diferença no som, o equalizador pode não estar funcionando corretamente.</value>
+    <comment>Conteúdo para a dica de ensino de teste de equalização</comment>
+  </data>
+  <data name="EqEffects_Understood" xml:space="preserve">
+    <value>Entendi</value>
+    <comment>Texto para o botão Entendido na dica de ensino</comment>
+  </data>
+  <data name="EqEffects_Close" xml:space="preserve">
+    <value>Fechar</value>
+    <comment>Texto para o botão Fechar na dica de ensino</comment>
   </data>
   
   <!-- Strings for About page -->
@@ -954,6 +1080,18 @@
   <data name="AboutDescription.Text" xml:space="preserve">
     <value>TECNOLOGIA DE ÁUDIO PREMIUM</value>
     <comment>Descrição curta do aplicativo na página Sobre</comment>
+  </data>
+  <data name="AboutAbout.Text" xml:space="preserve">
+    <value>Sobre o Fulcrum</value>
+    <comment>Título da seção sobre no About</comment>
+  </data>
+  <data name="AboutIntroP1.Text" xml:space="preserve">
+    <value>O Fulcrum é um aplicativo premium de reprodução de sons ambientes meticulosamente projetado para transformar sua experiência de foco, relaxamento e produtividade. Desenvolvido com precisão para proporcionar uma atmosfera verdadeiramente imersiva, o Fulcrum permite que você transcenda o ruído cotidiano e encontre seu equilíbrio sonoro perfeito.</value>
+    <comment>Primeiro parágrafo do texto sobre o aplicativo</comment>
+  </data>
+  <data name="AboutIntroP2.Text" xml:space="preserve">
+    <value>Combinando sons ambientes de alta fidelidade com uma interface elegante e minimalista, o Fulcrum eleva sua experiência sonora a um novo patamar. É a ferramenta ideal para quem busca criar o ambiente acústico perfeito para trabalhar com maior concentração, estudar com foco intenso, meditar profundamente ou simplesmente relaxar completamente.</value>
+    <comment>Segundo parágrafo do texto sobre o aplicativo</comment>
   </data>
   <data name="SourceCodeButton.Content" xml:space="preserve">
     <value>Ver Código Fonte</value>
@@ -1004,7 +1142,7 @@
     <comment>Descrição do recurso de mixador</comment>
   </data>
   <data name="TimerTitle.Text" xml:space="preserve">
-    <value>Timer Inteligente</value>
+    <value>Temporizador Inteligente</value>
     <comment>Título do recurso de timer</comment>
   </data>
   <data name="TimerDescription.Text" xml:space="preserve">
@@ -1134,5 +1272,337 @@
   <data name="ArchDescription.Text" xml:space="preserve">
     <value>Sistema de perfis inteligentes, gerenciamento de estado com serialização JSON, persistência automática de configurações, e transições suaves entre diferentes configurações de áudio.</value>
     <comment>Descrição tecnologia arquitetura</comment>
+  </data>
+  <data name="ShortcutsEnabledMessage" xml:space="preserve">
+    <value>Teclas de atalho globais habilitadas. Você pode controlar o Fulcrum mesmo quando ele estiver em segundo plano.</value>
+    <comment>Mensagem exibida quando os atalhos de teclado globais estão habilitados</comment>
+  </data>
+  <data name="ShortcutsDisabledMessage" xml:space="preserve">
+    <value>Teclas de atalho globais desabilitadas.</value>
+    <comment>Mensagem exibida quando os atalhos de teclado globais estão desabilitados</comment>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Erro</value>
+    <comment>Título para mensagens de erro</comment>
+  </data>
+  <data name="SuccessTitle" xml:space="preserve">
+    <value>Sucesso</value>
+    <comment>Título para mensagens de sucesso</comment>
+  </data>
+  <data name="NoSoundSelected" xml:space="preserve">
+    <value>Nenhum som selecionado para ajustar.</value>
+    <comment>Mensagem quando nenhum som está selecionado</comment>
+  </data>
+  <data name="PlayerNotFound" xml:space="preserve">
+    <value>Reprodutor '{0}' não encontrado.</value>
+    <comment>Mensagem quando o reprodutor não é encontrado</comment>
+  </data>
+  <data name="ControlsInitError" xml:space="preserve">
+    <value>Não foi possível inicializar os controles de equalização e efeitos.</value>
+    <comment>Mensagem de erro na inicialização dos controles</comment>
+  </data>
+  <data name="ReverbEffectName" xml:space="preserve">
+    <value>Reverberação</value>
+    <comment>Nome do efeito de reverberação</comment>
+  </data>
+  <data name="EchoEffectName" xml:space="preserve">
+    <value>Eco</value>
+    <comment>Nome do efeito de eco</comment>
+  </data>
+  <data name="PitchEffectName" xml:space="preserve">
+    <value>Afinação</value>
+    <comment>Nome do efeito de pitch</comment>
+  </data>
+  <data name="FlangerEffectName" xml:space="preserve">
+    <value>Flanger</value>
+    <comment>Nome do efeito de flanger</comment>
+  </data>
+  <data name="NoneEffectName" xml:space="preserve">
+    <value>Nenhum</value>
+    <comment>Nome para nenhum efeito</comment>
+  </data>
+  <data name="NoSoundSelectedForEQ" xml:space="preserve">
+    <value>Nenhum som selecionado para redefinir equalização</value>
+    <comment>Mensagem quando não há som para equalizar</comment>
+  </data>
+  <data name="PlayerNotFoundForEQ" xml:space="preserve">
+    <value>Reprodutor para o som '{0}' não encontrado</value>
+    <comment>Mensagem quando reprodutor não foi encontrado para equalização</comment>
+  </data>
+  <data name="EQResetSuccess" xml:space="preserve">
+    <value>Equalização redefinida com sucesso</value>
+    <comment>Mensagem de sucesso ao redefinir equalização</comment>
+  </data>
+  <data name="EQAccessError" xml:space="preserve">
+    <value>Não foi possível acessar o equalizador</value>
+    <comment>Mensagem de erro ao acessar equalizador</comment>
+  </data>
+  <data name="PlayerNotAvailableForEffects" xml:space="preserve">
+    <value>Reprodutor não disponível para resetar efeitos.</value>
+    <comment>Mensagem quando reprodutor não está disponível para efeitos</comment>
+  </data>
+  <data name="EffectsResetSuccess" xml:space="preserve">
+    <value>Efeitos resetados para os valores padrão.</value>
+    <comment>Mensagem de sucesso ao resetar efeitos</comment>
+  </data>
+  <data name="NoSoundSelectedForTest" xml:space="preserve">
+    <value>Nenhum som selecionado para testar equalização</value>
+    <comment>Mensagem quando não há som para testar equalização</comment>
+  </data>
+  <data name="PlayerOrEQNotAvailable" xml:space="preserve">
+    <value>Reprodutor ou equalizador não disponível</value>
+    <comment>Mensagem quando reprodutor ou equalizador não estão disponíveis</comment>
+  </data>
+  <data name="TestEQApplied" xml:space="preserve">
+    <value>Configuração de teste aplicada: Graves=-12dB, Médios=0dB, Agudos=+12dB</value>
+    <comment>Mensagem de sucesso ao aplicar configuração de teste</comment>
+  </data>
+  <data name="TestEQFailure" xml:space="preserve">
+    <value>Erro ao aplicar configuração de teste: {0}</value>
+    <comment>Mensagem de erro ao aplicar configuração de teste</comment>
+  </data>
+  <data name="BandResetSuccess" xml:space="preserve">
+    <value>Banda de equalização redefinida para {0:F1} dB</value>
+    <comment>Mensagem de sucesso ao redefinir banda de equalização</comment>
+  </data>
+  <data name="ConfigurationSaved" xml:space="preserve">
+    <value>Configurações salvas com sucesso.</value>
+    <comment>Mensagem de sucesso ao salvar configurações</comment>
+  </data>
+  <data name="TestEQTitle" xml:space="preserve">
+    <value>Teste de Equalização</value>
+    <comment>Título do teste de equalização</comment>
+  </data>
+  <data name="TestEQSubtitle" xml:space="preserve">
+    <value>Você deve notar uma diferença significativa no som</value>
+    <comment>Subtítulo do teste de equalização</comment>
+  </data>
+  <data name="TestEQContent" xml:space="preserve">
+    <value>Graves foram reduzidos e agudos amplificados para criar uma diferença audível. Se você não percebe diferença no som, o equalizador pode não estar funcionando corretamente.</value>
+    <comment>Conteúdo do teste de equalização</comment>
+  </data>
+  <data name="UnderstandButton" xml:space="preserve">
+    <value>Entendi</value>
+    <comment>Botão de entendimento</comment>
+  </data>
+  <data name="CloseButton" xml:space="preserve">
+    <value>Fechar</value>
+    <comment>Botão de fechar</comment>
+  </data>
+  <data name="RainSoundName" xml:space="preserve">
+    <value>Chuva</value>
+    <comment>Nome do som de chuva</comment>
+  </data>
+  <data name="BonfireSoundName" xml:space="preserve">
+    <value>Fogueira</value>
+    <comment>Nome do som de fogueira</comment>
+  </data>
+  <data name="WavesSoundName" xml:space="preserve">
+    <value>Ondas do Mar</value>
+    <comment>Nome do som de ondas do mar</comment>
+  </data>
+  <data name="BirdsSoundName" xml:space="preserve">
+    <value>Pássaros</value>
+    <comment>Nome do som de pássaros</comment>
+  </data>
+  <data name="BeachSoundName" xml:space="preserve">
+    <value>Praia</value>
+    <comment>Nome do som de praia</comment>
+  </data>
+  <data name="TrainSoundName" xml:space="preserve">
+    <value>Trem</value>
+    <comment>Nome do som de trem</comment>
+  </data>
+  <data name="WindSoundName" xml:space="preserve">
+    <value>Ventos</value>
+    <comment>Nome do som de ventos</comment>
+  </data>
+  <data name="CoffeeSoundName" xml:space="preserve">
+    <value>Cafeteria</value>
+    <comment>Nome do som de cafeteria</comment>
+  </data>
+  <data name="MotorboatSoundName" xml:space="preserve">
+    <value>Lancha</value>
+    <comment>Nome do som de lancha</comment>
+  </data>
+  <data name="NewProfileTitle" xml:space="preserve">
+    <value>Novo Perfil</value>
+    <comment>Título do diálogo para criar um novo perfil</comment>
+  </data>
+  <data name="ProfileNameLabel" xml:space="preserve">
+    <value>Nome:</value>
+    <comment>Rótulo para o campo de nome do perfil</comment>
+  </data>
+  <data name="ProfileNamePlaceholder" xml:space="preserve">
+    <value>Digite o nome do perfil</value>
+    <comment>Texto de placeholder para o campo de nome do perfil</comment>
+  </data>
+  <data name="ProfileDescriptionLabel" xml:space="preserve">
+    <value>Descrição:</value>
+    <comment>Rótulo para o campo de descrição do perfil</comment>
+  </data>
+  <data name="ProfileDescriptionPlaceholder" xml:space="preserve">
+    <value>Digite uma descrição (opcional)</value>
+    <comment>Texto de placeholder para o campo de descrição do perfil</comment>
+  </data>
+  <data name="CreateButtonText" xml:space="preserve">
+    <value>Criar</value>
+    <comment>Texto para o botão de criar em diálogos</comment>
+  </data>
+  <data name="DefaultProfileName" xml:space="preserve">
+    <value>Novo Perfil</value>
+    <comment>Nome padrão para um novo perfil</comment>
+  </data>
+  <data name="DefaultProfileDescription" xml:space="preserve">
+    <value>Configurações padrão para todos os sons</value>
+    <comment>Descrição padrão para o perfil padrão</comment>
+  </data>
+  <data name="SaveConfigButton.Content" xml:space="preserve">
+    <value>Salvar Configurações</value>
+    <comment>Texto do botão de salvar configurações</comment>
+  </data>
+  <data name="CancelButton.Content" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Texto do botão de cancelar</comment>
+  </data>
+  <data name="ResetEffectsButton.Content" xml:space="preserve">
+    <value>Resetar Efeitos</value>
+    <comment>Texto do botão para resetar efeitos</comment>
+  </data>
+  <data name="DelayLabel.Text" xml:space="preserve">
+    <value>Atraso</value>
+    <comment>Texto para o label de atraso do efeito de eco</comment>
+  </data>
+  <data name="MixLabel.Text" xml:space="preserve">
+    <value>Mix</value>
+    <comment>Texto para controle de mix de efeitos</comment>
+  </data>
+  <data name="EffectTypeLabel.Text" xml:space="preserve">
+    <value>Tipo de Efeito</value>
+    <comment>Texto para o label do tipo de efeito</comment>
+  </data>
+  <data name="EnableEffectsLabel.Text" xml:space="preserve">
+    <value>Habilitar Efeitos</value>
+    <comment>Texto para o label de habilitar efeitos</comment>
+  </data>
+
+  <!-- Strings para o menu lateral -->
+  <data name="HomeMenuItem.Content" xml:space="preserve">
+    <value>Início</value>
+    <comment>Item de menu Início</comment>
+  </data>
+  <data name="HomeMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Início - Controle de sons</value>
+    <comment>Dica de ferramenta para o item de menu Início</comment>
+  </data>
+  <data name="ProfilesMenuItem.Content" xml:space="preserve">
+    <value>Perfis</value>
+    <comment>Item de menu Perfis</comment>
+  </data>
+  <data name="ProfilesMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Perfis de som</value>
+    <comment>Dica de ferramenta para o item de menu Perfis</comment>
+  </data>
+  <data name="SettingsMenuItem.Content" xml:space="preserve">
+    <value>Configurações</value>
+    <comment>Item de menu Configurações</comment>
+  </data>
+  <data name="SettingsMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configurações do aplicativo</value>
+    <comment>Dica de ferramenta para o item de menu Configurações</comment>
+  </data>
+  <data name="AboutMenuItem.Content" xml:space="preserve">
+    <value>Sobre</value>
+    <comment>Item de menu Sobre</comment>
+  </data>
+  <data name="AboutMenuItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sobre o aplicativo</value>
+    <comment>Dica de ferramenta para o item de menu Sobre</comment>
+  </data>
+  <data name="AppTitle.Text" xml:space="preserve">
+    <value>Fulcrum - Sons Ambientes</value>
+    <comment>Título do aplicativo na barra de título</comment>
+  </data>
+
+  <!-- Strings para a página de Perfis -->
+  <data name="ProfilesPageTitle.Text" xml:space="preserve">
+    <value>Perfis de Som</value>
+    <comment>Título da página de perfis</comment>
+  </data>
+  <data name="ProfilesPageDescription.Text" xml:space="preserve">
+    <value>Crie, gerencie e aplique configurações de som personalizadas</value>
+    <comment>Descrição da página de perfis</comment>
+  </data>
+  <data name="ProfileHeaderText.Text" xml:space="preserve">
+    <value>Seus Perfis</value>
+    <comment>Texto para o cabeçalho da lista de perfis</comment>
+  </data>
+  <data name="ProfileDetailsText.Text" xml:space="preserve">
+    <value>Detalhes do Perfil</value>
+    <comment>Texto para a seção de detalhes do perfil</comment>
+  </data>
+  <data name="SelectProfileInfoBar.Title" xml:space="preserve">
+    <value>Selecione um perfil</value>
+    <comment>Título da barra de informações quando nenhum perfil está selecionado</comment>
+  </data>
+  <data name="ConfigurationInfoText.Text" xml:space="preserve">
+    <value>Selecione um perfil para ver as configurações de som</value>
+    <comment>Texto de informação para seleção de perfil</comment>
+  </data>
+  <data name="SoundConfigurationsText.Text" xml:space="preserve">
+    <value>Configurações de Som</value>
+    <comment>Título para a seção de configurações de som</comment>
+  </data>
+  <data name="NewProfileButton.Label" xml:space="preserve">
+    <value>Novo Perfil</value>
+    <comment>Texto para o botão de novo perfil</comment>
+  </data>
+  <data name="ApplyProfileButton.Label" xml:space="preserve">
+    <value>Aplicar Perfil</value>
+    <comment>Texto para o botão de aplicar perfil</comment>
+  </data>
+  <data name="DeleteProfileButton.Label" xml:space="preserve">
+    <value>Remover Perfil</value>
+    <comment>Texto para o botão de remover perfil</comment>
+  </data>
+  <data name="DeleteProfileTitle" xml:space="preserve">
+    <value>Remover Perfil</value>
+    <comment>Título do diálogo de confirmação para remover perfil</comment>
+  </data>
+  <data name="DeleteProfileConfirmation" xml:space="preserve">
+    <value>Tem certeza que deseja remover o perfil '{0}'? Esta ação não pode ser desfeita.</value>
+    <comment>Texto de confirmação para remover perfil</comment>
+  </data>
+  <data name="DeleteButton" xml:space="preserve">
+    <value>Remover</value>
+    <comment>Texto do botão de remover</comment>
+  </data>
+  <data name="ProfileAppliedTitle" xml:space="preserve">
+    <value>Perfil Aplicado</value>
+    <comment>Título da notificação quando um perfil é aplicado</comment>
+  </data>
+  <data name="ProfileAppliedMessage" xml:space="preserve">
+    <value>Perfil '{0}' aplicado com sucesso!</value>
+    <comment>Mensagem da notificação quando um perfil é aplicado</comment>
+  </data>
+  <data name="ProfileDeletedTitle" xml:space="preserve">
+    <value>Perfil Removido</value>
+    <comment>Título da notificação quando um perfil é removido</comment>
+  </data>
+  <data name="ProfileDeletedMessage" xml:space="preserve">
+    <value>Perfil '{0}' removido com sucesso!</value>
+    <comment>Mensagem da notificação quando um perfil é removido</comment>
+  </data>
+  <data name="PerfilAtivo" xml:space="preserve">
+    <value>Perfil Ativo:</value>
+    <comment>Texto para indicar o perfil ativo</comment>
+  </data>
+  <data name="NoActiveProfileText.Text" xml:space="preserve">
+    <value>Nenhum perfil ativo</value>
+    <comment>Texto quando não há perfil ativo</comment>
+  </data>
+  <data name="ProfileAppliedDescription" xml:space="preserve">
+    <value>O perfil '{0}' foi aplicado com sucesso.</value>
+    <comment>Descrição da mensagem quando um perfil é aplicado</comment>
   </data>
 </root>

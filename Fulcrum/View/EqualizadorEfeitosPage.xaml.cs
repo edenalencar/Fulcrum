@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Diagnostics;
+using Fulcrum.Util; // Adicionado para usar o LocalizationHelper
 
 namespace Fulcrum.View;
 
@@ -48,7 +49,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
             else
             {
                 // Reprodutor não encontrado, exibir mensagem de erro
-                ShowErrorMessage($"Reprodutor '{soundId}' não encontrado.");
+                ShowErrorMessage(string.Format(LocalizationHelper.GetString("PlayerNotFound", "Reprodutor '{0}' não encontrado."), soundId));
             }
         }
     }
@@ -98,13 +99,13 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 else
                 {
                     // Se não encontrou o reprodutor, exibe mensagem de erro
-                    ShowErrorMessage($"Reprodutor para o som '{_currentSoundId}' não encontrado.");
+                    ShowErrorMessage(string.Format(LocalizationHelper.GetString("PlayerNotFoundForEQ", "Reprodutor para o som '{0}' não encontrado"), _currentSoundId));
                 }
             }
             else
             {
                 // Se não foi passado um ID de som válido, exibe mensagem de erro
-                ShowErrorMessage("Nenhum som selecionado para ajustar.");
+                ShowErrorMessage(LocalizationHelper.GetString("NoSoundSelected", "Nenhum som selecionado para ajustar."));
             }
         }
         catch (Exception ex)
@@ -129,11 +130,11 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 // Verifica se o ComboBox já tem itens
                 if (tipoEfeitoComboBox.Items.Count == 0)
                 {
-                    tipoEfeitoComboBox.Items.Add("Nenhum");
-                    tipoEfeitoComboBox.Items.Add("Reverberação");
-                    tipoEfeitoComboBox.Items.Add("Eco");
-                    tipoEfeitoComboBox.Items.Add("Pitch");
-                    tipoEfeitoComboBox.Items.Add("Flanger");
+                    tipoEfeitoComboBox.Items.Add(LocalizationHelper.GetString("NoneEffectName", "Nenhum"));
+                    tipoEfeitoComboBox.Items.Add(LocalizationHelper.GetString("ReverbEffectName", "Reverberação"));
+                    tipoEfeitoComboBox.Items.Add(LocalizationHelper.GetString("EchoEffectName", "Eco"));
+                    tipoEfeitoComboBox.Items.Add(LocalizationHelper.GetString("PitchEffectName", "Pitch"));
+                    tipoEfeitoComboBox.Items.Add(LocalizationHelper.GetString("FlangerEffectName", "Flanger"));
                 }
                 
                 if (_currentPlayer != null && _currentPlayer.EffectsManager != null)
@@ -174,7 +175,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         catch (Exception ex)
         {
             Debug.WriteLine($"Erro ao inicializar controles: {ex.Message}");
-            ShowErrorMessage("Não foi possível inicializar os controles de equalização e efeitos.");
+            ShowErrorMessage(LocalizationHelper.GetString("ControlsInitError", "Não foi possível inicializar os controles de equalização e efeitos."));
         }
     }
 
@@ -493,7 +494,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         AudioManager.Instance.SalvarEstadoEfeitos();
         
         // Exibe feedback
-        MostrarFeedbackSucesso("Configurações salvas com sucesso.");
+        MostrarFeedbackSucesso(LocalizationHelper.GetString("ConfigurationSaved", "Configurações salvas com sucesso."));
     }
 
     /// <summary>
@@ -506,7 +507,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         // Verifica se há um ID de som atual válido
         if (string.IsNullOrEmpty(_currentSoundId))
         {
-            MostrarFeedbackErro("Nenhum som selecionado para redefinir equalização");
+            MostrarFeedbackErro(LocalizationHelper.GetString("NoSoundSelectedForEQ", "Nenhum som selecionado para redefinir equalização"));
             return;
         }
         
@@ -518,7 +519,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         }
         catch (KeyNotFoundException)
         {
-            MostrarFeedbackErro($"Reprodutor para o som '{_currentSoundId}' não encontrado");
+            MostrarFeedbackErro(string.Format(LocalizationHelper.GetString("PlayerNotFoundForEQ", "Reprodutor para o som '{0}' não encontrado"), _currentSoundId));
             return;
         }
 
@@ -538,11 +539,11 @@ public sealed partial class EqualizadorEfeitosPage : Page
             txtAltaValor.Text = "0.0 dB";
             _isInitializing = false;
             
-            MostrarFeedbackSucesso("Equalização redefinida com sucesso");
+            MostrarFeedbackSucesso(LocalizationHelper.GetString("EQResetSuccess", "Equalização redefinida com sucesso"));
         }
         else
         {
-            MostrarFeedbackErro("Não foi possível acessar o equalizador");
+            MostrarFeedbackErro(LocalizationHelper.GetString("EQAccessError", "Não foi possível acessar o equalizador"));
         }
     }
 
@@ -556,7 +557,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         // Verifica se _currentPlayer e _currentPlayer.EffectsManager não são nulos
         if (_currentPlayer == null || _currentPlayer.EffectsManager == null) 
         {
-            ShowErrorMessage("Reprodutor não disponível para resetar efeitos.");
+            ShowErrorMessage(LocalizationHelper.GetString("PlayerNotAvailableForEffects", "Reprodutor não disponível para resetar efeitos."));
             return;
         }
 
@@ -583,7 +584,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         UpdateEffectControls();
         
         // Exibe feedback
-        MostrarFeedbackSucesso("Efeitos resetados para os valores padrão.");
+        MostrarFeedbackSucesso(LocalizationHelper.GetString("EffectsResetSuccess", "Efeitos resetados para os valores padrão."));
     }
 
     /// <summary>
@@ -596,7 +597,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         // Verifica se há um ID de som atual válido
         if (string.IsNullOrEmpty(_currentSoundId))
         {
-            MostrarFeedbackErro("Nenhum som selecionado para testar equalização");
+            MostrarFeedbackErro(LocalizationHelper.GetString("NoSoundSelectedForTest", "Nenhum som selecionado para testar equalização"));
             return;
         }
         
@@ -613,7 +614,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
             var reprodutor = AudioManager.Instance.GetReprodutorPorId(_currentSoundId);
             if (reprodutor == null || reprodutor.Equalizer == null)
             {
-                MostrarFeedbackErro("Reprodutor ou equalizador não disponível");
+                MostrarFeedbackErro(LocalizationHelper.GetString("PlayerOrEQNotAvailable", "Reprodutor ou equalizador não disponível"));
                 return;
             }
             
@@ -639,25 +640,24 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 reprodutor.Reader.Volume > 0.001f)
             {
                 reprodutor.Play();
-                System.Diagnostics.Debug.WriteLine("[TEST EQ] Iniciando reprodução para testar o equalizador");
+                System.Diagnostics.Debug.WriteLine("[TEST EQ] Iniciando reprodução para testar equalizador");
             }
             
             // Mostra feedback
-            MostrarFeedbackSucesso("Configuração de teste aplicada: Graves=-12dB, Médios=0dB, Agudos=+12dB");
+            MostrarFeedbackSucesso(LocalizationHelper.GetString("TestEQApplied", "Configuração de teste aplicada: Graves=-12dB, Médios=0dB, Agudos=+12dB"));
             
             // Também mostra uma dica mais visível em um TeachingTip, se disponível
             var teachtip = new Microsoft.UI.Xaml.Controls.TeachingTip
             {
-                Title = "Teste de Equalização",
-                Subtitle = "Você deve notar uma diferença significativa no som",
+                Title = LocalizationHelper.GetString("TestEQTitle", "Teste de Equalização"),
+                Subtitle = LocalizationHelper.GetString("TestEQSubtitle", "Você deve notar uma diferença significativa no som"),
                 Content = new TextBlock 
                 { 
-                    Text = "Graves foram reduzidos e agudos amplificados para criar uma diferença audível. " +
-                           "Se você não percebe diferença no som, o equalizador pode não estar funcionando corretamente.",
+                    Text = LocalizationHelper.GetString("TestEQContent", "Graves foram reduzidos e agudos amplificados para criar uma diferença audível. Se você não percebe diferença no som, o equalizador pode não estar funcionando corretamente."),
                     TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
                 },
-                ActionButtonContent = "Entendi",
-                CloseButtonContent = "Fechar",
+                ActionButtonContent = LocalizationHelper.GetString("UnderstandButton", "Entendi"),
+                CloseButtonContent = LocalizationHelper.GetString("CloseButton", "Fechar"),
                 PreferredPlacement = Microsoft.UI.Xaml.Controls.TeachingTipPlacementMode.Bottom,
                 IsLightDismissEnabled = true
             };
@@ -678,7 +678,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[TEST EQ] Erro ao aplicar configuração de teste: {ex.Message}");
-            MostrarFeedbackErro($"Erro ao aplicar configuração de teste: {ex.Message}");
+            MostrarFeedbackErro(string.Format(LocalizationHelper.GetString("TestEQFailure", "Erro ao aplicar configuração de teste: {0}"), ex.Message));
         }
     }
 
@@ -691,10 +691,23 @@ public sealed partial class EqualizadorEfeitosPage : Page
     /// </summary>
     private void ShowErrorMessage(string message)
     {
-        infoBar.Title = "Erro";
-        infoBar.Message = message;
-        infoBar.Severity = InfoBarSeverity.Error;
-        infoBar.IsOpen = true;
+        try
+        {
+            // Usa a classe LocalizationHelper com tratamento de erro
+            infoBar.Title = LocalizationHelper.GetString("ErrorTitle", "Erro");
+            infoBar.Message = message;
+            infoBar.Severity = InfoBarSeverity.Error;
+            infoBar.IsOpen = true;
+        }
+        catch (Exception ex)
+        {
+            // Fallback para mensagens hardcoded em caso de erro
+            System.Diagnostics.Debug.WriteLine($"Erro ao carregar recursos: {ex.Message}");
+            infoBar.Title = "Erro";
+            infoBar.Message = message;
+            infoBar.Severity = InfoBarSeverity.Error;
+            infoBar.IsOpen = true;
+        }
     }
 
     /// <summary>
@@ -702,10 +715,23 @@ public sealed partial class EqualizadorEfeitosPage : Page
     /// </summary>
     private void MostrarFeedbackErro(string mensagem)
     {
-        infoBar.Title = "Erro";
-        infoBar.Message = mensagem;
-        infoBar.Severity = InfoBarSeverity.Error;
-        infoBar.IsOpen = true;
+        try
+        {
+            // Usa a classe LocalizationHelper com tratamento de erro
+            infoBar.Title = LocalizationHelper.GetString("ErrorTitle", "Erro");
+            infoBar.Message = mensagem;
+            infoBar.Severity = InfoBarSeverity.Error;
+            infoBar.IsOpen = true;
+        }
+        catch (Exception ex)
+        {
+            // Fallback para mensagens hardcoded em caso de erro
+            System.Diagnostics.Debug.WriteLine($"Erro ao carregar recursos: {ex.Message}");
+            infoBar.Title = "Erro";
+            infoBar.Message = mensagem;
+            infoBar.Severity = InfoBarSeverity.Error;
+            infoBar.IsOpen = true;
+        }
 
         // Configura um temporizador para fechar a infoBar após alguns segundos
         var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
@@ -722,10 +748,23 @@ public sealed partial class EqualizadorEfeitosPage : Page
     /// </summary>
     private void MostrarFeedbackSucesso(string mensagem)
     {
-        infoBar.Title = "Sucesso";
-        infoBar.Message = mensagem;
-        infoBar.Severity = InfoBarSeverity.Success;
-        infoBar.IsOpen = true;
+        try
+        {
+            // Usa a classe LocalizationHelper com tratamento de erro
+            infoBar.Title = LocalizationHelper.GetString("SuccessTitle", "Sucesso");
+            infoBar.Message = mensagem;
+            infoBar.Severity = InfoBarSeverity.Success;
+            infoBar.IsOpen = true;
+        }
+        catch (Exception ex)
+        {
+            // Fallback para mensagens hardcoded em caso de erro
+            System.Diagnostics.Debug.WriteLine($"Erro ao carregar recursos: {ex.Message}");
+            infoBar.Title = "Sucesso";
+            infoBar.Message = mensagem;
+            infoBar.Severity = InfoBarSeverity.Success;
+            infoBar.IsOpen = true;
+        }
 
         // Configura um temporizador para fechar a infoBar após alguns segundos
         var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
@@ -742,18 +781,18 @@ public sealed partial class EqualizadorEfeitosPage : Page
     /// </summary>
     private string ObterNomeLegivel(string chaveSom)
     {
-        // Mapear chaves técnicas para nomes amigáveis
+        // Mapear chaves técnicas para nomes amigáveis usando recursos localizados
         switch (chaveSom)
         {
-            case "chuva": return "Chuva";
-            case "fogueira": return "Fogueira";
-            case "ondas": return "Ondas do Mar";
-            case "passaros": return "Pássaros";
-            case "praia": return "Praia";
-            case "trem": return "Trem";
-            case "ventos": return "Ventos";
-            case "cafeteria": return "Cafeteria";
-            case "lancha": return "Lancha";
+            case "chuva": return LocalizationHelper.GetString("RainSoundName", "Chuva");
+            case "fogueira": return LocalizationHelper.GetString("BonfireSoundName", "Fogueira");
+            case "ondas": return LocalizationHelper.GetString("WavesSoundName", "Ondas do Mar");
+            case "passaros": return LocalizationHelper.GetString("BirdsSoundName", "Pássaros");
+            case "praia": return LocalizationHelper.GetString("BeachSoundName", "Praia");
+            case "trem": return LocalizationHelper.GetString("TrainSoundName", "Trem");
+            case "ventos": return LocalizationHelper.GetString("WindSoundName", "Ventos");
+            case "cafeteria": return LocalizationHelper.GetString("CoffeeSoundName", "Cafeteria");
+            case "lancha": return LocalizationHelper.GetString("MotorboatSoundName", "Lancha");
             default: return chaveSom;
         }
     }
