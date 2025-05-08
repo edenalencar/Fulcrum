@@ -6,10 +6,7 @@ using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
-using NAudio.Wave;
-using System;
 using Windows.UI;
 
 namespace Fulcrum.View;
@@ -31,7 +28,7 @@ public sealed partial class HomePage : Page
     public HomePage()
     {
         this.InitializeComponent();
-        
+
         // Inicializa gerenciador de áudio
         _audioManager = AudioManager.Instance;
 
@@ -39,16 +36,16 @@ public sealed partial class HomePage : Page
         _sleepTimerDisplayUpdateTimer = new DispatcherTimer();
         _sleepTimerDisplayUpdateTimer.Interval = TimeSpan.FromSeconds(10);
         _sleepTimerDisplayUpdateTimer.Tick += SleepTimerDisplayUpdateTimer_Tick;
-        
+
         // Registrar manipuladores de eventos para o SleepTimerService
         SleepTimerService.Instance.TimerStarted += SleepTimer_TimerStarted;
         SleepTimerService.Instance.TimerCancelled += SleepTimer_TimerCancelled;
         SleepTimerService.Instance.TimerCompleted += SleepTimer_TimerCompleted;
         SleepTimerService.Instance.TimerUpdated += SleepTimer_TimerUpdated;
-        
+
         // Atualizar visibilidade do timer
         UpdateTimerDisplay();
-        
+
         Loaded += HomePage_Loaded;
         Unloaded += HomePage_Unloaded;
     }
@@ -62,15 +59,15 @@ public sealed partial class HomePage : Page
 
         // Aplica animações iniciais aos cards
         ApplyEntryAnimations();
-        
+
         if (!_isInitialized)
         {
             // Configura os sliders para exibir o valor atual
             ConfigureSliders();
-            
+
             // Inicializa os visualizadores de forma de onda
             ConfigureWaveformVisualizers();
-            
+
             // Verifica se já existem reprodutores antes de inicializar novamente
             if (AudioManager.Instance.GetQuantidadeReprodutor == 0)
             {
@@ -78,7 +75,7 @@ public sealed partial class HomePage : Page
                 InitializeAudioPlayers();
                 _isInitialized = true;
             }
-            
+
             System.Diagnostics.Debug.WriteLine("HomePage: Primeira inicialização concluída");
         }
         else
@@ -87,17 +84,17 @@ public sealed partial class HomePage : Page
             UpdateSlidersWithCurrentVolumes();
             System.Diagnostics.Debug.WriteLine("HomePage: Restaurando estado anterior");
         }
-        
+
         // Restaura estado dos áudios, garantindo que reprodutores com volume > 0 estejam tocando
         RestoreAudioStates();
-        
+
         // Sincroniza os valores dos sliders com os valores dos reprodutores
         SyncSliderValues();
-        
+
         // Atualiza o estado visual do botão de reprodução principal
         UpdatePlayButtonState(AudioManager.Instance.IsPlaying);
     }
-    
+
     /// <summary>
     /// Manipula o evento de página descarregada
     /// </summary>
@@ -120,7 +117,7 @@ public sealed partial class HomePage : Page
     {
         // As animações são controladas pelos estilos definidos no XAML
     }
-    
+
     /// <summary>
     /// Configura os visualizadores de forma de onda para cada reprodutor de áudio
     /// </summary>
@@ -137,31 +134,31 @@ public sealed partial class HomePage : Page
 
             // Configura cada visualizador apenas se o reprodutor correspondente existir
             var reprodutores = AudioManager.Instance.GetListReprodutores();
-            
+
             if (reprodutores.ContainsKey(Constantes.Sons.Chuva))
                 ConfigureVisualizer(Constantes.Sons.Chuva, chuvaWaveform, Colors.DeepSkyBlue);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Fogueira))
                 ConfigureVisualizer(Constantes.Sons.Fogueira, fogueiraWaveform, Colors.OrangeRed);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Ondas))
                 ConfigureVisualizer(Constantes.Sons.Ondas, ondasWaveform, Colors.LightSeaGreen);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Passaros))
                 ConfigureVisualizer(Constantes.Sons.Passaros, passarosWaveform, Colors.YellowGreen);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Praia))
                 ConfigureVisualizer(Constantes.Sons.Praia, praiaWaveform, Colors.Gold);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Trem))
                 ConfigureVisualizer(Constantes.Sons.Trem, tremWaveform, Colors.Gray);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Ventos))
                 ConfigureVisualizer(Constantes.Sons.Ventos, ventosWaveform, Colors.LightBlue);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Cafeteria))
                 ConfigureVisualizer(Constantes.Sons.Cafeteria, cafeteriaWaveform, Colors.SandyBrown);
-                
+
             if (reprodutores.ContainsKey(Constantes.Sons.Lancha))
                 ConfigureVisualizer(Constantes.Sons.Lancha, lanchaWaveform, Colors.MediumPurple);
         }
@@ -171,7 +168,7 @@ public sealed partial class HomePage : Page
             System.Diagnostics.Debug.WriteLine($"Erro ao configurar visualizadores: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Configura um visualizador específico para um reprodutor de áudio
     /// </summary>
@@ -184,10 +181,10 @@ public sealed partial class HomePage : Page
             if (reprodutor != null)
             {
                 reprodutor.ConfigureVisualizer(waveformElement);
-                
+
                 // Define a cor da forma de onda
                 waveformElement.Stroke = new SolidColorBrush(color);
-                
+
                 System.Diagnostics.Debug.WriteLine($"Visualizador configurado com sucesso para {soundId}");
             }
         }
@@ -205,7 +202,7 @@ public sealed partial class HomePage : Page
         try
         {
             System.Diagnostics.Debug.WriteLine("Iniciando carregamento dos reprodutores de áudio...");
-            
+
             // Adiciona os reprodutores ao gerenciador de áudio, com tratamento de erros individual
             TryAddAudioPlayer(Constantes.Sons.Chuva, () => new ReprodutorChuva());
             TryAddAudioPlayer(Constantes.Sons.Fogueira, () => new ReprodutorFogueira());
@@ -216,7 +213,7 @@ public sealed partial class HomePage : Page
             TryAddAudioPlayer(Constantes.Sons.Trem, () => new ReprodutorTrem());
             TryAddAudioPlayer(Constantes.Sons.Ventos, () => new ReprodutorVentos());
             TryAddAudioPlayer(Constantes.Sons.Cafeteria, () => new ReprodutorCafeteria());
-            
+
             // Verifica que todos os reprodutores tenham volume zero inicialmente
             foreach (var player in AudioManager.Instance.GetListReprodutores())
             {
@@ -226,7 +223,7 @@ public sealed partial class HomePage : Page
                     AudioManager.Instance.AlterarVolume(player.Key, 0.0f);
                 }
             }
-            
+
             System.Diagnostics.Debug.WriteLine($"Reprodutores carregados: {AudioManager.Instance.GetQuantidadeReprodutor}");
         }
         catch (Exception ex)
@@ -235,7 +232,7 @@ public sealed partial class HomePage : Page
             System.Diagnostics.Debug.WriteLine($"Erro geral ao inicializar reprodutores: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Tenta adicionar um reprodutor de áudio com tratamento de exceção individual
     /// </summary>
@@ -272,35 +269,35 @@ public sealed partial class HomePage : Page
         chuva.Minimum = 0.0;
         chuva.Maximum = 1.0;
         chuva.Value = 0.0;
-        
+
         fogueira.Minimum = 0.0;
         fogueira.Maximum = 1.0;
         fogueira.Value = 0.0;
-        
+
         lancha.Minimum = 0.0;
         lancha.Maximum = 1.0;
         lancha.Value = 0.0;
-        
+
         ondas.Minimum = 0.0;
         ondas.Maximum = 1.0;
         ondas.Value = 0.0;
-        
+
         passaros.Minimum = 0.0;
         passaros.Maximum = 1.0;
         passaros.Value = 0.0;
-        
+
         praia.Minimum = 0.0;
         praia.Maximum = 1.0;
         praia.Value = 0.0;
-        
+
         trem.Minimum = 0.0;
         trem.Maximum = 1.0;
         trem.Value = 0.0;
-        
+
         ventos.Minimum = 0.0;
         ventos.Maximum = 1.0;
         ventos.Value = 0.0;
-        
+
         cafeteria.Minimum = 0.0;
         cafeteria.Maximum = 1.0;
         cafeteria.Value = 0.0;
@@ -315,7 +312,7 @@ public sealed partial class HomePage : Page
         trem.ValueChanged += Slider_ValueChanged;
         ventos.ValueChanged += Slider_ValueChanged;
         cafeteria.ValueChanged += Slider_ValueChanged;
-        
+
         System.Diagnostics.Debug.WriteLine("Sliders configurados com valores iniciais zero");
     }
 
@@ -332,51 +329,60 @@ public sealed partial class HomePage : Page
                 System.Diagnostics.Debug.WriteLine("Não há reprodutores para sincronizar com os sliders");
                 return;
             }
-            
+
             var reprodutores = AudioManager.Instance.GetListReprodutores();
-            
+
             // Sincroniza apenas sliders cujos reprodutores existem
-            if (reprodutores.ContainsKey(Constantes.Sons.Chuva)) {
+            if (reprodutores.ContainsKey(Constantes.Sons.Chuva))
+            {
                 var slider = FindName("chuva") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Chuva, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Fogueira)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Fogueira))
+            {
                 var slider = FindName("fogueira") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Fogueira, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Lancha)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Lancha))
+            {
                 var slider = FindName("lancha") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Lancha, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Ondas)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Ondas))
+            {
                 var slider = FindName("ondas") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Ondas, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Passaros)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Passaros))
+            {
                 var slider = FindName("passaros") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Passaros, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Praia)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Praia))
+            {
                 var slider = FindName("praia") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Praia, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Trem)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Trem))
+            {
                 var slider = FindName("trem") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Trem, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Ventos)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Ventos))
+            {
                 var slider = FindName("ventos") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Ventos, slider);
             }
-                
-            if (reprodutores.ContainsKey(Constantes.Sons.Cafeteria)) {
+
+            if (reprodutores.ContainsKey(Constantes.Sons.Cafeteria))
+            {
                 var slider = FindName("cafeteria") as Slider;
                 if (slider != null) SyncSliderValue(Constantes.Sons.Cafeteria, slider);
             }
@@ -386,7 +392,7 @@ public sealed partial class HomePage : Page
             System.Diagnostics.Debug.WriteLine($"Erro ao sincronizar sliders: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Sincroniza um slider específico com o volume atual do reprodutor
     /// </summary>
@@ -399,7 +405,7 @@ public sealed partial class HomePage : Page
                 System.Diagnostics.Debug.WriteLine($"Slider para {soundId} não encontrado");
                 return;
             }
-            
+
             var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
             if (reprodutor != null && reprodutor.Reader != null)
             {
@@ -420,7 +426,7 @@ public sealed partial class HomePage : Page
     {
         // Ativa a flag para indicar que estamos fazendo uma atualização em massa dos sliders
         _isUpdatingSliders = true;
-        
+
         try
         {
             // Desconecta temporariamente os eventos de alteração de valor
@@ -479,7 +485,7 @@ public sealed partial class HomePage : Page
             ventos.ValueChanged += Slider_ValueChanged;
             cafeteria.ValueChanged += Slider_ValueChanged;
             VolumeSlider.ValueChanged += Volume_ValueChanged;
-            
+
             System.Diagnostics.Debug.WriteLine("Sliders atualizados com os valores atuais dos reprodutores");
         }
         finally
@@ -518,20 +524,20 @@ public sealed partial class HomePage : Page
 
         // Obtém o ID do som baseado no nome do slider
         string soundId = slider.Name;
-        
+
         try
         {
             // Obtém o reprodutor correspondente
             var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
             if (reprodutor == null) return;
-            
+
             // Verifica se o volume era zero antes da mudança
             bool eraZero = reprodutor.Reader.Volume <= 0.001f;
-            
+
             // Atualiza o volume do reprodutor
             AudioManager.Instance.AlterarVolume(soundId, (float)e.NewValue);
             System.Diagnostics.Debug.WriteLine($"Volume alterado para {soundId}: {e.NewValue:F2}");
-            
+
             // Se o volume mudou de zero para maior que zero, garante que a visualização seja iniciada
             if (eraZero && e.NewValue > 0.001f)
             {
@@ -539,7 +545,7 @@ public sealed partial class HomePage : Page
                 ConfigurarEIniciarVisualizacao(soundId);
                 System.Diagnostics.Debug.WriteLine($"Visualização forçada para {soundId} após aumento de volume");
             }
-            
+
             // Anunciar a mudança de volume para leitores de tela
             string nomeSomAcessivel = ObterNomeSomAmigavel(soundId);
             bool ativo = e.NewValue > 0.001f;
@@ -550,7 +556,7 @@ public sealed partial class HomePage : Page
             System.Diagnostics.Debug.WriteLine($"Erro ao ajustar volume: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Configura e inicia a visualização para um som específico
     /// </summary>
@@ -560,14 +566,14 @@ public sealed partial class HomePage : Page
         {
             var reprodutor = AudioManager.Instance.GetReprodutorPorId(soundId);
             if (reprodutor == null) return;
-            
+
             // Obtém a referência ao elemento Polyline correspondente
             var waveformElement = ObterElementoWaveform(soundId);
             if (waveformElement == null) return;
-            
+
             // Configura a visualização com a cor apropriada
             Color cor = ObterCorParaSom(soundId);
-            
+
             // Reconfigura o visualizador
             if (reprodutor.Visualizer != null)
             {
@@ -575,11 +581,11 @@ public sealed partial class HomePage : Page
                 reprodutor.Visualizer.Dispose();
                 reprodutor.Visualizer = null!; // Usando null! para indicar que será inicializado antes do uso
             }
-            
+
             // Cria novo visualizador
             reprodutor.ConfigureVisualizer(waveformElement);
             waveformElement.Stroke = new SolidColorBrush(cor);
-            
+
             // Inicia a visualização explicitamente se o volume for maior que zero
             if (reprodutor.Reader.Volume > 0.001f)
             {
@@ -592,7 +598,7 @@ public sealed partial class HomePage : Page
             System.Diagnostics.Debug.WriteLine($"Erro ao configurar visualização: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Obtém o elemento Polyline correspondente ao ID do som
     /// </summary>
@@ -612,7 +618,7 @@ public sealed partial class HomePage : Page
             _ => null
         };
     }
-    
+
     /// <summary>
     /// Obtém a cor associada ao som específico
     /// </summary>
@@ -730,7 +736,7 @@ public sealed partial class HomePage : Page
             };
 
             // Adiciona a InfoBar diretamente ao ScrollViewer
-            if (this.Content is ScrollViewer scrollViewer && 
+            if (this.Content is ScrollViewer scrollViewer &&
                 scrollViewer.Content is StackPanel mainStackPanel)
             {
                 mainStackPanel.Children.Insert(0, infoBar);
@@ -771,7 +777,7 @@ public sealed partial class HomePage : Page
             {
                 timerDisplay.Text = SleepTimerService.Instance.GetFormattedTimeRemaining();
                 timerContainer.Visibility = Visibility.Visible;
-                
+
                 // Usar LocalizationHelper em vez de ResourceLoader direto
                 try
                 {
@@ -783,13 +789,13 @@ public sealed partial class HomePage : Page
                     SetSleepTimerButton.Content = "Alterar Timer";
                     System.Diagnostics.Debug.WriteLine($"Erro ao acessar recurso localizado: {ex.Message}");
                 }
-                
+
                 cancelTimerButton.Visibility = Visibility.Visible;
             }
             else
             {
                 timerContainer.Visibility = Visibility.Collapsed;
-                
+
                 // Usar LocalizationHelper em vez de ResourceLoader direto
                 try
                 {
@@ -801,7 +807,7 @@ public sealed partial class HomePage : Page
                     SetSleepTimerButton.Content = "Definir Timer";
                     System.Diagnostics.Debug.WriteLine($"Erro ao acessar recurso localizado: {ex.Message}");
                 }
-                
+
                 cancelTimerButton.Visibility = Visibility.Collapsed;
             }
         });
@@ -820,7 +826,7 @@ public sealed partial class HomePage : Page
                 "5 minutos",
                 "15 minutos",
                 "30 minutos",
-                "45 minutos", 
+                "45 minutos",
                 "1 hora",
                 "2 horas",
                 "3 horas",
@@ -848,10 +854,10 @@ public sealed partial class HomePage : Page
                 Text = "Escolha quanto tempo o Fulcrum deve reproduzir antes de pausar automaticamente:",
                 TextWrapping = TextWrapping.Wrap
             };
-            
+
             // Configurações de acessibilidade para o texto explicativo
             AutomationProperties.SetName(textBlock, "Instruções do temporizador de sono");
-            
+
             panel.Children.Add(textBlock);
 
             var comboBox = new ComboBox
@@ -859,7 +865,7 @@ public sealed partial class HomePage : Page
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 SelectedIndex = 2 // 30 minutos como padrão
             };
-            
+
             // Configurações de acessibilidade para o ComboBox
             AutomationProperties.SetName(comboBox, "Selecionar duração do temporizador");
             AutomationProperties.SetHelpText(comboBox, "Escolha por quanto tempo os sons devem ser reproduzidos antes de parar");
@@ -873,7 +879,7 @@ public sealed partial class HomePage : Page
             dialog.Content = panel;
 
             var result = await dialog.ShowAsync();
-            
+
             // Corrigido: verifica se comboBox não é nulo e se tem um item selecionado
             if (result == ContentDialogResult.Primary && comboBox != null && comboBox.SelectedIndex >= 0)
             {
@@ -882,11 +888,11 @@ public sealed partial class HomePage : Page
                 if (minutes > 0)
                 {
                     SleepTimerService.Instance.StartTimer(minutes);
-                    
+
                     // Anunciar para leitores de tela
                     string duracao = comboBox.SelectedItem.ToString() ?? $"{minutes} minutos";
                     AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
-                        SetSleepTimerButton, 
+                        SetSleepTimerButton,
                         $"Temporizador de sono definido para {duracao}. Os sons serão pausados automaticamente após este período.",
                         true);
                 }
@@ -895,11 +901,11 @@ public sealed partial class HomePage : Page
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao definir timer: {ex.Message}");
-            
+
             // Anunciar erro
             AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
-                SetSleepTimerButton, 
-                "Ocorreu um erro ao definir o temporizador de sono", 
+                SetSleepTimerButton,
+                "Ocorreu um erro ao definir o temporizador de sono",
                 true);
         }
     }
@@ -930,10 +936,10 @@ public sealed partial class HomePage : Page
     private void CancelTimer_Click(object sender, RoutedEventArgs e)
     {
         SleepTimerService.Instance.CancelTimer();
-        
+
         // Anunciar para leitores de tela
-        AcessibilidadeHelper.AnunciarParaLeitoresEscreens(cancelTimerButton, 
-            "Temporizador de sono cancelado. A reprodução continuará normalmente.", 
+        AcessibilidadeHelper.AnunciarParaLeitoresEscreens(cancelTimerButton,
+            "Temporizador de sono cancelado. A reprodução continuará normalmente.",
             true);
     }
 
@@ -982,17 +988,17 @@ public sealed partial class HomePage : Page
     /// </summary>
     private void PlayButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        try 
+        try
         {
             // Verifica o estado atual da reprodução
             bool estaReproduzindo = AudioManager.Instance.IsPlaying;
-            
+
             if (estaReproduzindo)
             {
                 // Se estiver tocando, pausamos todos
                 AudioManager.Instance.PauseAll();
                 System.Diagnostics.Debug.WriteLine("Pausando todos os sons");
-                
+
                 // Anunciar para leitores de tela
                 AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, "Todos os sons foram pausados", true);
             }
@@ -1001,7 +1007,7 @@ public sealed partial class HomePage : Page
                 // Se estiver pausado, verificamos quais players têm volume maior que zero
                 var players = AudioManager.Instance.GetListReprodutores();
                 bool peloMenosUmPlayerComVolume = false;
-                
+
                 foreach (var player in players)
                 {
                     if (player.Value.Reader.Volume > 0.001f)
@@ -1012,12 +1018,12 @@ public sealed partial class HomePage : Page
                         peloMenosUmPlayerComVolume = true;
                     }
                 }
-                
+
                 if (!peloMenosUmPlayerComVolume)
                 {
                     System.Diagnostics.Debug.WriteLine("Nenhum player com volume maior que zero para reproduzir");
                     // Anunciar a ausência de sons ativos
-                    AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, 
+                    AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton,
                         "Não há sons com volume para reproduzir. Ajuste o volume de pelo menos um som.", true);
                 }
                 else
@@ -1026,18 +1032,18 @@ public sealed partial class HomePage : Page
                     AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, "Reprodução iniciada", true);
                 }
             }
-            
+
             // Atualiza o estado visual do botão após a ação
             UpdatePlayButtonState(!estaReproduzindo);
-            
+
             System.Diagnostics.Debug.WriteLine($"Botão de reprodução clicado - Novo estado: {(!estaReproduzindo ? "Reproduzindo" : "Pausado")}");
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao manipular botão de reprodução: {ex.Message}");
-            
+
             // Anunciar erro
-            AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton, 
+            AcessibilidadeHelper.AnunciarParaLeitoresEscreens(PlayButton,
                 "Ocorreu um erro ao tentar reproduzir ou pausar os sons", true);
         }
     }

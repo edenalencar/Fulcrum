@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 namespace Fulcrum.Bu;
@@ -14,11 +10,11 @@ public static class ConfiguracoesApp
 {
     // Instância do armazenamento local
     private static readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-    
+
     // Chaves para armazenamento das configurações
     private const string EqualizerSettingsKey = "EqualizerSettings";
     private const string EffectSettingsKey = "EffectSettings";
-    
+
     /// <summary>
     /// Salva as configurações de equalização no armazenamento local
     /// </summary>
@@ -35,7 +31,7 @@ public static class ConfiguracoesApp
             System.Diagnostics.Debug.WriteLine($"Erro ao salvar configurações de equalização: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Salva as configurações de efeitos no armazenamento local
     /// </summary>
@@ -52,7 +48,7 @@ public static class ConfiguracoesApp
             System.Diagnostics.Debug.WriteLine($"Erro ao salvar configurações de efeitos: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Carrega as configurações de equalização do armazenamento local
     /// </summary>
@@ -71,10 +67,10 @@ public static class ConfiguracoesApp
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar configurações de equalização: {ex.Message}");
         }
-        
+
         return new Dictionary<string, float[]>();
     }
-    
+
     /// <summary>
     /// Carrega as configurações de efeitos do armazenamento local
     /// </summary>
@@ -93,7 +89,7 @@ public static class ConfiguracoesApp
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar configurações de efeitos: {ex.Message}");
         }
-        
+
         return new Dictionary<string, EffectSettings>();
     }
 }

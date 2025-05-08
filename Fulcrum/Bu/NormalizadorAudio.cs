@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -18,13 +17,13 @@ public class NormalizadorAudio : ISampleProvider
     private float _peakLevel = 0.0f;
     private bool _enableHardLimiter = true;
     private bool _isEnabled = true;
-    
+
     // Cache para armazenar valores históricos e aplicar suavização
     private readonly float[] _historicalPeaks;
     private int _historicalPeaksIndex = 0;
     private readonly int _historicalPeaksSize = 5;
     private readonly bool _useAveragePeak = true;
-    
+
     // Atenuação para valores extremos
     private float _lastCompressionFactor = 1.0f;
     private readonly float _compressionSmoothingFactor = 0.8f; // Menos suavização para resposta mais rápida
@@ -45,7 +44,7 @@ public class NormalizadorAudio : ISampleProvider
         _scanBuffer = new float[_scanBufferSize];
         _maxSampleValue = 1.0f;
         _historicalPeaks = new float[_historicalPeaksSize];
-        
+
         // Inicializa o histórico com valores padrão (1.0)
         for (int i = 0; i < _historicalPeaksSize; i++)
         {
@@ -57,7 +56,7 @@ public class NormalizadorAudio : ISampleProvider
         {
             ScanSource();
         }
-        
+
         System.Diagnostics.Debug.WriteLine($"NormalizadorAudio inicializado: TargetLevel={_targetLevel}, PeakLevel={_peakLevel}, HardLimiter={_enableHardLimiter}");
     }
 
@@ -84,7 +83,7 @@ public class NormalizadorAudio : ISampleProvider
             return;
 
         System.Diagnostics.Debug.WriteLine("Escaneando áudio para determinar nível de pico...");
-        
+
         int totalSamplesRead = 0;
         int samplesRead;
         float currentPeak = 0.0f;
@@ -128,7 +127,7 @@ public class NormalizadorAudio : ISampleProvider
             }
         }
     }
-    
+
     /// <summary>
     /// Calcula uma média suavizada dos picos históricos para evitar mudanças bruscas
     /// </summary>
@@ -141,7 +140,7 @@ public class NormalizadorAudio : ISampleProvider
         }
         return sum / _historicalPeaksSize;
     }
-    
+
     /// <summary>
     /// Adiciona um novo valor de pico ao histórico
     /// </summary>
@@ -165,7 +164,7 @@ public class NormalizadorAudio : ISampleProvider
         // Verifica se há amostras com valor acima de 1.0
         float maxSample = 0.0f;
         bool hasExtremeValues = false;
-        
+
         // Primeiro passo: encontrar o valor máximo neste frame
         for (int i = 0; i < samplesRead; i++)
         {
@@ -174,21 +173,21 @@ public class NormalizadorAudio : ISampleProvider
             {
                 maxSample = absoluteSample;
             }
-            
+
             // Detecta valores realmente extremos (acima de 10.0) para tratamento especial
             if (absoluteSample > 10.0f)
             {
                 hasExtremeValues = true;
             }
         }
-        
+
         // Adiciona este pico ao histórico
         AddPeakToHistory(maxSample);
-        
+
         // Calcula o fator de compressão suavizado
         float compressionFactor = 1.0f;
         float peakForCalculation = _useAveragePeak ? CalculateAveragePeak() : maxSample;
-        
+
         // Se o valor máximo exceder 1.0, calcula o fator de compressão
         if (peakForCalculation > _maxSampleValue)
         {
@@ -209,20 +208,20 @@ public class NormalizadorAudio : ISampleProvider
             {
                 compressionFactor = _targetLevel / peakForCalculation;
             }
-            
+
             // Garante um fator mínimo para evitar silenciamento excessivo
             compressionFactor = Math.Max(compressionFactor, _minCompressionFactor);
-            
+
             // Suaviza a transição entre fatores de compressão para evitar artefatos audíveis
-            compressionFactor = (_lastCompressionFactor * _compressionSmoothingFactor) + 
+            compressionFactor = (_lastCompressionFactor * _compressionSmoothingFactor) +
                               (compressionFactor * (1.0f - _compressionSmoothingFactor));
-            
+
             if (hasExtremeValues || maxSample > 2.0f)
             {
                 System.Diagnostics.Debug.WriteLine($"Normalizando áudio: valor máximo={maxSample:F2}, fator={compressionFactor:F3}");
             }
         }
-        
+
         // Armazena o fator para a próxima iteração
         _lastCompressionFactor = compressionFactor;
 
@@ -242,7 +241,7 @@ public class NormalizadorAudio : ISampleProvider
                 {
                     float absValue = Math.Abs(buffer[offset + i]);
                     float sign = Math.Sign(buffer[offset + i]);
-                    
+
                     // Usamos uma curva logarítmica para comprimir valores extremos
                     // Esta abordagem preserva mais as características do áudio
                     float logValue = (float)Math.Log10(absValue) + 1.0f;
@@ -254,7 +253,7 @@ public class NormalizadorAudio : ISampleProvider
                     buffer[offset + i] *= compressionFactor;
                 }
             }
-            
+
             // Aplica limitador rígido como última proteção, apenas se estiver habilitado
             if (_enableHardLimiter)
             {

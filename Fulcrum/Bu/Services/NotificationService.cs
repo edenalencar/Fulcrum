@@ -1,15 +1,6 @@
+using Microsoft.UI.Dispatching;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Storage.Streams;
-using Microsoft.UI.Xaml.Media.Imaging;
-using System.IO;
-using Windows.Storage;
-using Microsoft.UI.Dispatching;
-using System.Threading.Tasks;
 
 namespace Fulcrum.Bu.Services
 {
@@ -50,7 +41,7 @@ namespace Fulcrum.Bu.Services
             {
                 // Registra o manipulador de ativação de notificações
                 AppNotificationManager.Default.NotificationInvoked += OnNotificationInvoked;
-                
+
                 // Registra o aplicativo para notificações
                 AppNotificationManager.Default.Register();
 
@@ -125,7 +116,7 @@ namespace Fulcrum.Bu.Services
                 // Envia a notificação
                 var notification = builder.BuildNotification();
                 AppNotificationManager.Default.Show(notification);
-                
+
                 System.Diagnostics.Debug.WriteLine("Notificação do temporizador de sono enviada com sucesso");
             }
             catch (Exception ex)
@@ -143,7 +134,7 @@ namespace Fulcrum.Bu.Services
             {
                 // Obtém os argumentos da notificação
                 var arguments = args.Argument;
-                
+
                 if (_dispatcherQueue == null)
                 {
                     System.Diagnostics.Debug.WriteLine("DispatcherQueue não disponível para processar a ação da notificação");

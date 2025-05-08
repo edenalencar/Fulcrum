@@ -1,6 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
-using System;
 
 namespace Fulcrum.View;
 
@@ -13,11 +12,11 @@ public class BooleanToVisibilityConverter : IValueConverter
     /// Inverte o resultado (Collapsed se verdadeiro, Visible se falso)
     /// </summary>
     public bool Invert { get; set; } = false;
-    
+
     public object Convert(object value, Type targetType, object parameter, string language)
     {
         bool bValue = false;
-        
+
         if (value is bool b)
         {
             bValue = b;
@@ -26,7 +25,7 @@ public class BooleanToVisibilityConverter : IValueConverter
         {
             bValue = System.Convert.ToBoolean(value);
         }
-        
+
         return (bValue != Invert) ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -36,7 +35,7 @@ public class BooleanToVisibilityConverter : IValueConverter
         {
             return (visibility == Visibility.Visible) != Invert;
         }
-        
+
         return !Invert;
     }
 }

@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -25,7 +24,7 @@ public class EchoSampleProvider : ISampleProvider
         _source = source;
         WaveFormat = source.WaveFormat;
         _sampleRate = WaveFormat.SampleRate;
-        
+
         // Inicializa o buffer de eco com tamanho para até 2 segundos de delay
         _echoBuffer = new float[_sampleRate * 2];
         _bufferPosition = 0;
@@ -72,30 +71,30 @@ public class EchoSampleProvider : ISampleProvider
     public void ProcessInPlace(float[] buffer, int offset, int count)
     {
         if (!_isEnabled || _mix <= 0.001f) return;
-        
+
         // Calcula o número de amostras correspondente ao delay em ms
         int delaySamples = (int)(_delay * _sampleRate / 1000);
-        
+
         // Limita ao tamanho do buffer
         delaySamples = Math.Min(delaySamples, _echoBuffer.Length - 1);
-        
+
         for (int i = 0; i < count; i++)
         {
             // Obtém a amostra original
             float sample = buffer[offset + i];
-            
+
             // Calcula a posição do eco no buffer circular
             int echoPos = (_bufferPosition - delaySamples + _echoBuffer.Length) % _echoBuffer.Length;
-            
+
             // Obtém a amostra atrasada
             float echoSample = _echoBuffer[echoPos];
-            
+
             // Armazena a amostra atual no buffer
             _echoBuffer[_bufferPosition] = sample + (echoSample * 0.6f); // feedback para múltiplos ecos
-            
+
             // Avança a posição no buffer circular
             _bufferPosition = (_bufferPosition + 1) % _echoBuffer.Length;
-            
+
             // Combina a amostra original com o eco
             buffer[offset + i] = (sample * (1 - _mix)) + (echoSample * _mix);
         }
@@ -107,12 +106,12 @@ public class EchoSampleProvider : ISampleProvider
     public int Read(float[] buffer, int offset, int count)
     {
         int samplesRead = _source.Read(buffer, offset, count);
-        
+
         if (samplesRead > 0 && _isEnabled)
         {
             ProcessInPlace(buffer, offset, samplesRead);
         }
-        
+
         return samplesRead;
     }
 

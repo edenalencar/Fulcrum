@@ -1,5 +1,3 @@
-using NAudio.Wave;
-
 namespace Fulcrum.Bu;
 
 /// <summary>

@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -41,19 +40,19 @@ public class AudioCleanerFilter : ISampleProvider
     public int Read(float[] buffer, int offset, int count)
     {
         int samplesRead = _source.Read(buffer, offset, count);
-        
+
         if (samplesRead > 0)
         {
             // Calcula as constantes de tempo baseadas na taxa de amostragem
             float attackCoeff = (float)Math.Exp(-1.0 / (_attackTime * 0.001f * WaveFormat.SampleRate));
             float releaseCoeff = (float)Math.Exp(-1.0 / (_releaseTime * 0.001f * WaveFormat.SampleRate));
-            
+
             // Processa cada amostra
             for (int i = 0; i < samplesRead; i++)
             {
                 float input = buffer[offset + i];
                 float inputAbs = Math.Abs(input);
-                
+
                 // Atualiza o envelope seguidor
                 if (inputAbs > _envelope)
                 {
@@ -63,7 +62,7 @@ public class AudioCleanerFilter : ISampleProvider
                 {
                     _envelope = releaseCoeff * _envelope + (1 - releaseCoeff) * inputAbs;
                 }
-                
+
                 // Aplica o gate baseado no envelope e threshold
                 if (_envelope < _threshold)
                 {
@@ -71,7 +70,7 @@ public class AudioCleanerFilter : ISampleProvider
                 }
             }
         }
-        
+
         return samplesRead;
     }
 }

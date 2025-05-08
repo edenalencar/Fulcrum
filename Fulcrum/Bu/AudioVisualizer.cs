@@ -2,10 +2,8 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using Windows.UI;
 using Windows.Foundation; // Adicionando o namespace para Point
+using Windows.UI;
 
 namespace Fulcrum.Bu;
 
@@ -159,13 +157,13 @@ public class AudioVisualizer : IDisposable
             double height = _waveformPolyline.ActualHeight;
             double centerY = height / 2;
             float maxSample = 0;
-            
+
             // Encontrar o valor máximo para normalização
             for (int i = 0; i < samplesRead; i++)
             {
                 maxSample = Math.Max(maxSample, Math.Abs(_sampleBuffer[i]));
             }
-            
+
             // Fator de escala para evitar clipping e amplificar sinais fracos
             float scaleFactor = maxSample > 0.01f ? 0.9f / Math.Max(1.0f, maxSample) : 0.9f;
 
@@ -183,7 +181,7 @@ public class AudioVisualizer : IDisposable
             {
                 _waveformPolyline.Points.Add(point);
             }
-            
+
             // Log periódico (1 a cada 10 atualizações)
             if (DateTime.Now.Second % 10 == 0 && DateTime.Now.Millisecond < 100)
             {
@@ -214,18 +212,18 @@ public class AudioVisualizer : IDisposable
         {
             // Para a visualização se estiver em execução
             Stop();
-            
+
             // Se temos acesso ao provedor de amostras, marcamos que ele não deve mais ser acessado
-            if (_sampleProvider is ISampleProvider provider && 
+            if (_sampleProvider is ISampleProvider provider &&
                 _waveformPolyline?.Dispatcher?.HasThreadAccess == true)
             {
                 var reader = new SampleProviderWaveReader(provider);
                 reader.MarkAsDisposed();
             }
-            
+
             // Limpa os pontos da forma de onda para liberar memória
             _points.Clear();
-            
+
             System.Diagnostics.Debug.WriteLine("Recursos do visualizador liberados com sucesso");
         }
         catch (Exception ex)
@@ -248,7 +246,7 @@ internal class SampleProviderWaveReader
     public SampleProviderWaveReader(ISampleProvider sampleProvider)
     {
         _sampleProvider = sampleProvider ?? throw new ArgumentNullException(nameof(sampleProvider));
-        
+
         // Armazena uma referência fraca se for um AudioFileReader
         if (sampleProvider is AudioFileReader afr)
         {
@@ -279,7 +277,7 @@ internal class SampleProviderWaveReader
                     {
                         // Checar a referência do AudioFileReader
                         AudioFileReader? audioReader = null;
-                        
+
                         // Tentativa 1: Obter do cache WeakReference
                         if (_cachedAudioFileReader != null)
                         {
@@ -289,20 +287,20 @@ internal class SampleProviderWaveReader
                                 return 0;
                             }
                         }
-                        
+
                         // Tentativa 2: Cast direto (fallback)
                         if (audioReader == null && _sampleProvider is AudioFileReader castReader)
                         {
                             audioReader = castReader;
                         }
-                        
+
                         // Se ainda for nulo após as tentativas, desistir
                         if (audioReader == null)
                         {
                             _isDisposed = true;
                             return 0;
                         }
-                        
+
                         // Verificação de propriedades críticas em um único bloco try/catch
                         try
                         {
@@ -327,7 +325,7 @@ internal class SampleProviderWaveReader
                         return 0;
                     }
                 }
-                
+
                 // Feitas todas as verificações, tentar ler as amostras
                 try
                 {
@@ -348,13 +346,13 @@ internal class SampleProviderWaveReader
             return 0;
         }
     }
-    
+
     // Método auxiliar que verifica de forma segura se um AudioFileReader está em estado válido
     private bool IsSafeToUse(AudioFileReader reader)
     {
-        if (reader == null || _isDisposed) 
+        if (reader == null || _isDisposed)
             return false;
-            
+
         // Verificação ultra defensiva usando reflexão para verificar se o objeto
         // ainda é válido sem tentar acessar suas propriedades diretamente
         try
@@ -363,7 +361,7 @@ internal class SampleProviderWaveReader
             var waveFormat = reader.WaveFormat;
             if (waveFormat == null)
                 return false;
-            
+
             // Verificação de Position usando reflexão para evitar acessar diretamente
             // objetos internos que possam ter sido liberados
             try
@@ -372,10 +370,10 @@ internal class SampleProviderWaveReader
                 var waveStreamField = reader.GetType()
                     .GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                     .FirstOrDefault(f => f.Name.Contains("Stream"));
-                    
+
                 if (waveStreamField == null || waveStreamField.GetValue(reader) == null)
                     return false;
-                    
+
                 // Se chegou até aqui, o objeto interno parece válido
                 // Mas ainda assim, coloque o acesso à Position em um bloco try separado
                 try
@@ -383,7 +381,7 @@ internal class SampleProviderWaveReader
                     var dummy = reader.Position;
                     if (dummy < 0)
                         return false;
-                        
+
                     var length = reader.Length;
                     if (length <= 0)
                         return false;
@@ -398,7 +396,7 @@ internal class SampleProviderWaveReader
             {
                 return false;
             }
-            
+
             // Todas as verificações passaram
             return true;
         }

@@ -1,7 +1,5 @@
 using Fulcrum.Bu;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Text.Json;
 using Windows.Storage;
 
@@ -14,17 +12,17 @@ public static class ConfiguracoesApp
 {
     // Armazenamento local para as configurações
     private static readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-    
+
     /// <summary>
     /// Chave para armazenar as configurações de equalizador
     /// </summary>
     private const string EQ_SETTINGS_KEY = "EqualizerSettings";
-    
+
     /// <summary>
     /// Chave para armazenar as configurações de efeitos
     /// </summary>
     private const string FX_SETTINGS_KEY = "EffectsSettings";
-    
+
     /// <summary>
     /// Salva as configurações de equalizador no armazenamento local
     /// </summary>
@@ -39,7 +37,7 @@ public static class ConfiguracoesApp
             {
                 serializableDict[entry.Key] = entry.Value;
             }
-            
+
             // Serializa e salva nas configurações locais
             string json = JsonSerializer.Serialize(serializableDict);
             _localSettings.Values[EQ_SETTINGS_KEY] = json;
@@ -49,7 +47,7 @@ public static class ConfiguracoesApp
             System.Diagnostics.Debug.WriteLine($"Erro ao salvar configurações do equalizador: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Salva as configurações de efeitos no armazenamento local
     /// </summary>
@@ -64,7 +62,7 @@ public static class ConfiguracoesApp
             {
                 serializableDict[entry.Key] = entry.Value;
             }
-            
+
             // Serializa e salva nas configurações locais
             string json = JsonSerializer.Serialize(serializableDict);
             _localSettings.Values[FX_SETTINGS_KEY] = json;
@@ -74,7 +72,7 @@ public static class ConfiguracoesApp
             System.Diagnostics.Debug.WriteLine($"Erro ao salvar configurações de efeitos: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Carrega as configurações de equalizador do armazenamento local
     /// </summary>
@@ -92,10 +90,10 @@ public static class ConfiguracoesApp
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar configurações do equalizador: {ex.Message}");
         }
-        
+
         return new Dictionary<string, float[]>();
     }
-    
+
     /// <summary>
     /// Carrega as configurações de efeitos do armazenamento local
     /// </summary>
@@ -113,7 +111,7 @@ public static class ConfiguracoesApp
         {
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar configurações de efeitos: {ex.Message}");
         }
-        
+
         return new Dictionary<string, EffectSettings>();
     }
 }

@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -24,7 +23,7 @@ public class SimpleDelayProvider : ISampleProvider
     {
         _source = source;
         WaveFormat = source.WaveFormat;
-        
+
         // Configura o buffer de atraso
         RecalcularBuffer();
     }
@@ -97,21 +96,21 @@ public class SimpleDelayProvider : ISampleProvider
         {
             // Calcula o fator de dry/wet mix
             float dryFactor = 1.0f - _mix;
-            
+
             // Para cada amostra no buffer
             for (int i = 0; i < samplesRead; i++)
             {
                 float originalSample = buffer[offset + i];
-                
+
                 // Obtém a amostra atrasada do buffer circular
                 float delaySample = _delayBuffer![_delayBufferPosition];
-                
+
                 // Combina a amostra original com a amostra atrasada (com feedback)
                 _delayBuffer[_delayBufferPosition] = originalSample + (delaySample * _feedback);
-                
+
                 // Avança a posição no buffer circular
                 _delayBufferPosition = (_delayBufferPosition + 1) % _delayBufferLength;
-                
+
                 // Combina sinal seco com o atrasado
                 buffer[offset + i] = (originalSample * dryFactor) + (delaySample * _mix);
             }

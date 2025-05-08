@@ -2,7 +2,6 @@ using Fulcrum.Bu.Services;
 using Fulcrum.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
 using Windows.Storage;
 using Windows.System;
 
@@ -23,27 +22,27 @@ public sealed partial class SettingsPage : Page
     {
         // Inicializamos os componentes da interface uma única vez
         this.InitializeComponent();
-        
+
         // Desabilitamos temporariamente os eventos para evitar alterações de tema
         // durante a carga inicial da página
         ThemeRadioButtons.SelectionChanged -= OnThemeSelectionChanged;
-        
+
         // Carregamos o tema atual
         CarregarTemaAtual();
-        
+
         // Carregamos as configurações de teclas de atalho
         CarregarConfiguracoesAtalhos();
-        
+
         // Carregamos o tamanho de fonte atual
         CarregarTamanhoFonteAtual();
-        
+
         // Reativamos os eventos depois que a inicialização estiver completa
         ThemeRadioButtons.SelectionChanged += OnThemeSelectionChanged;
         FontSizeRadioButtons.SelectionChanged += OnFontSizeSelectionChanged;
-        
+
         // Registramos o evento de carregamento da página
         Loaded += SettingsPage_Loaded;
-        
+
         // Obtém a instância do gerenciador de teclas de atalho
         _hotKeyManager = new AppHotKeyManager();
     }
@@ -64,7 +63,7 @@ public sealed partial class SettingsPage : Page
     {
         // Tenta obter a configuração salva
         var temaSalvo = _localSettings.Values[Constantes.Tema.TemaAppSelecionado] as string ?? Constantes.Tema.Default;
-        
+
         // Define a seleção do RadioButtons baseado no tema salvo
         switch (temaSalvo)
         {
@@ -78,7 +77,7 @@ public sealed partial class SettingsPage : Page
                 ThemeRadioButtons.SelectedIndex = 2;
                 break;
         }
-        
+
         // Importante: não alterar o tema aqui, apenas atualizar a UI
         // para refletir a configuração atual
     }
@@ -90,12 +89,12 @@ public sealed partial class SettingsPage : Page
     {
         // Carrega a configuração de habilitação de teclas de atalho globais
         bool atalhosGlobaisHabilitados = true; // Valor padrão é habilitado
-        
+
         if (_localSettings.Values.ContainsKey(Constantes.Config.AtalhosGlobaisHabilitados))
         {
             atalhosGlobaisHabilitados = (bool)_localSettings.Values[Constantes.Config.AtalhosGlobaisHabilitados];
         }
-        
+
         // Define o estado do toggle de atalhos globais
         toggleAtalhosGlobais.IsOn = atalhosGlobaisHabilitados;
     }
@@ -107,7 +106,7 @@ public sealed partial class SettingsPage : Page
     {
         // Tenta obter a configuração salva
         var tamanhoSalvo = _localSettings.Values[Constantes.Config.TamanhoFonte] as string ?? "Médio";
-        
+
         // Define a seleção do RadioButtons baseado no tamanho salvo
         switch (tamanhoSalvo)
         {
@@ -211,13 +210,13 @@ public sealed partial class SettingsPage : Page
         {
             // Obtém o tamanho de fonte atualmente selecionado
             string tamanhoFonteSelecionado = _localSettings.Values[Constantes.Config.TamanhoFonte] as string ?? "Médio";
-            
+
             var app = Application.Current as Fulcrum.App;
             if (app?.Window?.Content is FrameworkElement rootElement)
             {
                 // Atualiza os recursos de tamanho de fonte
                 var resources = rootElement.Resources;
-                
+
                 // Verifica se as chaves já existem, caso não, cria-as com valores padrão
                 if (!resources.ContainsKey("TextControlThemeFontSize"))
                     resources.Add("TextControlThemeFontSize", 14.0);
@@ -231,7 +230,7 @@ public sealed partial class SettingsPage : Page
                     resources.Add("TitleLargeTextBlockFontSize", 28.0);
                 if (!resources.ContainsKey("HeaderTextBlockFontSize"))
                     resources.Add("HeaderTextBlockFontSize", 46.0);
-                
+
                 // Agora atualiza os tamanhos com o fator de escala
                 resources["TextControlThemeFontSize"] = 14 * fatorEscala;
                 resources["BodyTextBlockFontSize"] = 14 * fatorEscala;
@@ -242,13 +241,13 @@ public sealed partial class SettingsPage : Page
 
                 // Força uma atualização nos estilos existentes para aplicar os novos tamanhos
                 rootElement.RequestedTheme = rootElement.RequestedTheme; // Isso força a reavaliação dos estilos
-                
+
                 // Anuncia a mudança para leitores de tela
                 AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
-                    FontSizeRadioButtons, 
+                    FontSizeRadioButtons,
                     $"Tamanho de fonte alterado para {tamanhoFonteSelecionado}",
                     true);
-                
+
                 System.Diagnostics.Debug.WriteLine($"Tamanho de fonte alterado: {tamanhoFonteSelecionado} (fator: {fatorEscala})");
             }
         }
@@ -264,10 +263,10 @@ public sealed partial class SettingsPage : Page
     private void ToggleAtalhosGlobais_Toggled(object sender, RoutedEventArgs e)
     {
         bool isEnabled = toggleAtalhosGlobais.IsOn;
-        
+
         // Salva a configuração
         _localSettings.Values[Constantes.Config.AtalhosGlobaisHabilitados] = isEnabled;
-        
+
         // Atualiza o status no gerenciador de teclas de atalho
         // Verifica se o objeto foi inicializado antes de usá-lo
         if (_hotKeyManager == null)
@@ -275,7 +274,7 @@ public sealed partial class SettingsPage : Page
             _hotKeyManager = new AppHotKeyManager();
         }
         _hotKeyManager.HotKeysEnabled = isEnabled;
-        
+
         // Mostra uma mensagem informativa
         try
         {
@@ -292,9 +291,9 @@ public sealed partial class SettingsPage : Page
                 ? "Atalhos de teclado globais ativados. Você pode controlar o Fulcrum mesmo quando ele estiver em segundo plano."
                 : "Atalhos de teclado globais desativados.";
         }
-            
+
         atalhosMensagemInfo.IsOpen = true;
-        
+
         // Esconde a mensagem após alguns segundos
         DispatcherQueue.TryEnqueue(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, async () =>
         {

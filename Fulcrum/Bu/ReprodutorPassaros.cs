@@ -1,6 +1,4 @@
-﻿using NAudio.Wave;
-
-namespace Fulcrum.Bu;
+﻿namespace Fulcrum.Bu;
 
 /// <summary>
 /// Reprodutor especializado para som de pássaros

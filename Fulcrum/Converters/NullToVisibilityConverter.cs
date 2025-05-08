@@ -1,6 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
-using System;
 
 namespace Fulcrum.Converters;
 
@@ -16,7 +15,7 @@ public class NullToVisibilityConverter : IValueConverter
     {
         bool invertido = parameter != null && parameter.ToString() == "Inverted";
         bool isNull = value == null;
-        
+
         if (invertido)
         {
             return isNull ? Visibility.Visible : Visibility.Collapsed;

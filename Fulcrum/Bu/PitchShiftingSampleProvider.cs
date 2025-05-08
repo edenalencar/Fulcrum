@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 using System.Diagnostics;
 
 namespace Fulcrum.Bu;
@@ -18,10 +17,10 @@ public class PitchShiftingSampleProvider : ISampleProvider
     private float _maxSampleValue = 1.0f;
     private bool _enableClipping = true;
     private float _outputGain = 1.0f;
-    private float[] _peakHistory = new float[5]; 
+    private float[] _peakHistory = new float[5];
     private int _peakHistoryIndex = 0;
     private bool _autoNormalizeEnabled = true;
-    
+
     // Constantes melhoradas
     private const float MIN_PITCH_CHANGE = 0.001f;
     private const int INITIAL_BUFFER_SIZE = 16384; // Aumentado para melhor desempenho
@@ -37,18 +36,18 @@ public class PitchShiftingSampleProvider : ISampleProvider
     {
         _source = source;
         WaveFormat = source.WaveFormat;
-        
+
         // Buffer maior para processamento mais suave
-        _lastBuffer = new float[INITIAL_BUFFER_SIZE]; 
+        _lastBuffer = new float[INITIAL_BUFFER_SIZE];
         Debug.WriteLine($"[PitchShifting] Inicializado com tamanho de buffer {_lastBuffer.Length}");
-        
+
         // Inicializa o histórico de picos com valores seguros
         for (int i = 0; i < _peakHistory.Length; i++)
             _peakHistory[i] = 0.8f;
-            
+
         // Ajusta ganho inicial
         UpdateOutputGain();
-        
+
         // Pré-carrega o buffer com amostras iniciais para processamento imediato
         PreencherBufferInicial();
     }
@@ -64,13 +63,13 @@ public class PitchShiftingSampleProvider : ISampleProvider
     public bool IsEnabled
     {
         get => _isEnabled;
-        set 
-        { 
+        set
+        {
             if (_isEnabled != value)
             {
                 Debug.WriteLine($"[PitchShifting] Efeito {(value ? "ativado" : "desativado")}");
                 _isEnabled = value;
-                
+
                 // Resetar estado ao ativar/desativar para evitar problemas de transição
                 if (value)
                 {
@@ -86,15 +85,15 @@ public class PitchShiftingSampleProvider : ISampleProvider
     public float PitchFactor
     {
         get => _pitchFactor;
-        set 
+        set
         {
             float newValue = Math.Clamp(value, 0.5f, 2.0f);
-            
+
             // Se a mudança for significativa, atualiza e reseta
             if (Math.Abs(_pitchFactor - newValue) > MIN_PITCH_CHANGE)
             {
                 Debug.WriteLine($"[PitchShifting] Fator alterado: {newValue:F4}");
-                
+
                 // Para mudanças pequenas próximas a 1.0, garantimos transição suave
                 if (Math.Abs(_pitchFactor - 1.0f) < 0.1f && Math.Abs(newValue - 1.0f) < 0.1f)
                 {
@@ -129,17 +128,17 @@ public class PitchShiftingSampleProvider : ISampleProvider
     {
         _position = 0;
         _lastBufferSize = 0;
-        
+
         // Reinicia o histórico de picos
         for (int i = 0; i < _peakHistory.Length; i++)
             _peakHistory[i] = 0.8f;
-            
+
         // Recalcula o ganho adequado
         UpdateOutputGain();
-        
+
         // Pré-enche o buffer para iniciar com dados disponíveis
         PreencherBufferInicial();
-            
+
         Debug.WriteLine("[PitchShifting] Estado reiniciado");
     }
 
@@ -152,7 +151,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
         int initialSamples = Math.Min(INITIAL_BUFFER_SIZE / 2, _lastBuffer.Length);
         int samplesRead = _source.Read(_lastBuffer, 0, initialSamples);
         _lastBufferSize = samplesRead;
-        
+
         if (samplesRead > 0)
         {
             Debug.WriteLine($"[PitchShifting] Buffer inicial preenchido com {samplesRead} amostras");
@@ -175,17 +174,17 @@ public class PitchShiftingSampleProvider : ISampleProvider
         {
             return _source.Read(buffer, offset, count);
         }
-        
+
         // Garante que o buffer é grande o suficiente
         EnsureBufferSize(count * 3); // Aumentamos a margem de segurança
-        
+
         // Verifica se precisamos de mais amostras no buffer (ponto de recarga antecipado)
         // Se a posição atual já passou de 70% do buffer, buscamos mais amostras
         if (_position > _lastBufferSize * BUFFER_REFILL_THRESHOLD)
         {
             FillBuffer(count * 2); // Pedimos mais amostras do que precisamos para evitar recarga frequente
         }
-        
+
         // Se ainda não temos amostras suficientes, retorna silêncio
         if (_lastBufferSize <= WINDOW_SIZE)
         {
@@ -193,61 +192,61 @@ public class PitchShiftingSampleProvider : ISampleProvider
             Array.Clear(buffer, offset, count);
             return count;
         }
-        
+
         int outputSamples = 0;
-        
+
         // Preenche o buffer de saída utilizando o fator de pitch
         while (outputSamples < count && _position < _lastBufferSize - WINDOW_SIZE)
         {
             // Calcula a amostra interpolada na posição atual
             float outputSample = ObterAmostraInterpolada(_position);
-            
+
             // Aplica o ganho de saída para evitar saturação
             outputSample *= _outputGain;
-            
+
             // Limita o valor para evitar clipping se habilitado
             if (_enableClipping)
             {
                 outputSample = Math.Clamp(outputSample, -_maxSampleValue, _maxSampleValue);
             }
-            
+
             buffer[offset + outputSamples] = outputSample;
-            
+
             // Avança a posição de acordo com o fator de pitch, usando incremento mais preciso
             _position += _pitchFactor;
             outputSamples++;
         }
-        
+
         // Se chegamos ao fim do buffer atual, mas ainda não preenchemos a saída,
         // buscamos mais amostras e continuamos o processamento
         if (outputSamples < count)
         {
             // Busca mais amostras
             FillBuffer(count * 2);
-            
+
             // Continua preenchendo o buffer de saída
             while (outputSamples < count && _position < _lastBufferSize - WINDOW_SIZE)
             {
                 float outputSample = ObterAmostraInterpolada(_position);
                 outputSample *= _outputGain;
-                
+
                 if (_enableClipping)
                 {
                     outputSample = Math.Clamp(outputSample, -_maxSampleValue, _maxSampleValue);
                 }
-                
+
                 buffer[offset + outputSamples] = outputSample;
                 _position += _pitchFactor;
                 outputSamples++;
             }
         }
-        
+
         // Monitora picos e ajusta ganho se necessário
         if (_autoNormalizeEnabled && outputSamples > 0)
         {
             MonitorAndNormalize(buffer, offset, outputSamples);
         }
-        
+
         // Para casos extremos, onde não conseguimos gerar nenhuma amostra
         if (outputSamples == 0)
         {
@@ -255,10 +254,10 @@ public class PitchShiftingSampleProvider : ISampleProvider
             int sourceSamples = _source.Read(buffer, offset, count);
             return sourceSamples > 0 ? sourceSamples : count;
         }
-        
+
         return outputSamples;
     }
-    
+
     /// <summary>
     /// Obtém uma amostra interpolada da posição especificada do buffer
     /// Usa interpolação cúbica para melhor qualidade
@@ -267,7 +266,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
     {
         int pos0 = (int)pos;
         float frac = pos - pos0;
-        
+
         // Para interpolação de alta qualidade, usamos 4 pontos (interpolação cúbica)
         if (pos0 > 0 && pos0 < _lastBufferSize - 2)
         {
@@ -275,13 +274,13 @@ public class PitchShiftingSampleProvider : ISampleProvider
             float y0 = _lastBuffer[pos0];
             float y1 = _lastBuffer[pos0 + 1];
             float y2 = _lastBuffer[pos0 + 2];
-            
+
             // Coeficientes para interpolação cúbica (algoritmo de Hermite)
             float c0 = y0;
             float c1 = 0.5f * (y1 - ym1);
             float c2 = ym1 - 2.5f * y0 + 2.0f * y1 - 0.5f * y2;
             float c3 = 0.5f * (y2 - ym1) + 1.5f * (y0 - y1);
-            
+
             // Calcula o valor interpolado
             return ((c3 * frac + c2) * frac + c1) * frac + c0;
         }
@@ -306,14 +305,14 @@ public class PitchShiftingSampleProvider : ISampleProvider
         {
             return;
         }
-        
+
         // Verifica a integridade do buffer de entrada
         if (buffer == null || offset < 0 || count <= 0 || buffer.Length < offset + count)
         {
             Debug.WriteLine("[PitchShifting] ERRO: Parâmetros inválidos em ProcessInPlace");
             return;
         }
-        
+
         // Detecta valores extremos no buffer de entrada para normalização
         float maxInputValue = 0;
         for (int i = 0; i < count; i++)
@@ -322,7 +321,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
             if (absValue > maxInputValue)
                 maxInputValue = absValue;
         }
-        
+
         // Normaliza valores extremamente altos para evitar distorção
         if (maxInputValue > 10.0f)
         {
@@ -333,40 +332,40 @@ public class PitchShiftingSampleProvider : ISampleProvider
             }
             Debug.WriteLine($"[PitchShifting] Entrada normalizada com fator {normFactor:F6}");
         }
-        
+
         // Salvamos uma cópia do buffer original
         float[] tempBuffer = new float[count];
         Array.Copy(buffer, offset, tempBuffer, 0, count);
-        
+
         // Garante que o buffer é grande o suficiente
         EnsureBufferSize(count * 3);
-        
+
         // Adiciona as amostras do buffer ao buffer de processamento
         FillBufferFromTemp(tempBuffer, count);
-        
+
         int outputSamples = 0;
-        
+
         // Limpa o buffer de saída
         Array.Clear(buffer, offset, count);
-        
+
         // Preenche o buffer de saída
         while (outputSamples < count && _position < _lastBufferSize - WINDOW_SIZE)
         {
             float outputSample = ObterAmostraInterpolada(_position);
-            
+
             // Aplica processamento de ganho e limitação
             outputSample *= _outputGain;
-            
+
             if (_enableClipping)
             {
                 outputSample = Math.Clamp(outputSample, -_maxSampleValue, _maxSampleValue);
             }
-            
+
             buffer[offset + outputSamples] = outputSample;
             _position += _pitchFactor;
             outputSamples++;
         }
-        
+
         // Se não conseguimos gerar amostras suficientes, completamos o que falta
         if (outputSamples < count)
         {
@@ -375,14 +374,14 @@ public class PitchShiftingSampleProvider : ISampleProvider
                 buffer[offset + i] = 0;
             }
         }
-        
+
         // Monitora e ajusta o ganho
         if (_autoNormalizeEnabled && outputSamples > 0)
         {
             MonitorAndNormalize(buffer, offset, outputSamples);
         }
     }
-    
+
     /// <summary>
     /// Garante que o buffer interno tem tamanho suficiente
     /// </summary>
@@ -392,18 +391,18 @@ public class PitchShiftingSampleProvider : ISampleProvider
         {
             int newSize = Math.Max(requiredSize, _lastBuffer.Length * 2);
             float[] newBuffer = new float[newSize];
-            
+
             // Copia os dados existentes para o novo buffer
             if (_lastBufferSize > 0)
             {
                 Array.Copy(_lastBuffer, 0, newBuffer, 0, _lastBufferSize);
             }
-            
+
             _lastBuffer = newBuffer;
             Debug.WriteLine($"[PitchShifting] Buffer redimensionado para {newSize} amostras");
         }
     }
-    
+
     /// <summary>
     /// Preenche o buffer interno com novas amostras da fonte
     /// </summary>
@@ -415,13 +414,13 @@ public class PitchShiftingSampleProvider : ISampleProvider
             // Calculamos quantas amostras queremos manter no início do buffer (overlap)
             int overlapStart = Math.Max(0, (int)_position - OVERLAP_SAMPLES);
             int overlapSize = Math.Min(_lastBufferSize - overlapStart, OVERLAP_SAMPLES);
-            
+
             // Só fazemos a movimentação se tivermos amostras suficientes para o overlap
             if (overlapSize > 0)
             {
                 // Move as amostras de sobreposição para o início do buffer
                 Array.Copy(_lastBuffer, overlapStart, _lastBuffer, 0, overlapSize);
-                
+
                 // Ajustamos a posição considerando a nova posição das amostras no buffer
                 _position -= overlapStart;
                 _lastBufferSize = overlapSize;
@@ -433,16 +432,16 @@ public class PitchShiftingSampleProvider : ISampleProvider
                 _lastBufferSize = 0;
             }
         }
-        
+
         // Calculamos quantas amostras precisamos adicionar
         int spaceAvailable = _lastBuffer.Length - _lastBufferSize;
         int samplesToRead = Math.Min(spaceAvailable, count);
-        
+
         // Lemos novas amostras na parte disponível do buffer
         if (samplesToRead > 0)
         {
             int samplesRead = _source.Read(_lastBuffer, _lastBufferSize, samplesToRead);
-            
+
             if (samplesRead > 0)
             {
                 // Atualizamos o tamanho do buffer
@@ -463,7 +462,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
             }
         }
     }
-    
+
     /// <summary>
     /// Preenche o buffer interno com amostras do buffer temporário
     /// </summary>
@@ -474,7 +473,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
         {
             int overlapStart = Math.Max(0, (int)_position - OVERLAP_SAMPLES);
             int overlapSize = Math.Min(_lastBufferSize - overlapStart, OVERLAP_SAMPLES);
-            
+
             if (overlapSize > 0)
             {
                 Array.Copy(_lastBuffer, overlapStart, _lastBuffer, 0, overlapSize);
@@ -487,18 +486,18 @@ public class PitchShiftingSampleProvider : ISampleProvider
                 _lastBufferSize = 0;
             }
         }
-        
+
         // Adiciona amostras do buffer temporário
         int spaceAvailable = _lastBuffer.Length - _lastBufferSize;
         int samplesToAdd = Math.Min(spaceAvailable, count);
-        
+
         if (samplesToAdd > 0)
         {
             Array.Copy(tempBuffer, 0, _lastBuffer, _lastBufferSize, samplesToAdd);
             _lastBufferSize += samplesToAdd;
         }
     }
-    
+
     /// <summary>
     /// Monitora as amostras para detectar picos e ajusta o ganho se necessário
     /// </summary>
@@ -512,14 +511,14 @@ public class PitchShiftingSampleProvider : ISampleProvider
             if (absValue > maxValue)
                 maxValue = absValue;
         }
-        
+
         // Registra valores de pico no histórico
         if (maxValue > 0.01f)
         {
             _peakHistory[_peakHistoryIndex] = maxValue;
             _peakHistoryIndex = (_peakHistoryIndex + 1) % _peakHistory.Length;
         }
-        
+
         // Verifica se há valores acima do limite
         if (maxValue > _maxSampleValue)
         {
@@ -527,7 +526,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
             if (maxValue > 10.0f)
             {
                 _outputGain *= 0.5f; // Redução mais agressiva para valores extremos
-                
+
                 // Aplica limitador
                 for (int i = 0; i < count; i++)
                 {
@@ -536,7 +535,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
                         buffer[offset + i] = Math.Sign(buffer[offset + i]) * _maxSampleValue * 0.99f;
                     }
                 }
-                
+
                 Debug.WriteLine($"[PitchShifting] Limitação aplicada para valor extremo: {maxValue:F4}");
             }
             // Valor alto, mas não extremo - ajuste gradual
@@ -544,7 +543,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
             {
                 _outputGain *= 0.95f; // Redução suave
             }
-            
+
             _outputGain = Math.Max(_outputGain, 0.1f); // Limitação inferior
         }
         // Se estiver muito abaixo do limite, aumentamos gradualmente
@@ -554,7 +553,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
             _outputGain = Math.Min(_outputGain, 1.0f); // Limitação superior
         }
     }
-    
+
     /// <summary>
     /// Atualiza o ganho de saída baseado no fator de pitch atual
     /// </summary>
@@ -581,7 +580,7 @@ public class PitchShiftingSampleProvider : ISampleProvider
             // Pitch próximo ao normal
             _outputGain = 0.95f;
         }
-        
+
         Debug.WriteLine($"[PitchShifting] Ganho inicial definido para {_outputGain:F2} com fator de pitch {_pitchFactor:F4}");
     }
 }

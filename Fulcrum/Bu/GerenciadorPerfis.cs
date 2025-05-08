@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Fulcrum.Util;
+using System.Text.Json;
 using Windows.Storage;
-using Microsoft.Windows.ApplicationModel.Resources;
 
 namespace Fulcrum.Bu;
 
@@ -15,49 +10,49 @@ namespace Fulcrum.Bu;
 public class GerenciadorPerfis
 {
     private static readonly Lazy<GerenciadorPerfis> _instance = new(() => new GerenciadorPerfis());
-    
+
     private readonly List<PerfilSom> _perfis = new();
     private readonly string _perfilDiretorio;
     private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-    
+
     // Nome do perfil ativo
     private string _perfilAtivoNome = string.Empty;
-    
+
     // Construtor privado para implementar o padrão Singleton
     private GerenciadorPerfis()
     {
         // Cria o diretório para armazenar os perfis
         var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         _perfilDiretorio = Path.Combine(appDataPath, "Fulcrum", "Perfis");
-        
+
         // Garante que o diretório exista
         if (!Directory.Exists(_perfilDiretorio))
         {
             Directory.CreateDirectory(_perfilDiretorio);
         }
-        
+
         // Carrega o nome do perfil ativo das configurações
         if (_localSettings.Values.TryGetValue(Constantes.Perfis.PerfilAtivo, out var perfilAtivo) && perfilAtivo is string perfilAtivoNome)
         {
             _perfilAtivoNome = perfilAtivoNome;
         }
     }
-    
+
     /// <summary>
     /// Instância única do GerenciadorPerfis (Singleton)
     /// </summary>
     public static GerenciadorPerfis Instance => _instance.Value;
-    
+
     /// <summary>
     /// Lista de perfis de som disponíveis
     /// </summary>
     public IReadOnlyList<PerfilSom> Perfis => _perfis;
-    
+
     /// <summary>
     /// Nome do perfil ativo atualmente
     /// </summary>
     public string PerfilAtivoNome => _perfilAtivoNome;
-    
+
     /// <summary>
     /// Obtém o perfil ativo atual ou null se nenhum perfil estiver ativo
     /// </summary>
@@ -67,18 +62,18 @@ public class GerenciadorPerfis
         {
             if (string.IsNullOrEmpty(_perfilAtivoNome))
                 return null;
-            
+
             // Encontra o perfil pelo nome
             foreach (var perfil in _perfis)
             {
                 if (perfil.Nome == _perfilAtivoNome)
                     return perfil;
             }
-            
+
             return null;
         }
     }
-    
+
     /// <summary>
     /// Define o perfil ativo atual pelo nome
     /// </summary>
@@ -88,7 +83,7 @@ public class GerenciadorPerfis
         _perfilAtivoNome = nomePerfil;
         _localSettings.Values[Constantes.Perfis.PerfilAtivo] = nomePerfil;
     }
-    
+
     /// <summary>
     /// Define o perfil ativo atual
     /// </summary>
@@ -106,7 +101,7 @@ public class GerenciadorPerfis
             _localSettings.Values[Constantes.Perfis.PerfilAtivo] = string.Empty;
         }
     }
-    
+
     /// <summary>
     /// Verifica se um perfil é o perfil ativo atualmente
     /// </summary>
@@ -116,17 +111,17 @@ public class GerenciadorPerfis
     {
         if (perfil == null || string.IsNullOrEmpty(_perfilAtivoNome))
             return false;
-        
+
         return perfil.Nome == _perfilAtivoNome;
     }
-    
+
     /// <summary>
     /// Carrega todos os perfis de som disponíveis do armazenamento
     /// </summary>
     public async Task CarregarPerfisAsync()
     {
         _perfis.Clear();
-        
+
         try
         {
             foreach (var arquivo in Directory.GetFiles(_perfilDiretorio, "*.json"))
@@ -135,7 +130,7 @@ public class GerenciadorPerfis
                 {
                     using var stream = new FileStream(arquivo, FileMode.Open, FileAccess.Read);
                     var perfil = await JsonSerializer.DeserializeAsync<PerfilSom>(stream);
-                    
+
                     if (perfil != null)
                     {
                         _perfis.Add(perfil);
@@ -152,7 +147,7 @@ public class GerenciadorPerfis
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar perfis: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Salva um perfil de som no armazenamento
     /// </summary>
@@ -166,11 +161,11 @@ public class GerenciadorPerfis
             {
                 _perfis.Add(perfil);
             }
-            
+
             // Salva o perfil em um arquivo JSON
             var nomeArquivo = SanitizarNomeArquivo(perfil.Nome) + ".json";
             var caminhoArquivo = Path.Combine(_perfilDiretorio, nomeArquivo);
-            
+
             using var stream = new FileStream(caminhoArquivo, FileMode.Create, FileAccess.Write);
             var options = new JsonSerializerOptions { WriteIndented = true };
             await JsonSerializer.SerializeAsync(stream, perfil, options);
@@ -181,7 +176,7 @@ public class GerenciadorPerfis
             throw;
         }
     }
-    
+
     /// <summary>
     /// Remove um perfil de som
     /// </summary>
@@ -193,11 +188,11 @@ public class GerenciadorPerfis
             if (_perfis.Contains(perfil))
             {
                 _perfis.Remove(perfil);
-                
+
                 // Remove o arquivo do perfil
                 var nomeArquivo = SanitizarNomeArquivo(perfil.Nome) + ".json";
                 var caminhoArquivo = Path.Combine(_perfilDiretorio, nomeArquivo);
-                
+
                 if (File.Exists(caminhoArquivo))
                 {
                     File.Delete(caminhoArquivo);
@@ -210,7 +205,7 @@ public class GerenciadorPerfis
             throw;
         }
     }
-    
+
     /// <summary>
     /// Cria um novo perfil baseado nas configurações atuais do AudioManager
     /// </summary>
@@ -221,16 +216,16 @@ public class GerenciadorPerfis
     {
         var perfil = new PerfilSom(nome, descricao);
         var audioManager = AudioManager.Instance;
-        
+
         // Captura as configurações atuais de todos os reprodutores
         foreach (var reprodutor in audioManager.GetListReprodutores())
         {
             perfil.DefinirVolumeSom(reprodutor.Key, reprodutor.Value.Reader.Volume);
         }
-        
+
         return perfil;
     }
-    
+
     /// <summary>
     /// Cria um perfil com todas as configurações padrão
     /// </summary>
@@ -243,12 +238,12 @@ public class GerenciadorPerfis
         {
             nome = LocalizationHelper.GetString("DefaultProfileName", "Perfil Padrão");
         }
-        
+
         // Obtém a descrição localizada
         string descricao = LocalizationHelper.GetString("DefaultProfileDescription", "Configurações padrão para todos os sons");
-        
+
         var perfil = new PerfilSom(nome, descricao);
-        
+
         // Configura valores iniciais para todos os sons conhecidos
         perfil.DefinirVolumeSom(Constantes.Sons.Chuva, 0.2f);
         perfil.DefinirVolumeSom(Constantes.Sons.Fogueira, 0.3f);
@@ -259,16 +254,16 @@ public class GerenciadorPerfis
         perfil.DefinirVolumeSom(Constantes.Sons.Trem, 0.2f);
         perfil.DefinirVolumeSom(Constantes.Sons.Ventos, 0.2f);
         perfil.DefinirVolumeSom(Constantes.Sons.Cafeteria, 0.25f);
-        
+
         // Define configurações de efeitos padrão
         ConfigurarEfeitosPadrao(perfil);
-        
+
         // Adiciona o perfil à lista interna
         _perfis.Add(perfil);
-        
+
         return perfil;
     }
-    
+
     /// <summary>
     /// Configura efeitos padrão para um perfil de som
     /// </summary>
@@ -277,7 +272,7 @@ public class GerenciadorPerfis
     {
         // Esta é uma implementação básica que pode ser expandida no futuro
         // para incluir configurações específicas de efeitos para cada som
-        
+
         // Atualmente, apenas garantimos que o perfil existe e está registrado
         // As configurações específicas de efeitos serão gerenciadas pelo AudioManager
         if (perfil == null)
@@ -285,12 +280,12 @@ public class GerenciadorPerfis
             System.Diagnostics.Debug.WriteLine("Erro: Tentativa de configurar efeitos para um perfil nulo");
             return;
         }
-        
+
         // Pode ser expandido para incluir configurações iniciais específicas
         // como valores de equalização padrão, configurações de reverb, etc.
         System.Diagnostics.Debug.WriteLine($"Configurações de efeitos padrão aplicadas ao perfil: {perfil.Nome}");
     }
-    
+
     /// <summary>
     /// Sanitiza um nome para que seja válido como nome de arquivo
     /// </summary>

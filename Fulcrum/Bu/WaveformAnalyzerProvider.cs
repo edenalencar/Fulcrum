@@ -1,7 +1,4 @@
 using NAudio.Wave;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Fulcrum.Bu;
 
@@ -15,7 +12,7 @@ public class WaveformAnalyzerProvider : ISampleProvider
     private readonly List<float> _sampleHistory;
     private readonly int _maxHistoryLength;
     private readonly object _lockObject = new();
-    
+
     // Buffers para análise FFT (para futura implementação espectral)
     private float[] _fftBuffer;
     private Complex[] _complexBuffer;
@@ -33,7 +30,7 @@ public class WaveformAnalyzerProvider : ISampleProvider
         _maxHistoryLength = historyLength;
         _sampleHistory = new List<float>(historyLength);
         _fftLength = fftLength;
-        
+
         // Inicializa buffers para análise FFT
         _fftBuffer = new float[fftLength];
         _complexBuffer = new Complex[fftLength];
@@ -66,13 +63,13 @@ public class WaveformAnalyzerProvider : ISampleProvider
         {
             if (_sampleHistory.Count == 0)
                 return 0f;
-                
+
             float sumOfSquares = 0;
             foreach (float sample in _sampleHistory)
             {
                 sumOfSquares += sample * sample;
             }
-            
+
             return (float)Math.Sqrt(sumOfSquares / _sampleHistory.Count);
         }
     }
@@ -87,7 +84,7 @@ public class WaveformAnalyzerProvider : ISampleProvider
         {
             if (_sampleHistory.Count == 0)
                 return 0f;
-                
+
             float max = 0;
             foreach (float sample in _sampleHistory)
             {
@@ -95,7 +92,7 @@ public class WaveformAnalyzerProvider : ISampleProvider
                 if (abs > max)
                     max = abs;
             }
-            
+
             return max;
         }
     }
@@ -128,7 +125,7 @@ public class WaveformAnalyzerProvider : ISampleProvider
                     // Usado para mono ou para o canal esquerdo em estéreo
                     float sample = buffer[offset + i];
                     _sampleHistory.Add(sample);
-                    
+
                     // Limita o tamanho do histórico
                     if (_sampleHistory.Count > _maxHistoryLength)
                     {
@@ -148,13 +145,13 @@ public class WaveformAnalyzerProvider : ISampleProvider
     {
         public float Real;
         public float Imaginary;
-        
+
         public Complex(float real, float imaginary)
         {
             Real = real;
             Imaginary = imaginary;
         }
-        
+
         public float Magnitude => (float)Math.Sqrt(Real * Real + Imaginary * Imaginary);
     }
 }

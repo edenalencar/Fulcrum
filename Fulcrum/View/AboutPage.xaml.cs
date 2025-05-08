@@ -1,8 +1,7 @@
+using Fulcrum.Util;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
 using Windows.System;
-using Fulcrum.Util;
 
 namespace Fulcrum.View;
 
@@ -27,15 +26,15 @@ public sealed partial class AboutPage : Page
     {
         // Inicializa o LocalizationHelper se ainda não foi inicializado
         LocalizationHelper.Initialize();
-        
+
         // Preenche informações dinâmicas com texto localizado
         var appVersion = GetAppVersion();
-        
+
         // Pega o texto do recurso AboutVersion e formata com a versão
         // usando o LocalizationHelper em vez do ResourceLoader direto
         string versionTextFormat = LocalizationHelper.GetString("AboutVersion/Text", "Versão {0}");
         txtVersion.Text = string.Format(versionTextFormat, appVersion);
-        
+
         // Atualiza o texto de direitos autorais com o ano atual
         // usando o LocalizationHelper em vez do ResourceLoader direto
         string rightsTextFormat = LocalizationHelper.GetString("Rights/Text", "@{0} Éden Alencar. Todos os direitos reservados");
@@ -86,7 +85,7 @@ public sealed partial class AboutPage : Page
         var package = Windows.ApplicationModel.Package.Current;
         var packageId = package.Id;
         var version = packageId.Version;
-        
+
         return $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
     }
 }

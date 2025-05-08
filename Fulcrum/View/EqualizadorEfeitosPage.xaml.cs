@@ -1,12 +1,11 @@
 using Fulcrum.Bu;
+using Fulcrum.Util; // Adicionado para usar o LocalizationHelper
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
-using System;
 using System.Diagnostics;
-using Fulcrum.Util; // Adicionado para usar o LocalizationHelper
 
 namespace Fulcrum.View;
 
@@ -42,7 +41,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
             {
                 // Atualiza o título da página
                 soundNameTextBlock.Text = ObterNomeLegivel(soundId);
-                
+
                 // Inicializa os controles
                 InitializeControls();
             }
@@ -65,15 +64,15 @@ public sealed partial class EqualizadorEfeitosPage : Page
             {
                 // Atualiza o título da página com o nome legível do som
                 soundNameTextBlock.Text = ObterNomeLegivel(_currentSoundId);
-                
+
                 // Verifica se o reprodutor existe antes de prosseguir
                 if (AudioManager.Instance.GetListReprodutores().TryGetValue(_currentSoundId, out var reprodutor) && reprodutor != null)
                 {
                     _currentPlayer = reprodutor;
-                    
+
                     // Evita eventos de atualização durante a inicialização
                     _isInitializing = true;
-                    
+
                     // Configura controles de equalização
                     if (reprodutor.Equalizer?.Bands != null && reprodutor.Equalizer.Bands.Length >= 3)
                     {
@@ -81,19 +80,19 @@ public sealed partial class EqualizadorEfeitosPage : Page
                         sliderBaixa.Value = bands[0].Gain;
                         sliderMedia.Value = bands[1].Gain;
                         sliderAlta.Value = bands[2].Gain;
-                        
+
                         // Exibe os valores atuais nos elementos de texto
                         txtBaixaValor.Text = $"{bands[0].Gain:F1} dB";
                         txtMediaValor.Text = $"{bands[1].Gain:F1} dB";
                         txtAltaValor.Text = $"{bands[2].Gain:F1} dB";
                     }
-                    
+
                     // Configura switch de ativação do equalizador
                     equalizerSwitch.IsOn = reprodutor.EqualizerEnabled;
-                    
+
                     // Atualiza controles de efeitos com base nas configurações atuais
                     UpdateEffectControls();
-                    
+
                     _isInitializing = false;
                 }
                 else
@@ -136,7 +135,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
                     tipoEfeitoComboBox.Items.Add(LocalizationHelper.GetString("PitchEffectName", "Pitch"));
                     tipoEfeitoComboBox.Items.Add(LocalizationHelper.GetString("FlangerEffectName", "Flanger"));
                 }
-                
+
                 if (_currentPlayer != null && _currentPlayer.EffectsManager != null)
                 {
                     tipoEfeitoComboBox.SelectedIndex = (int)_currentPlayer.EffectsManager.TipoEfeito;
@@ -154,10 +153,10 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 {
                     sliderBaixa.Value = _currentPlayer.Equalizer.Bands[0].Gain;
                     txtBaixaValor.Text = $"{sliderBaixa.Value:F1} dB";
-                    
+
                     sliderMedia.Value = _currentPlayer.Equalizer.Bands[1].Gain;
                     txtMediaValor.Text = $"{sliderMedia.Value:F1} dB";
-                    
+
                     sliderAlta.Value = _currentPlayer.Equalizer.Bands[2].Gain;
                     txtAltaValor.Text = $"{sliderAlta.Value:F1} dB";
                 }
@@ -169,7 +168,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
 
             // Configura os controles de efeitos com base no tipo selecionado
             UpdateEffectControls();
-            
+
             _isInitializing = false;
         }
         catch (Exception ex)
@@ -206,7 +205,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 reverbPanel.Visibility = Visibility.Visible;
                 sliderReverbMix.Value = _currentPlayer.EffectsManager.ReverbMix;
                 txtReverbMixValor.Text = $"{sliderReverbMix.Value:F2}";
-                
+
                 sliderReverbTime.Value = _currentPlayer.EffectsManager.ReverbTime;
                 txtReverbTimeValor.Text = $"{sliderReverbTime.Value:F1} s";
                 break;
@@ -215,7 +214,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 echoPanel.Visibility = Visibility.Visible;
                 sliderEchoDelay.Value = _currentPlayer.EffectsManager.EchoDelay;
                 txtEchoDelayValor.Text = $"{sliderEchoDelay.Value:F0} ms";
-                
+
                 sliderEchoMix.Value = _currentPlayer.EffectsManager.EchoMix;
                 txtEchoMixValor.Text = $"{sliderEchoMix.Value:F2}";
                 break;
@@ -230,7 +229,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 flangerPanel.Visibility = Visibility.Visible;
                 sliderFlangerRate.Value = _currentPlayer.EffectsManager.FlangerRate;
                 txtFlangerRateValor.Text = $"{sliderFlangerRate.Value:F1} Hz";
-                
+
                 sliderFlangerDepth.Value = _currentPlayer.EffectsManager.FlangerDepth;
                 txtFlangerDepthValor.Text = $"{sliderFlangerDepth.Value:F3}";
                 break;
@@ -258,17 +257,17 @@ public sealed partial class EqualizadorEfeitosPage : Page
             }
 
             _isInitializing = true;
-            
+
             // Atualiza os sliders com os valores atuais das bandas do equalizador
             sliderBaixa.Value = reprodutor.Equalizer.Bands[0].Gain;
             sliderMedia.Value = reprodutor.Equalizer.Bands[1].Gain;
             sliderAlta.Value = reprodutor.Equalizer.Bands[2].Gain;
-            
+
             // Atualiza os textos
             txtBaixaValor.Text = $"{reprodutor.Equalizer.Bands[0].Gain:F1} dB";
             txtMediaValor.Text = $"{reprodutor.Equalizer.Bands[1].Gain:F1} dB";
             txtAltaValor.Text = $"{reprodutor.Equalizer.Bands[2].Gain:F1} dB";
-            
+
             _isInitializing = false;
         }
         catch (Exception ex)
@@ -298,13 +297,13 @@ public sealed partial class EqualizadorEfeitosPage : Page
             }
 
             _isInitializing = true;
-            
+
             // Atualiza o tipo de efeito selecionado no ComboBox
             tipoEfeitoComboBox.SelectedIndex = (int)reprodutor.EffectsManager.TipoEfeito;
-            
+
             // Atualiza controles específicos de acordo com o tipo de efeito
             UpdateEffectControls();
-            
+
             _isInitializing = false;
         }
         catch (Exception ex)
@@ -321,10 +320,10 @@ public sealed partial class EqualizadorEfeitosPage : Page
         if (_isInitializing) return;
 
         var tipoEfeito = (TipoEfeito)tipoEfeitoComboBox.SelectedIndex;
-        
+
         // Define o tipo de efeito
         AudioManager.Instance.DefinirTipoEfeito(_currentSoundId, tipoEfeito);
-        
+
         // Atualiza os controles visíveis
         UpdateEffectControls();
     }
@@ -338,7 +337,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
 
         // Ativa/desativa o equalizador
         AudioManager.Instance.AtivarEqualizador(_currentSoundId, equalizerSwitch.IsOn);
-        
+
         // Atualiza a interface
         equalizerPanel.Visibility = equalizerSwitch.IsOn ? Visibility.Visible : Visibility.Collapsed;
     }
@@ -352,10 +351,10 @@ public sealed partial class EqualizadorEfeitosPage : Page
 
         // Ativa/desativa os efeitos
         AudioManager.Instance.AtivarEfeitos(_currentSoundId, effectsSwitch.IsOn);
-        
+
         // Atualiza a interface
         effectsPanel.Visibility = effectsSwitch.IsOn ? Visibility.Visible : Visibility.Collapsed;
-        
+
         // Também atualiza os painéis específicos para manter consistência com o estado atual
         UpdateEffectControls();
     }
@@ -478,7 +477,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
         // Salva o estado atual antes de navegar de volta
         AudioManager.Instance.SalvarEstadoEfeitos();
         AudioManager.Instance.SalvarEstadoVolumes();
-        
+
         if (Frame.CanGoBack)
         {
             Frame.GoBack();
@@ -492,7 +491,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
     {
         // Salva explicitamente as configurações de efeitos e equalização
         AudioManager.Instance.SalvarEstadoEfeitos();
-        
+
         // Exibe feedback
         MostrarFeedbackSucesso(LocalizationHelper.GetString("ConfigurationSaved", "Configurações salvas com sucesso."));
     }
@@ -503,14 +502,14 @@ public sealed partial class EqualizadorEfeitosPage : Page
     private void BtnResetEqualizer_Click(object sender, RoutedEventArgs e)
     {
         if (_isInitializing) return;
-        
+
         // Verifica se há um ID de som atual válido
         if (string.IsNullOrEmpty(_currentSoundId))
         {
             MostrarFeedbackErro(LocalizationHelper.GetString("NoSoundSelectedForEQ", "Nenhum som selecionado para redefinir equalização"));
             return;
         }
-        
+
         // Obtém o reprodutor para o som atual
         Reprodutor? reprodutor = null;
         try
@@ -527,18 +526,18 @@ public sealed partial class EqualizadorEfeitosPage : Page
         if (reprodutor != null && reprodutor.Equalizer != null)
         {
             reprodutor.Equalizer.Reset();
-            
+
             // Atualiza a UI
             _isInitializing = true;
             sliderBaixa.Value = 0;
             sliderMedia.Value = 0;
             sliderAlta.Value = 0;
-            
+
             txtBaixaValor.Text = "0.0 dB";
             txtMediaValor.Text = "0.0 dB";
             txtAltaValor.Text = "0.0 dB";
             _isInitializing = false;
-            
+
             MostrarFeedbackSucesso(LocalizationHelper.GetString("EQResetSuccess", "Equalização redefinida com sucesso"));
         }
         else
@@ -555,14 +554,14 @@ public sealed partial class EqualizadorEfeitosPage : Page
         if (_isInitializing) return;
 
         // Verifica se _currentPlayer e _currentPlayer.EffectsManager não são nulos
-        if (_currentPlayer == null || _currentPlayer.EffectsManager == null) 
+        if (_currentPlayer == null || _currentPlayer.EffectsManager == null)
         {
             ShowErrorMessage(LocalizationHelper.GetString("PlayerNotAvailableForEffects", "Reprodutor não disponível para resetar efeitos."));
             return;
         }
 
         var tipoEfeito = _currentPlayer.EffectsManager.TipoEfeito;
-        
+
         // Reseta os efeitos para os valores padrão manualmente baseado no tipo atual
         switch (tipoEfeito)
         {
@@ -582,7 +581,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
 
         // Atualiza os controles
         UpdateEffectControls();
-        
+
         // Exibe feedback
         MostrarFeedbackSucesso(LocalizationHelper.GetString("EffectsResetSuccess", "Efeitos resetados para os valores padrão."));
     }
@@ -593,21 +592,21 @@ public sealed partial class EqualizadorEfeitosPage : Page
     private void BtnTestarEqualizer_Click(object sender, RoutedEventArgs e)
     {
         if (_isInitializing) return;
-        
+
         // Verifica se há um ID de som atual válido
         if (string.IsNullOrEmpty(_currentSoundId))
         {
             MostrarFeedbackErro(LocalizationHelper.GetString("NoSoundSelectedForTest", "Nenhum som selecionado para testar equalização"));
             return;
         }
-        
+
         // Garante que o equalizador esteja ativado
         if (!equalizerSwitch.IsOn)
         {
             equalizerSwitch.IsOn = true;
             // O evento Toggled já vai cuidar de atualizar a UI e ativar o equalizador
         }
-        
+
         try
         {
             // Obtém o reprodutor para o som atual
@@ -617,42 +616,42 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 MostrarFeedbackErro(LocalizationHelper.GetString("PlayerOrEQNotAvailable", "Reprodutor ou equalizador não disponível"));
                 return;
             }
-            
+
             // Primeiro, garante que o equalizador esteja ativo (além do switch da UI)
             reprodutor.EqualizerEnabled = true;
-            
+
             // Aplicando configuração de teste extrema (usando método da classe EqualizadorAudio)
             reprodutor.Equalizer.ApplyTestConfiguration();
-            
+
             // Atualiza os sliders e textos na UI
             _isInitializing = true;
             sliderBaixa.Value = -12.0;  // Redução drástica dos graves
             sliderMedia.Value = 0.0;    // Médios neutros
             sliderAlta.Value = 12.0;    // Aumento drástico dos agudos
-            
+
             txtBaixaValor.Text = $"{sliderBaixa.Value:F1} dB";
             txtMediaValor.Text = $"{sliderMedia.Value:F1} dB";
             txtAltaValor.Text = $"{sliderAlta.Value:F1} dB";
             _isInitializing = false;
-            
+
             // Se o reprodutor não estiver tocando e tiver volume, inicia a reprodução
-            if (reprodutor.WaveOut?.PlaybackState != NAudio.Wave.PlaybackState.Playing && 
+            if (reprodutor.WaveOut?.PlaybackState != NAudio.Wave.PlaybackState.Playing &&
                 reprodutor.Reader.Volume > 0.001f)
             {
                 reprodutor.Play();
                 System.Diagnostics.Debug.WriteLine("[TEST EQ] Iniciando reprodução para testar equalizador");
             }
-            
+
             // Mostra feedback
             MostrarFeedbackSucesso(LocalizationHelper.GetString("TestEQApplied", "Configuração de teste aplicada: Graves=-12dB, Médios=0dB, Agudos=+12dB"));
-            
+
             // Também mostra uma dica mais visível em um TeachingTip, se disponível
             var teachtip = new Microsoft.UI.Xaml.Controls.TeachingTip
             {
                 Title = LocalizationHelper.GetString("TestEQTitle", "Teste de Equalização"),
                 Subtitle = LocalizationHelper.GetString("TestEQSubtitle", "Você deve notar uma diferença significativa no som"),
-                Content = new TextBlock 
-                { 
+                Content = new TextBlock
+                {
                     Text = LocalizationHelper.GetString("TestEQContent", "Graves foram reduzidos e agudos amplificados para criar uma diferença audível. Se você não percebe diferença no som, o equalizador pode não estar funcionando corretamente."),
                     TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
                 },
@@ -661,17 +660,17 @@ public sealed partial class EqualizadorEfeitosPage : Page
                 PreferredPlacement = Microsoft.UI.Xaml.Controls.TeachingTipPlacementMode.Bottom,
                 IsLightDismissEnabled = true
             };
-            
+
             teachtip.ActionButtonClick += (s, args) => teachtip.IsOpen = false;
             teachtip.CloseButtonClick += (s, args) => teachtip.IsOpen = false;
-            
+
             // Adiciona o TeachingTip ao visual tree
             var panel = (StackPanel)((Button)sender).Parent;
             panel.Children.Add(teachtip);
-            
+
             // Abre o TeachingTip
             teachtip.IsOpen = true;
-            
+
             // Log de diagnóstico
             System.Diagnostics.Debug.WriteLine($"[TEST EQ] Aplicada configuração de teste ao equalizador para {_currentSoundId}");
         }
@@ -806,7 +805,7 @@ public sealed partial class EqualizadorEfeitosPage : Page
     private void TxtEqualizerValue_PointerPressed(object sender, PointerRoutedEventArgs e)
     {
         if (_isInitializing) return;
-        
+
         if (sender is TextBlock txtBlock)
         {
             int bandIndex = -1;
@@ -857,18 +856,19 @@ public sealed partial class EqualizadorEfeitosPage : Page
                     break;
                 }
             }
-            
+
             if (!string.IsNullOrEmpty(id))
             {
                 _currentSoundId = id;
                 soundNameTextBlock.Text = ObterNomeLegivel(id);
-                
+
                 // Atualiza a interface com os valores atuais
                 AtualizarValoresEqualizador();
                 AtualizarValoresEfeitos();
-                
+
                 // Atualiza os toggles de ativação
-                try {
+                try
+                {
                     var reprodutor = AudioManager.Instance.GetReprodutorPorId(id);
                     if (reprodutor != null)
                     {

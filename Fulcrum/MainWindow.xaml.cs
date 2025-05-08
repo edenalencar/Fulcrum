@@ -1,27 +1,16 @@
-using Fulcrum.View;
+using Fulcrum.Bu; // Adicionado para acessar o AudioManager
 using Fulcrum.Bu.Services;
+using Fulcrum.Util; // Adicionado para acessar a classe Constantes
+using Fulcrum.View;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Windowing;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI;
-using WinRT.Interop;
 using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.UI.Xaml.Navigation;
+using System.Runtime.InteropServices;
 using Windows.Storage; // Adicionado para o ApplicationDataContainer
-using Fulcrum.Bu; // Adicionado para acessar o AudioManager
-using Fulcrum.Util; // Adicionado para acessar a classe Constantes
+using WinRT.Interop;
 
 namespace Fulcrum;
 
@@ -53,7 +42,7 @@ public sealed partial class MainWindow : Window
 
     // Armazenamento local para as configurações
     private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-    
+
     // Flag para controlar a inicialização dos reprodutores de áudio
     private bool _audioInitialized = false;
 
@@ -63,10 +52,10 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
+
         // Aplica o idioma preferido do sistema
         ApplySystemLanguage();
-        
+
         // Inicializa o AudioManager
         InitializeAudioManager();
 
@@ -78,12 +67,12 @@ public sealed partial class MainWindow : Window
         // Define a altura e largura inicial da janela
         var displayArea = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Primary);
         var recommendedSize = displayArea.WorkArea;
-        
+
         // Define uma altura maior para evitar barra de rolagem na aba início
-        AppWindow.Resize(new Windows.Graphics.SizeInt32 
-        { 
-            Width = (int)(recommendedSize.Width * 0.85), 
-            Height = (int)(recommendedSize.Height * 0.90) 
+        AppWindow.Resize(new Windows.Graphics.SizeInt32
+        {
+            Width = (int)(recommendedSize.Width * 0.85),
+            Height = (int)(recommendedSize.Height * 0.90)
         });
 
         // Centraliza a janela
@@ -119,7 +108,7 @@ public sealed partial class MainWindow : Window
         // Registra manipuladores de eventos
         this.Activated += MainWindow_Activated;
         navigationView.SelectionChanged += NavigationView_SelectionChanged;
-        
+
         // Adicionar evento para mudanças de tamanho
         this.SizeChanged += MainWindow_SizeChanged;
 
@@ -138,11 +127,11 @@ public sealed partial class MainWindow : Window
 
         // Inicializa todos os reprodutores de áudio com volume 0.0
         InitializeAudioPlayers();
-        
+
         // Restaurar estado do painel de navegação
         RestoreNavigationViewState();
     }
-    
+
     /// <summary>
     /// Inicializa os reprodutores de áudio apenas uma vez
     /// </summary>
@@ -196,16 +185,16 @@ public sealed partial class MainWindow : Window
         // Desregistra todas as teclas de atalho e libera recursos
         _hotKeyManager?.Dispose();
         HotKeyService.Instance.Dispose();
-        
+
         // Salva o estado dos volumes antes de fechar
         AudioManager.Instance.SalvarEstadoVolumes();
-        
+
         // Salva o estado do painel de navegação antes de fechar
         SaveNavigationViewState();
-        
+
         // Libera recursos do AudioManager
         AudioManager.Instance.Dispose();
-        
+
         // Libera recursos do serviço de notificações
         NotificationService.Instance.Dispose();
     }
@@ -246,7 +235,7 @@ public sealed partial class MainWindow : Window
                     Constantes.Tema.Dark => ElementTheme.Dark,
                     _ => ElementTheme.Default
                 };
-                
+
                 rootElement.RequestedTheme = elementTheme;
                 System.Diagnostics.Debug.WriteLine($"Tema aplicado com sucesso: {elementTheme}");
             }
@@ -273,9 +262,9 @@ public sealed partial class MainWindow : Window
     {
         // Salva o estado atual dos volumes antes de navegar para outra página
         AudioManager.Instance.SalvarEstadoVolumes();
-        
+
         Type? targetPage = null;
-        
+
         if (args.IsSettingsSelected)
         {
             // Navegar para a página de configurações
@@ -301,7 +290,7 @@ public sealed partial class MainWindow : Window
                     break;
             }
         }
-        
+
         // Navega para a página selecionada usando SuppressNavigationTransitionInfo
         // para evitar que o áudio seja reinicializado durante a transição
         if (targetPage != null && contentFrame.CurrentSourcePageType != targetPage)
@@ -317,7 +306,7 @@ public sealed partial class MainWindow : Window
     {
         double windowWidth = this.Bounds.Width;
         double windowHeight = this.Bounds.Height;
-        
+
         if (windowWidth < 640)
         {
             // Em telas muito estreitas, use o modo mínimo
@@ -334,7 +323,7 @@ public sealed partial class MainWindow : Window
         {
             // Em telas largas, use o modo expandido
             navigationView.PaneDisplayMode = NavigationViewPaneDisplayMode.Left;
-            
+
             // Verifica se a orientação é paisagem com tela grande para decidir se abre o painel
             bool isLandscape = windowWidth > windowHeight;
             if (isLandscape && windowWidth > 1200)
@@ -377,7 +366,7 @@ public sealed partial class MainWindow : Window
         try
         {
             var localSettings = ApplicationData.Current.LocalSettings;
-            
+
             // Restaura o modo de exibição se estiver salvo
             if (localSettings.Values.TryGetValue("NavigationViewPaneDisplayMode", out var displayMode))
             {
@@ -390,7 +379,7 @@ public sealed partial class MainWindow : Window
                     System.Diagnostics.Debug.WriteLine($"Modo de exibição do NavigationView restaurado: {savedMode}");
                 }
             }
-            
+
             // Restaura o estado de abertura do painel (apenas no modo esquerdo)
             if (navigationView.PaneDisplayMode == NavigationViewPaneDisplayMode.Left &&
                 localSettings.Values.TryGetValue("NavigationViewIsPaneOpen", out var isPaneOpen))
@@ -434,10 +423,10 @@ public sealed partial class MainWindow : Window
                 "Conteúdo principal",
                 "Área principal de conteúdo do aplicativo",
                 Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Main);
-            
+
             // Registra um evento para configurar a acessibilidade quando a página é navegada
             contentFrame.Navigated += ContentFrame_Navigated;
-            
+
             System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade configuradas com sucesso");
         }
         catch (Exception ex)
@@ -492,7 +481,7 @@ public sealed partial class MainWindow : Window
 
             // Configura cada cartão de som como uma região de conteúdo
             ConfigurarCardSons(page);
-            
+
             System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade da HomePage configuradas");
         }
         catch (Exception ex)
@@ -507,7 +496,7 @@ public sealed partial class MainWindow : Window
     private void ConfigurarCardSons(HomePage page)
     {
         var sons = new[] { "chuva", "fogueira", "lancha", "ondas", "passaros", "praia", "trem", "ventos", "cafeteria" };
-        
+
         foreach (var som in sons)
         {
             try
@@ -557,7 +546,7 @@ public sealed partial class MainWindow : Window
                     "Informações detalhadas sobre o perfil selecionado",
                     Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Custom);
             }
-            
+
             System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade da PerfisPage configuradas");
         }
         catch (Exception ex)
@@ -594,7 +583,7 @@ public sealed partial class MainWindow : Window
                     "Opções para configurar as teclas de atalho do aplicativo",
                     Microsoft.UI.Xaml.Automation.Peers.AutomationLandmarkType.Custom);
             }
-            
+
             System.Diagnostics.Debug.WriteLine("Propriedades de acessibilidade da SettingsPage configuradas");
         }
         catch (Exception ex)
@@ -614,24 +603,24 @@ public sealed partial class MainWindow : Window
             LocalizationHelper.Initialize();
 
             // Obtém o idioma preferido do usuário
-            string currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];               
+            string currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
 
             // Se não for português, usa o inglês como padrão
             if (!currentLanguage.StartsWith("pt"))
             {
                 currentLanguage = "en-US";
-            }            
+            }
             else
             {
                 currentLanguage = "pt-BR";
-            }            
+            }
 
             // Define o idioma para a aplicação
             Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = currentLanguage;
-            
+
             // Define o mesmo idioma no LocalizationHelper
             LocalizationHelper.SetLanguage(currentLanguage);
-            
+
             System.Diagnostics.Debug.WriteLine($"[IDIOMA] Aplicando idioma: {currentLanguage}");
         }
         catch (Exception ex)

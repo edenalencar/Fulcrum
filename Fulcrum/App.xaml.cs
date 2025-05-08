@@ -1,16 +1,9 @@
-﻿using Fulcrum.Bu;
+﻿using Fulcrum.Bu.Services;
 using Fulcrum.Util;
-using Fulcrum.Bu.Services;
 using Microsoft.UI.Xaml;
-using Windows.Storage;
-using Microsoft.Windows.AppLifecycle;
-using Microsoft.UI.Dispatching;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
+using Windows.Storage;
 
 namespace Fulcrum;
 
@@ -21,11 +14,11 @@ public partial class App : Application
 {
     // Propriedade que expõe a janela principal, permitindo acesso externo
     public Window? Window { get; private set; }
-    
+
     // Métodos nativos para diagnóstico de carregamento de DLLs
     [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern IntPtr LoadLibrary(string lpFileName);
-    
+
     [DllImport("kernel32.dll")]
     private static extern uint GetLastError();
 
@@ -33,7 +26,7 @@ public partial class App : Application
     /// Inicializa uma nova instância da classe App
     /// </summary>
     public App()
-    {        
+    {
         // Inicializa o componente após o diagnóstico
         this.InitializeComponent();
         this.UnhandledException += App_UnhandledException;
@@ -45,20 +38,20 @@ public partial class App : Application
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
         e.Handled = true;
-        
+
         try
         {
             // Log da exceção
             string logPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 "fulcrum_crash.log");
-                
-            File.WriteAllText(logPath, 
+
+            File.WriteAllText(logPath,
                 $"Exceção não tratada: {DateTime.Now}\n" +
                 $"Mensagem: {e.Exception.Message}\n" +
                 $"Tipo: {e.Exception.GetType().FullName}\n" +
                 $"StackTrace: {e.Exception.StackTrace}\n");
-                
+
             if (e.Exception.InnerException != null)
             {
                 File.AppendAllText(logPath,
@@ -81,7 +74,7 @@ public partial class App : Application
         {
             var localSettings = ApplicationData.Current.LocalSettings;
             var tamanhoFonte = localSettings.Values[Constantes.Config.TamanhoFonte] as string ?? "Médio";
-            
+
             // Determina o fator de escala com base no tamanho salvo
             double fatorEscala = tamanhoFonte switch
             {
@@ -90,12 +83,12 @@ public partial class App : Application
                 "Extra Grande" => 1.5,
                 _ => 1.0 // Médio (padrão)
             };
-            
+
             // Aplica o tamanho de fonte aos recursos globais
             if (Window?.Content is FrameworkElement rootElement)
             {
                 var resources = rootElement.Resources;
-                
+
                 // Verifica se as chaves já existem, caso não, cria-as com valores padrão
                 if (!resources.ContainsKey("TextControlThemeFontSize"))
                     resources.Add("TextControlThemeFontSize", 14.0);
@@ -109,7 +102,7 @@ public partial class App : Application
                     resources.Add("TitleLargeTextBlockFontSize", 28.0);
                 if (!resources.ContainsKey("HeaderTextBlockFontSize"))
                     resources.Add("HeaderTextBlockFontSize", 46.0);
-                
+
                 // Agora atualiza os tamanhos com o fator de escala
                 resources["TextControlThemeFontSize"] = 14 * fatorEscala;
                 resources["BodyTextBlockFontSize"] = 14 * fatorEscala;
@@ -117,10 +110,10 @@ public partial class App : Application
                 resources["TitleTextBlockFontSize"] = 24 * fatorEscala;
                 resources["TitleLargeTextBlockFontSize"] = 28 * fatorEscala;
                 resources["HeaderTextBlockFontSize"] = 46 * fatorEscala;
-                
+
                 // Força uma atualização nos estilos existentes
                 rootElement.RequestedTheme = rootElement.RequestedTheme;
-                
+
                 Debug.WriteLine($"Tamanho de fonte '{tamanhoFonte}' aplicado com fator de escala {fatorEscala}");
             }
         }
@@ -139,14 +132,14 @@ public partial class App : Application
         {
             // Obtém as preferências de idioma do usuário
             var userLanguage = Windows.Globalization.ApplicationLanguages.Languages[0];
-            
+
             // Define o idioma do aplicativo
             Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = userLanguage;
-            
+
             // Configura o idioma para recursos
             var resourceContext = new Windows.ApplicationModel.Resources.Core.ResourceContext();
             resourceContext.Languages = new List<string> { userLanguage };
-            
+
             System.Diagnostics.Debug.WriteLine($"[APP] Idioma configurado: {userLanguage}");
         }
         catch (Exception ex)
@@ -162,20 +155,20 @@ public partial class App : Application
     {
         // Inicializa os recursos com a cultura correta
         Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
-        
+
         try
         {
             // Configura o idioma do aplicativo
             ConfigureLanguage();
 
             Window = new MainWindow();
-            
+
             // Inicializa o serviço de notificações
             NotificationService.Instance.Initialize(Window.DispatcherQueue);
-            
+
             // Aplica configurações de fonte ao iniciar
             AplicarConfiguracoesFonte();
-            
+
             Window.Activate();
         }
         catch (Exception ex)
@@ -185,8 +178,8 @@ public partial class App : Application
                 string logPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                     "fulcrum_launch_error.log");
-                    
-                File.WriteAllText(logPath, 
+
+                File.WriteAllText(logPath,
                     $"Erro ao lançar o aplicativo: {DateTime.Now}\n" +
                     $"Mensagem: {ex.Message}\n" +
                     $"StackTrace: {ex.StackTrace}\n");

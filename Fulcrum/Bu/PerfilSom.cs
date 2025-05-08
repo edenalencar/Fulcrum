@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
@@ -29,7 +27,7 @@ public class PerfilSom : INotifyPropertyChanged
         get => _nome;
         set => SetProperty(ref _nome, value);
     }
-    
+
     /// <summary>
     /// Descrição do perfil
     /// </summary>
@@ -38,7 +36,7 @@ public class PerfilSom : INotifyPropertyChanged
         get => _descricao;
         set => SetProperty(ref _descricao, value);
     }
-    
+
     /// <summary>
     /// Data de criação do perfil
     /// </summary>
@@ -47,7 +45,7 @@ public class PerfilSom : INotifyPropertyChanged
         get => _dataCriacao;
         set => SetProperty(ref _dataCriacao, value);
     }
-    
+
     /// <summary>
     /// Configurações de som para este perfil (ID do som -> volume)
     /// </summary>
@@ -56,7 +54,7 @@ public class PerfilSom : INotifyPropertyChanged
         get => _configuracoesSom;
         set => SetProperty(ref _configuracoesSom, value);
     }
-    
+
     /// <summary>
     /// Cria uma nova instância de PerfilSom
     /// </summary>
@@ -68,7 +66,7 @@ public class PerfilSom : INotifyPropertyChanged
         DataCriacao = DateTime.Now;
         ConfiguracoesSom = new Dictionary<string, float>();
     }
-    
+
     /// <summary>
     /// Cria uma nova instância de PerfilSom com nome e descrição
     /// </summary>
@@ -81,7 +79,7 @@ public class PerfilSom : INotifyPropertyChanged
         DataCriacao = DateTime.Now;
         ConfiguracoesSom = new Dictionary<string, float>();
     }
-    
+
     /// <summary>
     /// Define o volume para um som específico
     /// </summary>
@@ -92,7 +90,7 @@ public class PerfilSom : INotifyPropertyChanged
         ConfiguracoesSom[idSom] = volume;
         OnPropertyChanged(nameof(ConfiguracoesSom));
     }
-    
+
     /// <summary>
     /// Obtém o volume configurado para um som específico
     /// </summary>
@@ -102,7 +100,7 @@ public class PerfilSom : INotifyPropertyChanged
     {
         return ConfiguracoesSom.TryGetValue(idSom, out var volume) ? volume : 0.0f;
     }
-    
+
     /// <summary>
     /// Método auxiliar para definir uma propriedade e notificar a mudança
     /// </summary>
@@ -115,12 +113,12 @@ public class PerfilSom : INotifyPropertyChanged
     {
         if (EqualityComparer<T>.Default.Equals(field, value))
             return false;
-        
+
         field = value;
         OnPropertyChanged(propertyName);
         return true;
     }
-    
+
     /// <summary>
     /// Método para disparar o evento PropertyChanged
     /// </summary>
@@ -129,14 +127,14 @@ public class PerfilSom : INotifyPropertyChanged
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-    
+
     /// <summary>
     /// Aplica este perfil de som, definindo os volumes configurados para cada reprodutor
     /// </summary>
     public void Aplicar()
     {
         var audioManager = AudioManager.Instance;
-        
+
         // Aplica as configurações de volume para cada som no perfil
         foreach (var configuracao in ConfiguracoesSom)
         {

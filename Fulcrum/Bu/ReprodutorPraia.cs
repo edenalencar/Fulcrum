@@ -12,11 +12,11 @@ public class ReprodutorPraia : Reprodutor
     {
         // Alterado para usar o arquivo correto que existe na pasta de ativos
         Initialize("Assets\\Sounds\\manhã-praia.wav");
-        
+
         // Configurações específicas para o som de praia
         ConfigurarEqualizadorPraia();
     }
-    
+
     /// <summary>
     /// Configura o equalizador com valores otimizados para sons de praia
     /// </summary>
@@ -28,15 +28,15 @@ public class ReprodutorPraia : Reprodutor
         {
             // Banda baixa (ondas) - ligeiramente aumentada
             AjustarBandaEqualizador(0, 2.0f);
-            
+
             // Banda média (sons gerais) - neutra
             AjustarBandaEqualizador(1, 0.0f);
-            
+
             // Banda alta (sons agudos como pássaros ao fundo) - redução leve
             AjustarBandaEqualizador(2, -1.5f);
         }
     }
-    
+
     /// <summary>
     /// Personaliza os efeitos para som de praia
     /// </summary>
@@ -44,7 +44,7 @@ public class ReprodutorPraia : Reprodutor
     public override void DefinirTipoEfeito(TipoEfeito tipoEfeito)
     {
         base.DefinirTipoEfeito(tipoEfeito);
-        
+
         // Configurações adicionais para sons de praia
         if (tipoEfeito == TipoEfeito.Reverb)
         {

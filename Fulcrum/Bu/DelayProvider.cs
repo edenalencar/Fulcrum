@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -25,10 +24,10 @@ public class DelayProvider : ISampleProvider
     {
         _source = source;
         WaveFormat = source.WaveFormat;
-        
+
         // Inicializa o atraso
         _delayMilliseconds = delayMilliseconds;
-        
+
         // Calcula o tamanho do buffer baseado no tempo do delay
         // Acrescenta um buffer adicional para segurança
         _delayBufferLength = (int)(source.WaveFormat.SampleRate * (delayMilliseconds / 1000.0f) * 2);
@@ -48,9 +47,9 @@ public class DelayProvider : ISampleProvider
         get => _delayMilliseconds;
         set
         {
-            if (value < 0) 
+            if (value < 0)
                 throw new ArgumentOutOfRangeException(nameof(value), "O tempo de atraso não pode ser negativo");
-            
+
             _delayMilliseconds = value;
         }
     }
@@ -79,36 +78,36 @@ public class DelayProvider : ISampleProvider
     public int Read(float[] buffer, int offset, int count)
     {
         int samplesRead = _source.Read(buffer, offset, count);
-        
+
         if (samplesRead > 0 && _wetDryMix > 0)
         {
             // Calcula o número de amostras para o delay
             int delaySamples = (int)(_delayMilliseconds * (WaveFormat.SampleRate / 1000.0));
-            
+
             // Calcula o fator dry/wet
             float dryFactor = 1.0f - _wetDryMix;
-            
+
             // Para cada amostra no buffer de entrada
             for (int i = 0; i < samplesRead; i++)
             {
                 // Guarda a amostra original antes de modificar
                 float originalSample = buffer[offset + i];
-                
+
                 // Obtém a amostra atrasada do buffer circular
                 int delayPosition = (_delayBufferPosition - delaySamples + _delayBufferLength) % _delayBufferLength;
                 float delaySample = _delayBuffer[delayPosition];
-                
+
                 // Escreve a amostra atual no buffer de delay (com feedback)
                 _delayBuffer[_delayBufferPosition] = originalSample + (delaySample * _delayAmplification);
-                
+
                 // Avança a posição do buffer de delay
                 _delayBufferPosition = (_delayBufferPosition + 1) % _delayBufferLength;
-                
+
                 // Mistura sinal seco (original) com o sinal de delay (molhado)
                 buffer[offset + i] = (originalSample * dryFactor) + (delaySample * _wetDryMix);
             }
         }
-        
+
         return samplesRead;
     }
 }

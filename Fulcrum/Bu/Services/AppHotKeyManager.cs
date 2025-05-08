@@ -1,7 +1,3 @@
-using Fulcrum.Bu;
-using Fulcrum.Bu.Services;
-using System;
-using System.Collections.Generic;
 using Windows.Storage;
 using Windows.System;
 
@@ -17,11 +13,11 @@ namespace Fulcrum.Bu.Services
         private readonly Dictionary<string, int> _registeredHotKeyIds = new();
         private bool _isDisposed = false;
         private readonly ApplicationDataContainer _localSettings = ApplicationData.Current.LocalSettings;
-        
+
         // Chaves para salvar as configurações
         private const string HOTKEYS_SETTINGS_KEY = "HotKeySettings";
         private const string ENABLE_HOTKEYS_KEY = "EnableHotKeys";
-        
+
         /// <summary>
         /// Inicializa uma nova instância do gerenciador de teclas de atalho
         /// </summary>
@@ -30,7 +26,7 @@ namespace Fulcrum.Bu.Services
             _hotKeyService = HotKeyService.Instance;
             _audioManager = AudioManager.Instance;
         }
-        
+
         /// <summary>
         /// Verifica se as teclas de atalho globais estão habilitadas
         /// </summary>
@@ -57,40 +53,40 @@ namespace Fulcrum.Bu.Services
                 }
             }
         }
-        
+
         /// <summary>
         /// Registra todas as teclas de atalho padrão
         /// </summary>
         public void RegisterAllHotKeys()
         {
             if (!HotKeysEnabled) return;
-            
+
             // Desregistra teclas existentes para evitar duplicidade
             UnregisterAllHotKeys();
-            
+
             // Reproduzir/Pausar - Ctrl+Alt+P
-            RegisterHotKey("PlayPause", VirtualKey.P, 
+            RegisterHotKey("PlayPause", VirtualKey.P,
                 HotKeyModifiers.Control | HotKeyModifiers.Alt,
                 TogglePlayPause);
-            
+
             // Aumentar volume - Ctrl+Alt+Up
             RegisterHotKey("VolumeUp", VirtualKey.Up,
                 HotKeyModifiers.Control | HotKeyModifiers.Alt,
                 IncreaseVolume);
-            
+
             // Diminuir volume - Ctrl+Alt+Down
             RegisterHotKey("VolumeDown", VirtualKey.Down,
                 HotKeyModifiers.Control | HotKeyModifiers.Alt,
                 DecreaseVolume);
-                
+
             // Mutar/Desmutar - Ctrl+Alt+M
             RegisterHotKey("Mute", VirtualKey.M,
                 HotKeyModifiers.Control | HotKeyModifiers.Alt,
                 ToggleMute);
-                
+
             System.Diagnostics.Debug.WriteLine("Teclas de atalho padrão registradas");
         }
-        
+
         /// <summary>
         /// Registra uma tecla de atalho específica
         /// </summary>
@@ -98,7 +94,7 @@ namespace Fulcrum.Bu.Services
         {
             // Desregistra se já existir
             UnregisterHotKey(name);
-            
+
             // Registra o novo atalho
             int id = _hotKeyService.RegisterHotKey(key, modifiers, action);
             if (id != -1)
@@ -106,7 +102,7 @@ namespace Fulcrum.Bu.Services
                 _registeredHotKeyIds[name] = id;
             }
         }
-        
+
         /// <summary>
         /// Remove o registro de uma tecla de atalho
         /// </summary>
@@ -118,7 +114,7 @@ namespace Fulcrum.Bu.Services
                 _registeredHotKeyIds.Remove(name);
             }
         }
-        
+
         /// <summary>
         /// Remove o registro de todas as teclas de atalho
         /// </summary>
@@ -131,9 +127,9 @@ namespace Fulcrum.Bu.Services
             _registeredHotKeyIds.Clear();
             System.Diagnostics.Debug.WriteLine("Todas as teclas de atalho foram desregistradas");
         }
-        
+
         #region Ações de teclas de atalho
-        
+
         /// <summary>
         /// Ação para alternar reprodução/pausa
         /// </summary>
@@ -142,7 +138,7 @@ namespace Fulcrum.Bu.Services
             _audioManager.TogglePlayback();
             System.Diagnostics.Debug.WriteLine($"Atalho: Alternar reprodução/pausa - {(_audioManager.IsPlaying ? "Reproduzindo" : "Pausado")}");
         }
-        
+
         /// <summary>
         /// Ação para aumentar o volume principal
         /// </summary>
@@ -151,7 +147,7 @@ namespace Fulcrum.Bu.Services
             _audioManager.IncreaseMainVolume(0.05f);
             System.Diagnostics.Debug.WriteLine("Atalho: Aumentar volume global em 5%");
         }
-        
+
         /// <summary>
         /// Ação para diminuir o volume principal
         /// </summary>
@@ -160,7 +156,7 @@ namespace Fulcrum.Bu.Services
             _audioManager.DecreaseMainVolume(0.05f);
             System.Diagnostics.Debug.WriteLine("Atalho: Diminuir volume global em 5%");
         }
-        
+
         /// <summary>
         /// Ação para alternar mudo/com som
         /// </summary>
@@ -169,9 +165,9 @@ namespace Fulcrum.Bu.Services
             _audioManager.ToggleMute();
             System.Diagnostics.Debug.WriteLine($"Atalho: Audio {(_audioManager.IsMuted ? "mutado" : "desmutado")}");
         }
-        
+
         #endregion
-        
+
         /// <summary>
         /// Libera recursos utilizados pelo gerenciador de teclas de atalho
         /// </summary>

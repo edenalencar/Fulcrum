@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Text.Json;
 using Windows.Storage;
 
@@ -16,12 +13,12 @@ public enum PlaybackState
     /// O áudio está parado
     /// </summary>
     Stopped,
-    
+
     /// <summary>
     /// O áudio está tocando
     /// </summary>
     Playing,
-    
+
     /// <summary>
     /// O áudio está pausado
     /// </summary>
@@ -37,22 +34,22 @@ public enum TipoEfeito
     /// Sem efeito
     /// </summary>
     Nenhum = 0,
-    
+
     /// <summary>
     /// Efeito de reverberação
     /// </summary>
     Reverb = 1,
-    
+
     /// <summary>
     /// Efeito de eco
     /// </summary>
     Echo = 2,
-    
+
     /// <summary>
     /// Efeito de alteração de tom
     /// </summary>
     Pitch = 3,
-    
+
     /// <summary>
     /// Efeito de flanger
     /// </summary>
@@ -76,10 +73,10 @@ public sealed class AudioManager
     private ConcurrentDictionary<string, float[]> _equalizerSettings = new();
     // Armazena configurações de efeitos para salvar/restaurar
     private ConcurrentDictionary<string, EffectSettings> _effectSettings = new();
-    
+
     // Flag para garantir que todos os reprodutores iniciem com volume zero
     private bool _forceInitialVolumeZero = true;
-    
+
     // Flag para controle de mudo global
     private bool _isMuted = false;
     private readonly ConcurrentDictionary<string, float> _preMuteVolumes = new();
@@ -88,20 +85,20 @@ public sealed class AudioManager
     private readonly ConcurrentDictionary<string, bool> _playbackStates = new();
 
     // Construtor privado para implementar o padrão Singleton
-    private AudioManager() 
+    private AudioManager()
     {
         // Inicializar todos os volumes para zero antes de carregar configurações salvas
         _volumeStates.Clear();
-        
+
         // Flag para forçar volume zero na primeira execução é ativada por padrão
         _forceInitialVolumeZero = true;
-        
+
         // Carregar configurações salvas de volume na inicialização
         CarregarVolumes();
-        
+
         // Carregar configurações salvas de efeitos na inicialização
         CarregarEstadoEfeitos();
-        
+
         System.Diagnostics.Debug.WriteLine("AudioManager: Inicializado com regra de volume zero");
     }
 
@@ -109,17 +106,17 @@ public sealed class AudioManager
     /// Instância única do AudioManager (Singleton)
     /// </summary>
     public static AudioManager Instance => _instance.Value;
-    
+
     /// <summary>
     /// Indica se pelo menos um som está em reprodução
     /// </summary>
     public bool IsPlaying => _audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing);
-    
+
     /// <summary>
     /// Indica se o áudio está em mudo
     /// </summary>
     public bool IsMuted => _isMuted;
-    
+
     /// <summary>
     /// Retorna a quantidade de reprodutores registrados
     /// </summary>
@@ -138,21 +135,21 @@ public sealed class AudioManager
         }
 
         _audioPlayers[id] = player;
-        
+
         // Inicializa o estado de reprodução como parado
         _playerStates[id] = PlaybackState.Stopped;
-        
+
         // Define o volume inicial como zero para todos os reprodutores
         player.Reader.Volume = 0f;
-        
+
         // Garante que o player não inicie automaticamente
         if (player.WaveOut != null && player.WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
         {
             player.Stop();
         }
-        
+
         System.Diagnostics.Debug.WriteLine($"Reprodutor {id} adicionado com sucesso com volume inicial zero e playback parado");
-        
+
         // Se o dicionário de volumes ainda não foi inicializado ou não tem entradas,
         // forçamos a inicialização com volume zero
         if (_volumeStates.Count == 0)
@@ -182,7 +179,7 @@ public sealed class AudioManager
             // Garantimos que o volume inicial seja sempre zero
             _volumeStates.TryAdd(id, 0f);
         }
-        
+
         // Restaura as configurações de efeitos salvas anteriormente, se existirem
         if (_effectSettings.TryGetValue(id, out var effectSettings))
         {
@@ -190,7 +187,7 @@ public sealed class AudioManager
             {
                 AtivarEfeitos(id, true);
                 DefinirTipoEfeito(id, effectSettings.TipoEfeito);
-                
+
                 switch (effectSettings.TipoEfeito)
                 {
                     case TipoEfeito.Reverb:
@@ -208,7 +205,7 @@ public sealed class AudioManager
                 }
             }
         }
-        
+
         // Restaura as configurações de equalizador salvas anteriormente, se existirem
         if (_equalizerSettings.TryGetValue(id, out var eqSettings) && eqSettings.Length >= 3)
         {
@@ -231,7 +228,7 @@ public sealed class AudioManager
         }
         throw new KeyNotFoundException($"Reprodutor com ID '{id}' não encontrado");
     }
-    
+
     /// <summary>
     /// Obtém a lista de todos os reprodutores registrados
     /// </summary>
@@ -240,7 +237,7 @@ public sealed class AudioManager
     {
         return _audioPlayers;
     }
-    
+
     /// <summary>
     /// Altera o volume de um reprodutor específico
     /// </summary>
@@ -255,11 +252,11 @@ public sealed class AudioManager
                 // Limita o volume entre 0 e 1
                 volume = Math.Clamp(volume, 0f, 1f);
                 player.AlterarVolume(volume);
-                
+
                 // Salva o novo estado do volume
                 _volumeStates[id] = volume;
                 SalvarVolumes();
-                
+
                 // Inicia a reprodução automaticamente se o volume for maior que zero
                 if (volume > 0.001f && player.WaveOut?.PlaybackState != NAudio.Wave.PlaybackState.Playing)
                 {
@@ -272,7 +269,7 @@ public sealed class AudioManager
                 {
                     player.Pause();
                     _playerStates[id] = PlaybackState.Paused;
-                    
+
                     // Verifica se ainda há algum player tocando
                     if (!_audioPlayers.Values.Any(p => p.WaveOut?.PlaybackState == NAudio.Wave.PlaybackState.Playing))
                     {
@@ -290,7 +287,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao alterar volume do reprodutor '{id}': {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Aumenta o volume de todos os reprodutores pela quantidade especificada
     /// </summary>
@@ -303,10 +300,10 @@ public sealed class AudioManager
             var newVolume = Math.Clamp(currentVolume + increment, 0f, 1f);
             AlterarVolume(pair.Key, newVolume);
         }
-        
+
         System.Diagnostics.Debug.WriteLine($"Volume global aumentado em {increment}");
     }
-    
+
     /// <summary>
     /// Diminui o volume de todos os reprodutores pela quantidade especificada
     /// </summary>
@@ -319,10 +316,10 @@ public sealed class AudioManager
             var newVolume = Math.Clamp(currentVolume - decrement, 0f, 1f);
             AlterarVolume(pair.Key, newVolume);
         }
-        
+
         System.Diagnostics.Debug.WriteLine($"Volume global diminuído em {decrement}");
     }
-    
+
     /// <summary>
     /// Alterna entre mudo e com som para todos os reprodutores
     /// </summary>
@@ -350,11 +347,11 @@ public sealed class AudioManager
                 AlterarVolume(pair.Key, 0f);
             }
         }
-        
+
         _isMuted = !_isMuted;
         System.Diagnostics.Debug.WriteLine($"Áudio global {(_isMuted ? "mutado" : "desmutado")}");
     }
-    
+
     /// <summary>
     /// Inicia a reprodução de todos os sons
     /// </summary>
@@ -365,20 +362,20 @@ public sealed class AudioManager
         {
             string soundId = playerEntry.Key;
             Reprodutor player = playerEntry.Value;
-            
+
             // Verifica se o reprodutor estava em estado de reprodução ou se tem volume suficiente para tocar
-            if (_playerStates.TryGetValue(soundId, out var state) && 
-                (state == PlaybackState.Playing || 
+            if (_playerStates.TryGetValue(soundId, out var state) &&
+                (state == PlaybackState.Playing ||
                 (state == PlaybackState.Stopped && player.Reader.Volume > 0.001f)))
             {
                 player.Play();
                 _playerStates[soundId] = PlaybackState.Playing;
             }
         }
-        
+
         System.Diagnostics.Debug.WriteLine("Iniciada reprodução respeitando estados anteriores dos reprodutores");
     }
-    
+
     /// <summary>
     /// Pausa a reprodução de todos os sons
     /// </summary>
@@ -389,10 +386,10 @@ public sealed class AudioManager
             playerEntry.Value.Pause();
             _playerStates[playerEntry.Key] = PlaybackState.Paused;
         }
-        
+
         System.Diagnostics.Debug.WriteLine("Pausada reprodução de todos os sons");
     }
-    
+
     /// <summary>
     /// Reproduz um som específico
     /// </summary>
@@ -404,7 +401,7 @@ public sealed class AudioManager
             _playerStates[soundId] = PlaybackState.Playing;
         }
     }
-    
+
     /// <summary>
     /// Pausa um som específico
     /// </summary>
@@ -416,7 +413,7 @@ public sealed class AudioManager
             _playerStates[soundId] = PlaybackState.Paused;
         }
     }
-    
+
     /// <summary>
     /// Alterna entre reprodução e pausa para todos os sons ativos
     /// </summary>
@@ -426,7 +423,7 @@ public sealed class AudioManager
         {
             // Verifica o estado atual de reprodução
             bool isCurrentlyPlaying = IsPlaying;
-            
+
             // Se estiver reproduzindo, pausa todos
             if (isCurrentlyPlaying)
             {
@@ -452,7 +449,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro em TogglePlayback: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Remove um reprodutor de áudio do gerenciador
     /// </summary>
@@ -476,7 +473,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao remover reprodutor '{id}': {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Salva o estado atual dos volumes para persistência
     /// </summary>
@@ -484,7 +481,7 @@ public sealed class AudioManager
     {
         SalvarVolumes();
     }
-    
+
     /// <summary>
     /// Salva os estados de volume atuais para persistência
     /// </summary>
@@ -500,7 +497,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao salvar configurações de volume: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Carrega os estados de volume salvos anteriormente
     /// </summary>
@@ -508,7 +505,7 @@ public sealed class AudioManager
     {
         try
         {
-            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(VOLUME_SETTINGS_KEY, out var value) && 
+            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(VOLUME_SETTINGS_KEY, out var value) &&
                 value is string json)
             {
                 var volumes = JsonSerializer.Deserialize<Dictionary<string, float>>(json);
@@ -516,13 +513,13 @@ public sealed class AudioManager
                 {
                     // Limpa o dicionário existente
                     _volumeStates.Clear();
-                    
+
                     // Adiciona os itens um a um
                     foreach (var item in volumes)
                     {
                         _volumeStates.TryAdd(item.Key, item.Value);
                     }
-                    
+
                     System.Diagnostics.Debug.WriteLine("Configurações de volume carregadas com sucesso");
                 }
             }
@@ -532,7 +529,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar configurações de volume: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Inicializa todos os reprodutores com um volume específico
     /// </summary>
@@ -541,78 +538,78 @@ public sealed class AudioManager
     {
         // Força volume zero na primeira execução
         float volume = _forceInitialVolumeZero ? 0.0f : (float)Math.Clamp(initialVolume, 0.0, 1.0);
-        
+
         // Se os volumes já foram carregados das configurações, mas queremos forçar volume zero
         if (_volumeStates.Count > 0 && _forceInitialVolumeZero)
         {
             System.Diagnostics.Debug.WriteLine("Forçando volume inicial zero para todos os reprodutores...");
-            
+
             // Reseta todos os volumes para zero
             foreach (var pair in _audioPlayers)
             {
                 // Define o volume
                 pair.Value.AlterarVolume(0.0f);
-                
+
                 // Garante que o player esteja parado
                 if (pair.Value.WaveOut != null && pair.Value.WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
                 {
                     pair.Value.Stop();
                 }
-                
+
                 // Atualiza o dicionário de estados de volume
                 _volumeStates[pair.Key] = 0.0f;
-                
+
                 // Marca o estado de reprodução como parado
                 _playerStates[pair.Key] = PlaybackState.Stopped;
             }
-            
+
             // Salva os novos estados de volume
             SalvarVolumes();
-            
+
             // Desativa o flag para futuras execuções
             _forceInitialVolumeZero = false;
-            
+
             System.Diagnostics.Debug.WriteLine("Todos os reprodutores foram inicializados com volume zero");
             return;
         }
-        
+
         // Se os volumes já foram carregados das configurações e não queremos forçar volume zero
         if (_volumeStates.Count > 0 && !_forceInitialVolumeZero)
         {
             System.Diagnostics.Debug.WriteLine("Volumes já carregados de configurações anteriores, preservando estado...");
             return;
         }
-        
+
         // Aplica o volume inicial a todos os reprodutores e interrompe qualquer reprodução
         foreach (var pair in _audioPlayers)
         {
             // Define o volume
             pair.Value.AlterarVolume(volume);
-            
+
             // Garante que o player esteja parado
             if (pair.Value.WaveOut != null && pair.Value.WaveOut.PlaybackState != NAudio.Wave.PlaybackState.Stopped)
             {
                 pair.Value.Stop();
             }
-            
+
             // Atualiza o dicionário de estados de volume
             _volumeStates[pair.Key] = volume;
-            
+
             // Marca o estado de reprodução como parado
             _playerStates[pair.Key] = PlaybackState.Stopped;
         }
-        
+
         // Salva os novos estados de volume
         SalvarVolumes();
-        
+
         // Após a inicialização, desativa o flag para futuras execuções
         _forceInitialVolumeZero = false;
-        
+
         System.Diagnostics.Debug.WriteLine($"Todos os reprodutores inicializados com volume {volume} e reprodução interrompida");
     }
-    
+
     #region Métodos de Equalizador e Efeitos
-    
+
     /// <summary>
     /// Ativa ou desativa o equalizador para um reprodutor específico
     /// </summary>
@@ -624,10 +621,10 @@ public sealed class AudioManager
         {
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.EqualizerEnabled = enabled;
-            
+
             // Salva o estado atual
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Equalizador {(enabled ? "ativado" : "desativado")} para {soundId}");
         }
         catch (Exception ex)
@@ -635,7 +632,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao {(enabled ? "ativar" : "desativar")} equalizador: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Ajusta uma banda específica do equalizador para um reprodutor
     /// </summary>
@@ -648,16 +645,16 @@ public sealed class AudioManager
         {
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.AjustarBandaEqualizador(bandIndex, gain);
-            
+
             // Salva o estado atual do equalizador
             if (!_equalizerSettings.ContainsKey(soundId))
             {
                 _equalizerSettings[soundId] = new float[3] { 0f, 0f, 0f };
             }
-            
+
             _equalizerSettings[soundId][bandIndex] = gain;
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Banda {bandIndex} ajustada para {gain}dB em {soundId}");
         }
         catch (Exception ex)
@@ -665,7 +662,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao ajustar equalizador: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Ativa ou desativa os efeitos para um reprodutor específico
     /// </summary>
@@ -677,16 +674,16 @@ public sealed class AudioManager
         {
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.EffectsEnabled = enabled;
-            
+
             // Inicializa ou atualiza as configurações de efeitos
             if (!_effectSettings.ContainsKey(soundId))
             {
                 _effectSettings[soundId] = new EffectSettings();
             }
-            
+
             _effectSettings[soundId].EffectsEnabled = enabled;
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Efeitos {(enabled ? "ativados" : "desativados")} para {soundId}");
         }
         catch (Exception ex)
@@ -694,7 +691,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao {(enabled ? "ativar" : "desativar")} efeitos: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Define o tipo de efeito a ser aplicado a um reprodutor
     /// </summary>
@@ -706,16 +703,16 @@ public sealed class AudioManager
         {
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.DefinirTipoEfeito(tipoEfeito);
-            
+
             // Salva o tipo de efeito atual
             if (!_effectSettings.ContainsKey(soundId))
             {
                 _effectSettings[soundId] = new EffectSettings();
             }
-            
+
             _effectSettings[soundId].TipoEfeito = tipoEfeito;
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Tipo de efeito definido para {tipoEfeito} em {soundId}");
         }
         catch (Exception ex)
@@ -723,7 +720,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao definir tipo de efeito: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Ajusta os parâmetros de reverberação para um reprodutor
     /// </summary>
@@ -737,17 +734,17 @@ public sealed class AudioManager
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.AjustarReverbMix(mix);
             reprodutor.AjustarReverbTime(time);
-            
+
             // Salva os parâmetros atuais
             if (!_effectSettings.ContainsKey(soundId))
             {
                 _effectSettings[soundId] = new EffectSettings();
             }
-            
+
             _effectSettings[soundId].ReverbMix = mix;
             _effectSettings[soundId].ReverbTime = time;
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Reverb ajustado para mix={mix}, time={time}s em {soundId}");
         }
         catch (Exception ex)
@@ -755,7 +752,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao ajustar reverb: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Ajusta os parâmetros de eco para um reprodutor
     /// </summary>
@@ -768,17 +765,17 @@ public sealed class AudioManager
         {
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.AjustarEcho(delay, mix);
-            
+
             // Salva os parâmetros atuais
             if (!_effectSettings.ContainsKey(soundId))
             {
                 _effectSettings[soundId] = new EffectSettings();
             }
-            
+
             _effectSettings[soundId].EchoDelay = delay;
             _effectSettings[soundId].EchoMix = mix;
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Echo ajustado para delay={delay}ms, mix={mix} em {soundId}");
         }
         catch (Exception ex)
@@ -786,7 +783,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao ajustar echo: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Ajusta o fator de pitch para um reprodutor
     /// </summary>
@@ -798,16 +795,16 @@ public sealed class AudioManager
         {
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.AjustarPitchFactor(factor);
-            
+
             // Salva o parâmetro atual
             if (!_effectSettings.ContainsKey(soundId))
             {
                 _effectSettings[soundId] = new EffectSettings();
             }
-            
+
             _effectSettings[soundId].PitchFactor = factor;
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Pitch ajustado para factor={factor} em {soundId}");
         }
         catch (Exception ex)
@@ -815,7 +812,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao ajustar pitch: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Ajusta os parâmetros de flanger para um reprodutor
     /// </summary>
@@ -828,17 +825,17 @@ public sealed class AudioManager
         {
             var reprodutor = GetReprodutorPorId(soundId);
             reprodutor.AjustarFlanger(rate, depth);
-            
+
             // Salva os parâmetros atuais
             if (!_effectSettings.ContainsKey(soundId))
             {
                 _effectSettings[soundId] = new EffectSettings();
             }
-            
+
             _effectSettings[soundId].FlangerRate = rate;
             _effectSettings[soundId].FlangerDepth = depth;
             SalvarEstadoEfeitos();
-            
+
             System.Diagnostics.Debug.WriteLine($"Flanger ajustado para rate={rate}Hz, depth={depth} em {soundId}");
         }
         catch (Exception ex)
@@ -846,7 +843,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao ajustar flanger: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Salva o estado atual dos efeitos e equalizadores
     /// </summary>
@@ -857,11 +854,11 @@ public sealed class AudioManager
             // Salva as configurações de efeitos
             var effectsJson = JsonSerializer.Serialize(_effectSettings);
             ApplicationData.Current.LocalSettings.Values[EFFECTS_SETTINGS_KEY + "_Effects"] = effectsJson;
-            
+
             // Salva as configurações de equalizador
             var eqJson = JsonSerializer.Serialize(_equalizerSettings);
             ApplicationData.Current.LocalSettings.Values[EFFECTS_SETTINGS_KEY + "_EQ"] = eqJson;
-            
+
             System.Diagnostics.Debug.WriteLine("Estado de efeitos e equalizador salvo com sucesso");
         }
         catch (Exception ex)
@@ -869,7 +866,7 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao salvar configurações de efeitos: {ex.Message}");
         }
     }
-    
+
     /// <summary>
     /// Carrega o estado salvo dos efeitos e equalizadores
     /// </summary>
@@ -878,7 +875,7 @@ public sealed class AudioManager
         try
         {
             // Carrega as configurações de efeitos
-            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(EFFECTS_SETTINGS_KEY + "_Effects", out var effectsValue) && 
+            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(EFFECTS_SETTINGS_KEY + "_Effects", out var effectsValue) &&
                 effectsValue is string effectsJson)
             {
                 var effects = JsonSerializer.Deserialize<ConcurrentDictionary<string, EffectSettings>>(effectsJson);
@@ -891,9 +888,9 @@ public sealed class AudioManager
                     }
                 }
             }
-            
+
             // Carrega as configurações de equalizador
-            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(EFFECTS_SETTINGS_KEY + "_EQ", out var eqValue) && 
+            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(EFFECTS_SETTINGS_KEY + "_EQ", out var eqValue) &&
                 eqValue is string eqJson)
             {
                 var eq = JsonSerializer.Deserialize<ConcurrentDictionary<string, float[]>>(eqJson);
@@ -906,7 +903,7 @@ public sealed class AudioManager
                     }
                 }
             }
-            
+
             System.Diagnostics.Debug.WriteLine("Configurações de efeitos carregadas com sucesso");
         }
         catch (Exception ex)
@@ -914,9 +911,9 @@ public sealed class AudioManager
             System.Diagnostics.Debug.WriteLine($"Erro ao carregar configurações de efeitos: {ex.Message}");
         }
     }
-    
+
     #endregion
-    
+
     /// <summary>
     /// Libera todos os recursos utilizados
     /// </summary>
@@ -929,7 +926,7 @@ public sealed class AudioManager
         _audioPlayers.Clear();
         System.Diagnostics.Debug.WriteLine("AudioManager: todos os recursos liberados");
     }
-    
+
     /// <summary>
     /// Obtém o estado de reprodução específico por player
     /// </summary>
@@ -952,42 +949,42 @@ public class EffectSettings
     /// Tipo de efeito ativo
     /// </summary>
     public TipoEfeito TipoEfeito { get; set; } = TipoEfeito.Nenhum;
-    
+
     /// <summary>
     /// Nível de reverberação (0.0 a 1.0)
     /// </summary>
     public float ReverbMix { get; set; } = 0.3f;
-    
+
     /// <summary>
     /// Tempo de reverberação (0.1 a 10.0 segundos)
     /// </summary>
     public float ReverbTime { get; set; } = 1.0f;
-    
+
     /// <summary>
     /// Tempo de atraso do eco (10 a 1000 ms)
     /// </summary>
     public float EchoDelay { get; set; } = 250f;
-    
+
     /// <summary>
     /// Mix do eco (0.0 a 1.0)
     /// </summary>
     public float EchoMix { get; set; } = 0.5f;
-    
+
     /// <summary>
     /// Fator de alteração de tom (0.5 a 2.0)
     /// </summary>
     public float PitchFactor { get; set; } = 1.0f;
-    
+
     /// <summary>
     /// Taxa de flanger em Hz (0.1 a 5.0)
     /// </summary>
     public float FlangerRate { get; set; } = 0.5f;
-    
+
     /// <summary>
     /// Profundidade de flanger (0.001 a 0.01)
     /// </summary>
     public float FlangerDepth { get; set; } = 0.005f;
-    
+
     /// <summary>
     /// Indica se os efeitos estão habilitados
     /// </summary>
@@ -1003,7 +1000,7 @@ public class EqualizerSettings
     /// Valores de ganho para cada banda (dB)
     /// </summary>
     public float[] BandGains { get; set; } = new float[3] { 0f, 0f, 0f };
-    
+
     /// <summary>
     /// Indica se o equalizador está habilitado
     /// </summary>

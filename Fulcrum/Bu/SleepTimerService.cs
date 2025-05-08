@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Fulcrum.Bu.Services;
 
 namespace Fulcrum.Bu;
@@ -26,7 +23,7 @@ public sealed class SleepTimerService
     public event EventHandler? TimerStarted;              // Dispara quando o temporizador é iniciado
     public event EventHandler? TimerCancelled;            // Dispara quando o temporizador é cancelado
     public event EventHandler? TimerCompleted;            // Dispara quando o temporizador termina naturalmente
-    
+
     /// <summary>
     /// Construtor privado para Singleton
     /// </summary>
@@ -117,7 +114,7 @@ public sealed class SleepTimerService
                     if (!_isTimerActive) break;
 
                     _remainingMinutes--;
-                    
+
                     // Notifica os ouvintes sobre a atualização do temporizador
                     TimerUpdated?.Invoke(this, _remainingMinutes);
                 }
@@ -137,10 +134,10 @@ public sealed class SleepTimerService
 
                     // Pausa todos os áudios quando o temporizador termina
                     AudioManager.Instance.PauseAll();
-                    
+
                     // Envia notificação do sistema
                     NotificationService.Instance.ShowSleepTimerNotification(
-                        "Temporizador de Sono Concluído", 
+                        "Temporizador de Sono Concluído",
                         "O temporizador de sono foi encerrado e todos os sons foram pausados."
                     );
                 }

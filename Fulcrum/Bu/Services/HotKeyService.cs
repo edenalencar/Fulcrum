@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Microsoft.UI.Xaml;
 using Windows.System;
-using Microsoft.UI.Dispatching;
 
 namespace Fulcrum.Bu.Services
 {
@@ -65,7 +61,7 @@ namespace Fulcrum.Bu.Services
         public int RegisterHotKey(VirtualKey key, HotKeyModifiers modifiers, Action action)
         {
             if (_isDisposed) throw new ObjectDisposedException(nameof(HotKeyService));
-            
+
             uint modValue = 0;
             if (modifiers.HasFlag(HotKeyModifiers.Alt)) modValue |= MOD_ALT;
             if (modifiers.HasFlag(HotKeyModifiers.Control)) modValue |= MOD_CONTROL;
@@ -74,14 +70,14 @@ namespace Fulcrum.Bu.Services
             modValue |= MOD_NOREPEAT; // Evitar repetição automática
 
             int id = _currentId++;
-            
+
             if (RegisterHotKey(_windowHandle, id, modValue, (uint)key))
             {
                 _registeredHotKeys[id] = action;
                 System.Diagnostics.Debug.WriteLine($"Tecla de atalho registrada com ID {id}");
                 return id;
             }
-            
+
             System.Diagnostics.Debug.WriteLine($"Falha ao registrar tecla de atalho {key} com modificador {modifiers}");
             return -1;
         }
@@ -93,7 +89,7 @@ namespace Fulcrum.Bu.Services
         public void UnregisterHotKey(int id)
         {
             if (_isDisposed) return;
-            
+
             if (_registeredHotKeys.ContainsKey(id))
             {
                 UnregisterHotKey(_windowHandle, id);
@@ -115,7 +111,8 @@ namespace Fulcrum.Bu.Services
                 if (_registeredHotKeys.TryGetValue(id, out var action) && action != null && _dispatcherQueue != null)
                 {
                     // Executar a ação na thread da UI
-                    _dispatcherQueue.TryEnqueue(() => {
+                    _dispatcherQueue.TryEnqueue(() =>
+                    {
                         action.Invoke();
                     });
                     return true;

@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -27,7 +26,7 @@ public class FlangerSampleProvider : ISampleProvider
     {
         _source = source;
         WaveFormat = source.WaveFormat;
-        
+
         // Criação de buffer para o efeito flanger
         // O buffer precisa ser grande o suficiente para acomodar as maiores profundidades de delay
         _bufferLength = source.WaveFormat.SampleRate / 5; // 200ms de buffer máximo
@@ -111,38 +110,38 @@ public class FlangerSampleProvider : ISampleProvider
 
         // Calcula o fator de dry/wet mix
         float dryFactor = 1.0f - _mix;
-        
+
         // Processa cada amostra
         for (int i = 0; i < count; i++)
         {
             // Atualiza a fase do LFO (oscilador de baixa frequência)
             _phase += _rate / WaveFormat.SampleRate;
             if (_phase > 1.0f) _phase -= 1.0f;
-            
+
             // Função seno para criar um delay variável
             float delayOffset = ((float)Math.Sin(_phase * 2 * Math.PI) * 0.5f + 0.5f) * _depth;
-            
+
             // Calcula o atraso em amostras (1ms a ~20ms)
             int delaySamples = (int)(delayOffset * WaveFormat.SampleRate / 50);
-            
+
             // Salva a amostra original
             float originalSample = buffer[offset + i];
-            
+
             // Armazena no buffer circular
             _buffer[_bufferPosition] = originalSample;
-            
+
             // Calcula a posição atrasada no buffer circular
             int delayPos = (_bufferPosition - delaySamples + _bufferLength) % _bufferLength;
-            
+
             // Obtém a amostra atrasada
             float delaySample = _buffer[delayPos];
-            
+
             // Aplica feedback ao buffer
             _buffer[_bufferPosition] = originalSample + (delaySample * _feedback);
-            
+
             // Avança a posição no buffer circular
             _bufferPosition = (_bufferPosition + 1) % _bufferLength;
-            
+
             // Combina sinal seco com o processado
             buffer[offset + i] = (originalSample * dryFactor) + (delaySample * _mix);
         }

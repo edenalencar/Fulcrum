@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Xml;
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -29,7 +26,7 @@ public static class LocalizationHelper
         {
             // Determinar a linguagem atual do sistema
             var currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
-            
+
             if (!string.IsNullOrEmpty(currentLanguage))
             {
                 if (currentLanguage.StartsWith("en"))
@@ -59,9 +56,9 @@ public static class LocalizationHelper
             var resxFolder = await installFolder.GetFolderAsync("Strings");
             var langFolder = await resxFolder.GetFolderAsync(_currentLanguage);
             var resourceFile = await langFolder.GetFileAsync("Resources.resw");
-            
+
             var fileContent = await FileIO.ReadTextAsync(resourceFile);
-            
+
             using (var stringReader = new StringReader(fileContent))
             using (var xmlReader = XmlReader.Create(stringReader))
             {
@@ -89,7 +86,7 @@ public static class LocalizationHelper
                     }
                 }
             }
-            
+
             Debug.WriteLine($"Recursos carregados com sucesso: {_resources.Count} itens");
         }
         catch (Exception ex)
@@ -144,7 +141,7 @@ public static class LocalizationHelper
 
         return defaultValue;
     }
-    
+
     /// <summary>
     /// Obtém uma string formatada usando um padrão localizado
     /// </summary>
@@ -195,12 +192,12 @@ public static class LocalizationHelper
                 return false; // Idioma não suportado
 
             Debug.WriteLine($"Alterando idioma de {_currentLanguage} para {language}");
-            
+
             // Atualiza o idioma e limpa o cache
             _currentLanguage = language;
             _resources.Clear();
             _initialized = false;
-            
+
             // Recarrega os recursos
             Initialize();
             return true;

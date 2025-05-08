@@ -1,16 +1,10 @@
+using Fulcrum.Bu;
+using Fulcrum.Util; // Adicionado para usar o LocalizationHelper
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using System;
-using Fulcrum.Bu;
-using System.Collections.ObjectModel;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel.DataTransfer;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI;
 using Microsoft.UI.Xaml.Media;
-using Fulcrum.Util; // Adicionado para usar o LocalizationHelper
+using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Fulcrum.View;
 
@@ -20,18 +14,18 @@ namespace Fulcrum.View;
 public sealed partial class PerfisPage : Page
 {
     private ObservableCollection<PerfilSom> _perfisCollection = new();
-    
+
     /// <summary>
     /// Inicializa uma nova instância da classe PerfisPage
     /// </summary>
     public PerfisPage()
     {
         this.InitializeComponent();
-        
+
         // Garante que o helper de localização esteja inicializado
         LocalizationHelper.Initialize();
     }
-    
+
     /// <summary>
     /// Manipula o evento de carregamento da página
     /// </summary>
@@ -39,14 +33,14 @@ public sealed partial class PerfisPage : Page
     {
         // Carrega os perfis salvos
         await GerenciadorPerfis.Instance.CarregarPerfisAsync();
-        
+
         // Atualiza a coleção de perfis para exibição
         _perfisCollection.Clear();
         foreach (var perfil in GerenciadorPerfis.Instance.Perfis)
         {
             _perfisCollection.Add(perfil);
         }
-        
+
         // Se não houver perfis, cria um perfil padrão
         if (_perfisCollection.Count == 0)
         {
@@ -54,11 +48,11 @@ public sealed partial class PerfisPage : Page
             _perfisCollection.Add(perfilPadrao);
             await GerenciadorPerfis.Instance.SalvarPerfilAsync(perfilPadrao);
         }
-        
+
         // Atualiza a interface com o perfil ativo
         AtualizarPerfilAtivoUI();
     }
-    
+
     /// <summary>
     /// Atualiza a interface para mostrar qual perfil está ativo
     /// </summary>
@@ -66,7 +60,7 @@ public sealed partial class PerfisPage : Page
     {
         // Obtém o perfil ativo
         var perfilAtivo = GerenciadorPerfis.Instance.PerfilAtivo;
-        
+
         // Atualiza o indicador global
         if (perfilAtivo != null)
         {
@@ -81,7 +75,7 @@ public sealed partial class PerfisPage : Page
             txtPerfilAtivo.Text = LocalizationHelper.GetString("NoActiveProfileText/Text", "Nenhum perfil ativo");
             perfilAtivoIndicador.Visibility = Visibility.Collapsed;
         }
-        
+
         // Atualiza os indicadores em cada item da lista
         foreach (var item in perfisList.Items)
         {
@@ -96,15 +90,15 @@ public sealed partial class PerfisPage : Page
                     if (indicador != null)
                     {
                         // Define a visibilidade com base no perfil ativo
-                        indicador.Visibility = GerenciadorPerfis.Instance.EhPerfilAtivo(perfil) 
-                            ? Visibility.Visible 
+                        indicador.Visibility = GerenciadorPerfis.Instance.EhPerfilAtivo(perfil)
+                            ? Visibility.Visible
                             : Visibility.Collapsed;
                     }
                 }
             }
         }
     }
-    
+
     /// <summary>
     /// Encontra um elemento filho dentro da árvore visual
     /// </summary>
@@ -112,23 +106,23 @@ public sealed partial class PerfisPage : Page
     {
         if (parent == null)
             return null;
-            
+
         int childCount = VisualTreeHelper.GetChildrenCount(parent);
         for (int i = 0; i < childCount; i++)
         {
             var child = VisualTreeHelper.GetChild(parent, i);
-            
+
             if (child is T && (child as FrameworkElement)?.Name == name)
                 return (T)child;
-                
+
             var result = FindVisualChild<T>(child, name);
             if (result != null)
                 return result;
         }
-        
+
         return null;
     }
-    
+
     /// <summary>
     /// Manipula o evento de clique no botão Novo Perfil
     /// </summary>
@@ -153,14 +147,14 @@ public sealed partial class PerfisPage : Page
             DefaultButton = ContentDialogButton.Primary,
             XamlRoot = this.XamlRoot
         };
-        
+
         var resultado = await dialogNome.ShowAsync();
         if (resultado == ContentDialogResult.Primary)
         {
             var panel = (StackPanel)dialogNome.Content;
             var nome = "";
             var descricao = "";
-            
+
             // Obtém os valores dos controles pelo nome
             foreach (var child in panel.Children)
             {
@@ -172,21 +166,21 @@ public sealed partial class PerfisPage : Page
                         descricao = textBox.Text;
                 }
             }
-            
+
             if (string.IsNullOrWhiteSpace(nome))
             {
                 nome = LocalizationHelper.GetString("DefaultProfileName", "Novo Perfil");
             }
-            
+
             // Cria o perfil baseado nas configurações atuais
             var perfil = GerenciadorPerfis.Instance.CriarPerfilDaConfigAtual(nome, descricao);
             _perfisCollection.Add(perfil);
-            
+
             // Salva o perfil
             await GerenciadorPerfis.Instance.SalvarPerfilAsync(perfil);
         }
     }
-    
+
     /// <summary>
     /// Manipula o evento de clique no botão Aplicar Perfil
     /// </summary>
@@ -196,25 +190,25 @@ public sealed partial class PerfisPage : Page
         {
             // Aplica o perfil de som
             perfilSelecionado.Aplicar();
-            
+
             // Define como o perfil ativo
             GerenciadorPerfis.Instance.DefinirPerfilAtivo(perfilSelecionado);
-            
+
             // Atualiza a interface para mostrar qual perfil está ativo
             AtualizarPerfilAtivoUI();
-            
+
             // Mostra animação de confirmação visual
             MostrarConfirmacaoVisual(perfilSelecionado.Nome);
-            
+
             // Exibe mensagem de confirmação
             infoBar.Title = LocalizationHelper.GetString("ProfileAppliedTitle", "Perfil Aplicado");
             infoBar.Message = LocalizationHelper.GetFormattedString(
-                "ProfileAppliedMessage", 
-                "Perfil '{0}' aplicado com sucesso!", 
+                "ProfileAppliedMessage",
+                "Perfil '{0}' aplicado com sucesso!",
                 perfilSelecionado.Nome);
             infoBar.Severity = InfoBarSeverity.Success;
             infoBar.IsOpen = true;
-            
+
             // Destaca o item na lista (efeito visual)
             var item = perfisList.ContainerFromItem(perfilSelecionado) as ListViewItem;
             if (item != null)
@@ -222,7 +216,7 @@ public sealed partial class PerfisPage : Page
                 // Aplica uma animação suave de destaque
                 var originalBrush = item.Background;
                 item.Background = new SolidColorBrush(Microsoft.UI.Colors.LightGreen);
-                
+
                 // Cria um timer para voltar à cor original
                 var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1.5) };
                 timer.Tick += (s, args) =>
@@ -232,7 +226,7 @@ public sealed partial class PerfisPage : Page
                 };
                 timer.Start();
             }
-            
+
             // Oculta a mensagem após 3 segundos
             var infoBarTimer = new DispatcherTimer
             {
@@ -246,7 +240,7 @@ public sealed partial class PerfisPage : Page
             infoBarTimer.Start();
         }
     }
-    
+
     /// <summary>
     /// Mostra uma animação de confirmação visual para indicar que o perfil foi aplicado
     /// </summary>
@@ -276,8 +270,8 @@ public sealed partial class PerfisPage : Page
                     new TextBlock
                     {
                         Text = LocalizationHelper.GetFormattedString(
-                            "ProfileAppliedDescription", 
-                            "O perfil '{0}' foi aplicado com sucesso.", 
+                            "ProfileAppliedDescription",
+                            "O perfil '{0}' foi aplicado com sucesso.",
                             nomePerfil),
                         TextWrapping = TextWrapping.Wrap,
                         HorizontalAlignment = HorizontalAlignment.Center,
@@ -300,13 +294,13 @@ public sealed partial class PerfisPage : Page
                 popupConfirmacao.Hide();
                 autoCloseTimer.Stop();
             };
-            
+
             // Exibe o dialog
             autoCloseTimer.Start();
             await popupConfirmacao.ShowAsync();
         });
     }
-    
+
     /// <summary>
     /// Manipula o evento de clique no botão Remover Perfil
     /// </summary>
@@ -316,28 +310,28 @@ public sealed partial class PerfisPage : Page
         {
             // Verifica se este é o perfil ativo
             bool eraPerfilAtivo = GerenciadorPerfis.Instance.EhPerfilAtivo(perfilSelecionado);
-            
+
             // Pede confirmação antes de remover
             var dialog = new ContentDialog
             {
                 Title = LocalizationHelper.GetString("DeleteProfileTitle", "Remover Perfil"),
                 Content = LocalizationHelper.GetFormattedString(
-                    "DeleteProfileConfirmation", 
-                    "Tem certeza que deseja remover o perfil '{0}'? Esta ação não pode ser desfeita.", 
+                    "DeleteProfileConfirmation",
+                    "Tem certeza que deseja remover o perfil '{0}'? Esta ação não pode ser desfeita.",
                     perfilSelecionado.Nome),
                 PrimaryButtonText = LocalizationHelper.GetString("DeleteButton", "Remover"),
                 CloseButtonText = LocalizationHelper.GetString("CancelButtonText", "Cancelar"),
                 DefaultButton = ContentDialogButton.Close,
                 XamlRoot = this.XamlRoot
             };
-            
+
             var resultado = await dialog.ShowAsync();
             if (resultado == ContentDialogResult.Primary)
             {
                 // Remove o perfil
                 GerenciadorPerfis.Instance.RemoverPerfil(perfilSelecionado);
                 _perfisCollection.Remove(perfilSelecionado);
-                
+
                 // Se era o perfil ativo, remove a referência
                 if (eraPerfilAtivo)
                 {
@@ -346,16 +340,16 @@ public sealed partial class PerfisPage : Page
                     GerenciadorPerfis.Instance.DefinirPerfilAtivo(perfilNulo);
                     AtualizarPerfilAtivoUI();
                 }
-                
+
                 // Exibe mensagem de confirmação
                 infoBar.Title = LocalizationHelper.GetString("ProfileDeletedTitle", "Perfil Removido");
                 infoBar.Message = LocalizationHelper.GetFormattedString(
-                    "ProfileDeletedMessage", 
-                    "Perfil '{0}' removido com sucesso!", 
+                    "ProfileDeletedMessage",
+                    "Perfil '{0}' removido com sucesso!",
                     perfilSelecionado.Nome);
                 infoBar.Severity = InfoBarSeverity.Informational;
                 infoBar.IsOpen = true;
-                
+
                 // Oculta a mensagem após 3 segundos
                 var timer = new DispatcherTimer
                 {
@@ -370,7 +364,7 @@ public sealed partial class PerfisPage : Page
             }
         }
     }
-    
+
     /// <summary>
     /// Manipula o evento de seleção alterada na lista de perfis
     /// </summary>
@@ -380,16 +374,16 @@ public sealed partial class PerfisPage : Page
         bool temPerfilSelecionado = perfisList.SelectedItem != null;
         btnAplicarPerfil.IsEnabled = temPerfilSelecionado;
         btnRemoverPerfil.IsEnabled = temPerfilSelecionado;
-        
+
         // Atualiza os detalhes do perfil quando um item é selecionado
         if (perfisList.SelectedItem is PerfilSom perfilSelecionado)
         {
             // Oculta a InfoBar que pede para selecionar um perfil
             infoBarPerfil.IsOpen = false;
-            
+
             // Exibe as informações do perfil em um formato simples no TextBlock
             StringBuilder sb = new StringBuilder();
-            
+
             foreach (var configuracao in perfilSelecionado.ConfiguracoesSom)
             {
                 // Formata o volume como porcentagem
@@ -397,7 +391,7 @@ public sealed partial class PerfisPage : Page
                 string nomeSom = ObterNomeLegivel(configuracao.Key);
                 sb.AppendLine($"{nomeSom}: {volumePorcentagem}%");
             }
-            
+
             // Define o texto no TextBlock
             txtConfiguracoesInfo.Text = sb.ToString();
         }
@@ -408,7 +402,7 @@ public sealed partial class PerfisPage : Page
             infoBarPerfil.IsOpen = true;
         }
     }
-    
+
     /// <summary>
     /// Converte a chave técnica do som para um nome mais amigável para exibição
     /// </summary>

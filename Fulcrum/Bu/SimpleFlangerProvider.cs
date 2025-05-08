@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -27,7 +26,7 @@ public class SimpleFlangerProvider : ISampleProvider
     {
         _source = source;
         WaveFormat = source.WaveFormat;
-        
+
         // O buffer deve ser grande o suficiente para acomodar o atraso máximo
         _bufferLength = (int)(source.WaveFormat.SampleRate * 0.02f); // 20ms de buffer
         _delayBuffer = new float[_bufferLength];
@@ -70,13 +69,13 @@ public class SimpleFlangerProvider : ISampleProvider
             {
                 // Armazena a amostra atual no buffer circular
                 _delayBuffer[_bufferPosition] = buffer[offset + i];
-                
+
                 // Calcula a posição modulada para o efeito de flanger
                 float modulationDepth = _depth * WaveFormat.SampleRate;
                 float lfoValue = (float)Math.Sin(_phase);
-                
+
                 float delayOffset = (float)((1.0f + lfoValue) * modulationDepth / 2.0f);
-                
+
                 // Atualiza a fase do LFO
                 _phase += 2 * (float)Math.PI * _rate / WaveFormat.SampleRate;
                 if (_phase > 2 * Math.PI)
@@ -85,22 +84,22 @@ public class SimpleFlangerProvider : ISampleProvider
                 _phase += 2 * (float)Math.PI * _rate / WaveFormat.SampleRate;
                 if (_phase > 2 * Math.PI)
                     _phase -= 2 * (float)Math.PI;
-                
+
                 // Calcula a posição exata no buffer (pode ser um valor fracionário)
                 float exactPosition = _bufferPosition - delayOffset;
                 if (exactPosition < 0)
                     exactPosition += _bufferLength;
-                
+
                 // Interpolação linear entre as duas amostras mais próximas
                 int index1 = (int)exactPosition;
                 int index2 = (index1 + 1) % _bufferLength;
                 float fraction = exactPosition - index1;
-                
+
                 float delayed = _delayBuffer[index1] * (1 - fraction) + _delayBuffer[index2] * fraction;
-                
+
                 // Combina o sinal original com o sinal defasado
                 buffer[offset + i] = buffer[offset + i] * 0.5f + delayed * 0.5f;
-                
+
                 // Avança o ponteiro do buffer circular
                 _bufferPosition = (_bufferPosition + 1) % _bufferLength;
             }

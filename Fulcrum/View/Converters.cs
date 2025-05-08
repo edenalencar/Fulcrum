@@ -1,6 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Data;
-using System;
 
 namespace Fulcrum.View;
 
@@ -51,12 +50,12 @@ public class VolumePercentageConverter : IValueConverter
         {
             return $"{(int)(floatValue * 100)}%";
         }
-        
+
         if (value is double doubleValue)
         {
             return $"{(int)(doubleValue * 100)}%";
         }
-        
+
         return "0%";
     }
 

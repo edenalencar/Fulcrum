@@ -1,5 +1,4 @@
 ﻿using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -24,7 +23,7 @@ public class DelayFadeOutSampleProvider : ISampleProvider
         _source = source ?? throw new ArgumentNullException(nameof(source));
         _fadeDurationMs = fadeDurationMs;
         WaveFormat = source.WaveFormat;
-        
+
         // Calcular o número de amostras para o fade
         _fadeSampleCount = (int)((fadeDurationMs / 1000.0) * WaveFormat.SampleRate * WaveFormat.Channels);
         System.Diagnostics.Debug.WriteLine($"DelayFadeOutSampleProvider inicializado: Canais={WaveFormat.Channels}, " +

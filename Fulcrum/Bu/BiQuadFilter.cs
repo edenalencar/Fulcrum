@@ -1,5 +1,3 @@
-using System;
-
 namespace Fulcrum.Bu;
 
 /// <summary>
@@ -9,10 +7,10 @@ public class BiQuadFilter
 {
     // Coeficientes do filtro
     private float a0, a1, a2, b1, b2;
-    
+
     // Estado do filtro
     private float z1, z2;
-    
+
     /// <summary>
     /// Inicializa um novo filtro BiQuad com os coeficientes especificados
     /// </summary>
@@ -28,10 +26,10 @@ public class BiQuadFilter
         this.a2 = a2;
         this.b1 = b1;
         this.b2 = b2;
-        
+
         Reset();
     }
-    
+
     /// <summary>
     /// Cria um filtro de equalização paramétrica (Peaking EQ)
     /// </summary>
@@ -44,17 +42,17 @@ public class BiQuadFilter
     {
         float omega = 2 * (float)Math.PI * frequency / sampleRate;
         float alpha = (float)Math.Sin(omega) / (2 * q);
-        
+
         float a0 = 1 + alpha / gainFactor;
         float a1 = -2 * (float)Math.Cos(omega);
         float a2 = 1 - alpha / gainFactor;
         float b0 = 1 + alpha * gainFactor;
         float b1 = -2 * (float)Math.Cos(omega);
         float b2 = 1 - alpha * gainFactor;
-        
-        return new BiQuadFilter(b0/a0, b1/a0, b2/a0, a1/a0, a2/a0);
+
+        return new BiQuadFilter(b0 / a0, b1 / a0, b2 / a0, a1 / a0, a2 / a0);
     }
-    
+
     /// <summary>
     /// Cria um filtro de shelving para baixas frequências
     /// </summary>
@@ -68,17 +66,17 @@ public class BiQuadFilter
         float omega = 2 * (float)Math.PI * frequency / sampleRate;
         float alpha = (float)Math.Sin(omega) / (2 * q);
         float A = (float)Math.Sqrt(gainFactor);
-        
+
         float a0 = (A + 1) + (A - 1) * (float)Math.Cos(omega) + 2 * (float)Math.Sqrt(A) * alpha;
         float a1 = -2 * ((A - 1) + (A + 1) * (float)Math.Cos(omega));
         float a2 = (A + 1) + (A - 1) * (float)Math.Cos(omega) - 2 * (float)Math.Sqrt(A) * alpha;
         float b0 = A * ((A + 1) - (A - 1) * (float)Math.Cos(omega) + 2 * (float)Math.Sqrt(A) * alpha);
         float b1 = 2 * A * ((A - 1) - (A + 1) * (float)Math.Cos(omega));
         float b2 = A * ((A + 1) - (A - 1) * (float)Math.Cos(omega) - 2 * (float)Math.Sqrt(A) * alpha);
-        
-        return new BiQuadFilter(b0/a0, b1/a0, b2/a0, a1/a0, a2/a0);
+
+        return new BiQuadFilter(b0 / a0, b1 / a0, b2 / a0, a1 / a0, a2 / a0);
     }
-    
+
     /// <summary>
     /// Cria um filtro de shelving para altas frequências
     /// </summary>
@@ -92,17 +90,17 @@ public class BiQuadFilter
         float omega = 2 * (float)Math.PI * frequency / sampleRate;
         float alpha = (float)Math.Sin(omega) / (2 * q);
         float A = (float)Math.Sqrt(gainFactor);
-        
+
         float a0 = (A + 1) - (A - 1) * (float)Math.Cos(omega) + 2 * (float)Math.Sqrt(A) * alpha;
         float a1 = 2 * ((A - 1) - (A + 1) * (float)Math.Cos(omega));
         float a2 = (A + 1) - (A - 1) * (float)Math.Cos(omega) - 2 * (float)Math.Sqrt(A) * alpha;
         float b0 = A * ((A + 1) + (A - 1) * (float)Math.Cos(omega) + 2 * (float)Math.Sqrt(A) * alpha);
         float b1 = -2 * A * ((A - 1) + (A + 1) * (float)Math.Cos(omega));
         float b2 = A * ((A + 1) + (A - 1) * (float)Math.Cos(omega) - 2 * (float)Math.Sqrt(A) * alpha);
-        
-        return new BiQuadFilter(b0/a0, b1/a0, b2/a0, a1/a0, a2/a0);
+
+        return new BiQuadFilter(b0 / a0, b1 / a0, b2 / a0, a1 / a0, a2 / a0);
     }
-    
+
     /// <summary>
     /// Processa uma amostra de áudio através do filtro
     /// </summary>
@@ -115,7 +113,7 @@ public class BiQuadFilter
         z2 = input * a2 - b2 * output;
         return output;
     }
-    
+
     /// <summary>
     /// Reseta o estado do filtro
     /// </summary>

@@ -1,5 +1,4 @@
 using NAudio.Wave;
-using System;
 
 namespace Fulcrum.Bu;
 
@@ -60,18 +59,18 @@ public class SimplePitchProvider : ISampleProvider
             {
                 // Calcula a posição de leitura no áudio fonte
                 _position += _pitchFactor;
-                
+
                 // Converte posição para índice (inteiro) e fração (para interpolação)
                 int intPosition = (int)_position;
                 float fraction = _position - intPosition;
-                
+
                 // Lê amostra atual e próxima para interpolação
                 float currentSample = intPosition < samplesRead ? sourceBuffer[intPosition] : 0;
                 float nextSample = intPosition + 1 < samplesRead ? sourceBuffer[intPosition + 1] : 0;
-                
+
                 // Interpolação linear
                 buffer[offset + i] = currentSample * (1 - fraction) + nextSample * fraction;
-                
+
                 // Se passamos do final do buffer fonte, é necessário buscar mais amostras
                 if (_position >= samplesRead - 1)
                 {
@@ -79,7 +78,7 @@ public class SimplePitchProvider : ISampleProvider
                     float remaining = _position - (samplesRead - 1);
                     _position = remaining;
                     _previousSample = sourceBuffer[samplesRead - 1];
-                    
+
                     // Lê mais amostras se necessário
                     if (_position > 0)
                     {
