@@ -811,9 +811,7 @@ public sealed partial class HomePage : Page
                 cancelTimerButton.Visibility = Visibility.Collapsed;
             }
         });
-    }
-
-    /// <summary>
+    }    /// <summary>
     /// Manipulador para o botão de definir temporizador
     /// </summary>
     private async void SetSleepTimer_Click(object sender, RoutedEventArgs e)
@@ -823,40 +821,38 @@ public sealed partial class HomePage : Page
             // Opções de tempo para o temporizador
             var timeOptions = new string[]
             {
-                "5 minutos",
-                "15 minutos",
-                "30 minutos",
-                "45 minutos",
-                "1 hora",
-                "2 horas",
-                "3 horas",
-                "4 horas",
-                "8 horas"
+                LocalizationHelper.GetString("TimerOption5Min", "5 minutos"),
+                LocalizationHelper.GetString("TimerOption15Min", "15 minutos"),
+                LocalizationHelper.GetString("TimerOption30Min", "30 minutos"),
+                LocalizationHelper.GetString("TimerOption45Min", "45 minutos"),
+                LocalizationHelper.GetString("TimerOption1Hour", "1 hora"),
+                LocalizationHelper.GetString("TimerOption2Hours", "2 horas"),
+                LocalizationHelper.GetString("TimerOption3Hours", "3 horas"),
+                LocalizationHelper.GetString("TimerOption4Hours", "4 horas"),
+                LocalizationHelper.GetString("TimerOption8Hours", "8 horas")
             };
 
             var dialog = new ContentDialog
             {
-                Title = "Temporizador de Sono",
-                PrimaryButtonText = "Confirmar",
-                CloseButtonText = "Cancelar",
+                Title = LocalizationHelper.GetString("SleepTimerDialogTitle", "Temporizador de Sono"),
+                PrimaryButtonText = LocalizationHelper.GetString("ConfirmButtonText", "Confirmar"),
+                CloseButtonText = LocalizationHelper.GetString("CancelButtonText", "Cancelar"),
                 DefaultButton = ContentDialogButton.Primary,
                 XamlRoot = this.XamlRoot,
                 Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style
-            };
-
-            var panel = new StackPanel
+            };            var panel = new StackPanel
             {
                 Spacing = 12
             };
 
             var textBlock = new TextBlock
             {
-                Text = "Escolha quanto tempo o Fulcrum deve reproduzir antes de pausar automaticamente:",
+                Text = LocalizationHelper.GetString("SleepTimerInstructions", "Escolha quanto tempo o Fulcrum deve reproduzir antes de pausar automaticamente:"),
                 TextWrapping = TextWrapping.Wrap
             };
 
             // Configurações de acessibilidade para o texto explicativo
-            AutomationProperties.SetName(textBlock, "Instruções do temporizador de sono");
+            AutomationProperties.SetName(textBlock, LocalizationHelper.GetString("SleepTimerInstructionsAutomation", "Instruções do temporizador de sono"));
 
             panel.Children.Add(textBlock);
 
@@ -867,8 +863,8 @@ public sealed partial class HomePage : Page
             };
 
             // Configurações de acessibilidade para o ComboBox
-            AutomationProperties.SetName(comboBox, "Selecionar duração do temporizador");
-            AutomationProperties.SetHelpText(comboBox, "Escolha por quanto tempo os sons devem ser reproduzidos antes de parar");
+            AutomationProperties.SetName(comboBox, LocalizationHelper.GetString("SleepTimerDurationSelector", "Selecionar duração do temporizador"));
+            AutomationProperties.SetHelpText(comboBox, LocalizationHelper.GetString("SleepTimerDurationHelp", "Escolha por quanto tempo os sons devem ser reproduzidos antes de parar"));
 
             foreach (var option in timeOptions)
             {
@@ -893,7 +889,7 @@ public sealed partial class HomePage : Page
                     string duracao = comboBox.SelectedItem.ToString() ?? $"{minutes} minutos";
                     AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
                         SetSleepTimerButton,
-                        $"Temporizador de sono definido para {duracao}. Os sons serão pausados automaticamente após este período.",
+                        LocalizationHelper.GetFormattedString("SleepTimerSetSuccess", "Temporizador de sono definido para {0}. Os sons serão pausados automaticamente após este período.", duracao),
                         true);
                 }
             }
@@ -905,7 +901,7 @@ public sealed partial class HomePage : Page
             // Anunciar erro
             AcessibilidadeHelper.AnunciarParaLeitoresEscreens(
                 SetSleepTimerButton,
-                "Ocorreu um erro ao definir o temporizador de sono",
+                LocalizationHelper.GetString("SleepTimerSetError", "Ocorreu um erro ao definir o temporizador de sono"),
                 true);
         }
     }
@@ -928,9 +924,7 @@ public sealed partial class HomePage : Page
             8 => 480,    // 8 horas
             _ => 30      // Padrão: 30 minutos
         };
-    }
-
-    /// <summary>
+    }    /// <summary>
     /// Manipulador para o botão de cancelar temporizador
     /// </summary>
     private void CancelTimer_Click(object sender, RoutedEventArgs e)
@@ -939,7 +933,7 @@ public sealed partial class HomePage : Page
 
         // Anunciar para leitores de tela
         AcessibilidadeHelper.AnunciarParaLeitoresEscreens(cancelTimerButton,
-            "Temporizador de sono cancelado. A reprodução continuará normalmente.",
+            LocalizationHelper.GetString("SleepTimerCancelled", "Temporizador de sono cancelado. A reprodução continuará normalmente."),
             true);
     }
 
