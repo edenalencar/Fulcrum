@@ -7,12 +7,12 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="61699denAlencar.FulcrumApp"
+    Name="61699denAlencar.FulcrumAppOfficial"
     Publisher="CN=26939AD8-50B0-4A8B-9C77-451CFC0ED859"
-    Version="1.0.5.0" />
+    Version="2.0.0.0" />
 
   <Properties>
-    <DisplayName>Fulcrum App</DisplayName>
+    <DisplayName>Fulcrum App Official</DisplayName>
     <PublisherDisplayName>Éden Alencar</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>

@@ -1548,6 +1548,9 @@
   <data name="SelectProfileInfoBar.Message" xml:space="preserve">
     <value>Selecione um perfil na lista à esquerda para ver seus detalhes.</value>
     <comment>Mensagem da barra de informações quando nenhum perfil é selecionado</comment>
+  </data>  <data name="ActiveText.Text" xml:space="preserve">
+    <value>ATIVO</value>
+    <comment>Texto exibido para o indicador de perfil ativo</comment>
   </data>
   <data name="ConfigurationInfoText.Text" xml:space="preserve">
     <value>Selecione um perfil para ver as configurações de som</value>
