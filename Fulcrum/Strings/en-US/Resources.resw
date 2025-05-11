@@ -1602,7 +1602,69 @@
     <comment>Name of coffee shop sound</comment>
   </data>
   <data name="MotorboatSoundName" xml:space="preserve">
-    <value>Motorboat</value>
-    <comment>Name of motorboat sound</comment>
+    <value>Motorboat</value>    <comment>Name of motorboat sound</comment>
+  </data>
+  <data name="SleepTimerInstructions" xml:space="preserve">
+    <value>Choose how long Fulcrum should play before automatically pausing:</value>
+    <comment>Instructions for sleep timer dialog</comment>
+  </data>
+  <data name="SleepTimerInstructionsAutomation" xml:space="preserve">
+    <value>Sleep timer instructions</value>
+    <comment>Automation name for sleep timer instructions</comment>
+  </data>
+  <data name="SleepTimerDurationSelector" xml:space="preserve">
+    <value>Select timer duration</value>
+    <comment>Automation name for sleep timer duration selector</comment>
+  </data>
+  <data name="SleepTimerDurationHelp" xml:space="preserve">
+    <value>Choose how long sounds should play before stopping</value>
+    <comment>Help text for sleep timer duration selector</comment>
+  </data>
+  <data name="SleepTimerSetSuccess" xml:space="preserve">
+    <value>Sleep timer set for {0}. Sounds will automatically pause after this period.</value>
+    <comment>Success message for sleep timer set</comment>
+  </data>  <data name="SleepTimerSetError" xml:space="preserve">
+    <value>An error occurred while setting the sleep timer</value>
+    <comment>Error message for sleep timer set</comment>
+  </data>
+  <data name="SleepTimerCancelled" xml:space="preserve">
+    <value>Sleep timer cancelled. Playback will continue normally.</value>
+    <comment>Message displayed when sleep timer is cancelled</comment>
+  </data>
+  <data name="TimerOption5Min" xml:space="preserve">
+    <value>5 minutes</value>
+    <comment>Timer option for 5 minutes</comment>
+  </data>
+  <data name="TimerOption15Min" xml:space="preserve">
+    <value>15 minutes</value>
+    <comment>Timer option for 15 minutes</comment>
+  </data>
+  <data name="TimerOption30Min" xml:space="preserve">
+    <value>30 minutes</value>
+    <comment>Timer option for 30 minutes</comment>
+  </data>
+  <data name="TimerOption45Min" xml:space="preserve">
+    <value>45 minutes</value>
+    <comment>Timer option for 45 minutes</comment>
+  </data>
+  <data name="TimerOption1Hour" xml:space="preserve">
+    <value>1 hour</value>
+    <comment>Timer option for 1 hour</comment>
+  </data>
+  <data name="TimerOption2Hours" xml:space="preserve">
+    <value>2 hours</value>
+    <comment>Timer option for 2 hours</comment>
+  </data>
+  <data name="TimerOption3Hours" xml:space="preserve">
+    <value>3 hours</value>
+    <comment>Timer option for 3 hours</comment>
+  </data>
+  <data name="TimerOption4Hours" xml:space="preserve">
+    <value>4 hours</value>
+    <comment>Timer option for 4 hours</comment>
+  </data>
+  <data name="TimerOption8Hours" xml:space="preserve">
+    <value>8 hours</value>
+    <comment>Timer option for 8 hours</comment>
   </data>
 </root>

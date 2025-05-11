@@ -1545,6 +1545,10 @@
     <value>Selecione um perfil</value>
     <comment>Título da barra de informações quando nenhum perfil está selecionado</comment>
   </data>
+  <data name="SelectProfileInfoBar.Message" xml:space="preserve">
+    <value>Selecione um perfil na lista à esquerda para ver seus detalhes.</value>
+    <comment>Mensagem da barra de informações quando nenhum perfil é selecionado</comment>
+  </data>
   <data name="ConfigurationInfoText.Text" xml:space="preserve">
     <value>Selecione um perfil para ver as configurações de som</value>
     <comment>Texto de informação para seleção de perfil</comment>
@@ -1602,7 +1606,69 @@
     <comment>Texto quando não há perfil ativo</comment>
   </data>
   <data name="ProfileAppliedDescription" xml:space="preserve">
-    <value>O perfil '{0}' foi aplicado com sucesso.</value>
-    <comment>Descrição da mensagem quando um perfil é aplicado</comment>
+    <value>O perfil '{0}' foi aplicado com sucesso.</value>    <comment>Descrição da mensagem quando um perfil é aplicado</comment>
+  </data>
+  <data name="SleepTimerInstructions" xml:space="preserve">
+    <value>Escolha quanto tempo o Fulcrum deve reproduzir antes de pausar automaticamente:</value>
+    <comment>Instruções para o diálogo do temporizador de sono</comment>
+  </data>
+  <data name="SleepTimerInstructionsAutomation" xml:space="preserve">
+    <value>Instruções do temporizador de sono</value>
+    <comment>Nome de automação para as instruções do temporizador de sono</comment>
+  </data>
+  <data name="SleepTimerDurationSelector" xml:space="preserve">
+    <value>Selecionar duração do temporizador</value>
+    <comment>Nome de automação para o seletor de duração do temporizador</comment>
+  </data>
+  <data name="SleepTimerDurationHelp" xml:space="preserve">
+    <value>Escolha por quanto tempo os sons devem ser reproduzidos antes de parar</value>
+    <comment>Texto de ajuda para o seletor de duração do temporizador</comment>
+  </data>
+  <data name="SleepTimerSetSuccess" xml:space="preserve">
+    <value>Temporizador de sono definido para {0}. Os sons serão pausados automaticamente após este período.</value>
+    <comment>Mensagem de sucesso para definição do temporizador de sono</comment>
+  </data>  <data name="SleepTimerSetError" xml:space="preserve">
+    <value>Ocorreu um erro ao definir o temporizador de sono</value>
+    <comment>Mensagem de erro para definição do temporizador de sono</comment>
+  </data>
+  <data name="SleepTimerCancelled" xml:space="preserve">
+    <value>Temporizador de sono cancelado. A reprodução continuará normalmente.</value>
+    <comment>Mensagem exibida quando o temporizador de sono é cancelado</comment>
+  </data>
+  <data name="TimerOption5Min" xml:space="preserve">
+    <value>5 minutos</value>
+    <comment>Opção de temporizador para 5 minutos</comment>
+  </data>
+  <data name="TimerOption15Min" xml:space="preserve">
+    <value>15 minutos</value>
+    <comment>Opção de temporizador para 15 minutos</comment>
+  </data>
+  <data name="TimerOption30Min" xml:space="preserve">
+    <value>30 minutos</value>
+    <comment>Opção de temporizador para 30 minutos</comment>
+  </data>
+  <data name="TimerOption45Min" xml:space="preserve">
+    <value>45 minutos</value>
+    <comment>Opção de temporizador para 45 minutos</comment>
+  </data>
+  <data name="TimerOption1Hour" xml:space="preserve">
+    <value>1 hora</value>
+    <comment>Opção de temporizador para 1 hora</comment>
+  </data>
+  <data name="TimerOption2Hours" xml:space="preserve">
+    <value>2 horas</value>
+    <comment>Opção de temporizador para 2 horas</comment>
+  </data>
+  <data name="TimerOption3Hours" xml:space="preserve">
+    <value>3 horas</value>
+    <comment>Opção de temporizador para 3 horas</comment>
+  </data>
+  <data name="TimerOption4Hours" xml:space="preserve">
+    <value>4 horas</value>
+    <comment>Opção de temporizador para 4 horas</comment>
+  </data>
+  <data name="TimerOption8Hours" xml:space="preserve">
+    <value>8 horas</value>
+    <comment>Opção de temporizador para 8 horas</comment>
   </data>
 </root>

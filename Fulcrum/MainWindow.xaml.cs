@@ -604,7 +604,7 @@ public sealed partial class MainWindow : Window
 
             // Obtém o idioma preferido do usuário
             string currentLanguage = Windows.System.UserProfile.GlobalizationPreferences.Languages[0];
-
+            
             // Se não for português, usa o inglês como padrão
             if (!currentLanguage.StartsWith("pt"))
             {
