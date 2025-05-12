@@ -59,6 +59,19 @@ Alternativamente, você pode baixar o pacote MSIX do release mais recente:
 4. **Temporizador**: Configure o temporizador de sono através das opções no menu
 5. **Tema**: O aplicativo segue automaticamente o tema do sistema, ou você pode escolher manualmente
 
+## 📸 Capturas de Tela
+
+<div align="center">
+  <h3>Tema Claro</h3>
+  <img src="Fulcrum/Assets/screenshots/Fulcrum Claro -Sons Ambiente.png" alt="Fulcrum - Tema Claro" width="700" />
+  
+  <h3>Tema Escuro</h3>
+  <img src="Fulcrum/Assets/screenshots/Fulcrum Escuro - Sons Ambiente.png" alt="Fulcrum - Tema Escuro" width="700" />
+  
+  <h3>Perfil de Som</h3>
+  <img src="Fulcrum/Assets/screenshots/Fulcrum Perfil- Sons Ambiente.png" alt="Fulcrum - Perfil de Som" width="700" />
+</div>
+
 ## 🧩 Arquitetura do Projeto
 
 O Fulcrum segue uma arquitetura clara com separação entre lógica de negócios e interface de usuário:
